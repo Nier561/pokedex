@@ -1,4 +1,4 @@
-# language_id: 9 = English. Cambia a 7 para Spanish si quieres.
+# language_id: 9 = English (7 = Spanish)
 query PokemonDetailV3($id: Int!, $langId: Int! = 9) {
     pokemon_v2_pokemon_by_pk(id: $id) {
         id
@@ -6,20 +6,20 @@ query PokemonDetailV3($id: Int!, $langId: Int! = 9) {
         height
         weight
 
+        # Tipos y stats
         pokemon_v2_pokemontypes {
             pokemon_v2_type { name }
         }
-
         pokemon_v2_pokemonstats {
             base_stat
             pokemon_v2_stat { name }
         }
 
+        # Habilidades con short_effect en el idioma pedido
         pokemon_v2_pokemonabilities {
             is_hidden
             pokemon_v2_ability {
                 name
-                # Descripción corta de la habilidad (en el idioma solicitado)
                 pokemon_v2_abilityeffecttexts(
                     where: { language_id: { _eq: $langId } }
                     limit: 1
@@ -27,44 +27,82 @@ query PokemonDetailV3($id: Int!, $langId: Int! = 9) {
             }
         }
 
-        # IMPORTANTE: En el esquema de PokeAPI el nombre de la relación desde "pokemon" hacia species
-        # suele ser "pokemon_v2_pokemonspecy" (no "pokemonspecies"). Si en tu esquema es distinto,
-        # solo cambia este nombre, todo lo demás es igual.
+        # ---------- ESPECIE (dex entry, cadena de evolución y TODAS LAS FORMAS) ----------
+        # Nota: en el esquema Hasura público de PokeAPI, desde "pokemon" la relación se llama "pokemonspecy".
         pokemon_v2_pokemonspecy {
             gender_rate
-            # Dex entry más reciente (por version_id descendente)
+
+            # Dex entry más reciente en el idioma solicitado
             pokemon_v2_pokemonspeciesflavortexts(
                 where: { language_id: { _eq: $langId } }
                 order_by: { version_id: desc }
                 limit: 1
             ) { flavor_text }
 
-            # Cadena de evolución (traemos todos los species del chain y el id de un pokemon por species)
+            # Cadena de evolución completa + métodos
             pokemon_v2_evolutionchain {
                 pokemon_v2_pokemonspecies(order_by: { order: asc }) {
                     id
                     name
                     order
                     evolves_from_species_id
+
+                    # Para poder navegar al detalle, necesitamos un pokemon_id por species
                     pokemon_v2_pokemons(limit: 1) { id }
+
+                    pokemon_v2_pokemonevolutions {
+                        min_level
+                        time_of_day
+                        min_happiness
+                        min_beauty
+                        min_affection
+                        needs_overworld_rain
+                        turn_upside_down
+                        trade_species_id
+
+                        pokemon_v2_evolutiontrigger { name }
+                        pokemon_v2_item       { name }
+                        pokemon_v2_move       { name }
+                        pokemon_v2_type       { name }
+                        pokemon_v2_location   { name }
+                    }
+                }
+            }
+
+            # --- TODAS LAS FORMAS DE LA ESPECIE ---
+            # Traemos los pokémon que pertenecen a la especie y, para cada uno, sus "pokemonforms".
+            pokemon_v2_pokemons {
+                id
+                name
+                pokemon_v2_pokemonforms {
+                    is_mega
+                    is_battle_only
+                    form_name
+                    name
+                    # Tipos por forma
+                    pokemon_v2_pokemonformtypes {
+                        pokemon_v2_type { name }
+                    }
+                    # No dependemos de este JSON; usamos official-artwork por id,
+                    # pero lo dejamos por si quieres parsearlo luego
+                    pokemon_v2_pokemonformsprites(limit: 1) { sprites }
                 }
             }
         }
 
-        # Movimientos: pedimos TODO, pero ordenamos para quedarnos con la entrada más nueva por move_id.
-        # "version_group_id desc" nos hace caer en la versión más reciente disponible en PokeAPI (hoy gen 9).
+        # Movimientos (ordenamos por version_group_id desc para quedarnos con lo más reciente)
         pokemon_v2_pokemonmoves(order_by: [{ version_group_id: desc }, { level: asc }]) {
             level
             version_group_id
-            pokemon_v2_movelearnmethod { name }
+            pokemon_v2_movelearnmethod { name } # level-up | machine | tutor | egg
             pokemon_v2_move {
                 name
                 power
                 pp
                 accuracy
+                generation_id
                 pokemon_v2_type { name }
                 pokemon_v2_movedamageclass { name } # physical | special | status
-                generation_id
             }
         }
     }

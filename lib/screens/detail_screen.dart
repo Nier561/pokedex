@@ -20,9 +20,9 @@ Color _typeColor(String type) {
 }
 
 String _pretty(String s) => s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
+String _titleCase(String s) => s.split('-').map((p) => _pretty(p)).join(' ');
 
 String _genderText(num? genderRate) {
-  // gender_rate: -1 genderless, 0..8 => female = rate*12.5
   if (genderRate == null || genderRate == -1) return 'Genderless';
   final female = (genderRate * 12.5);
   final male = 100 - female;
@@ -46,9 +46,9 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
-    // Warm-up del audio para que suene instantáneo
-    _player.setSource(UrlSource(_cryById(widget.id)));
+    // +2 tabs: Megas/G-Max y Forms => total 6
+    _tabController = TabController(length: 6, vsync: this);
+    _player.setSource(UrlSource(_cryById(widget.id))); // warm-up
   }
 
   @override
@@ -98,7 +98,6 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
           return const Scaffold(body: Center(child: Text('Not found')));
         }
 
-        // Autoplay del cry una sola vez al entrar con datos listos
         _maybeAutoplayCry();
 
         final name = p['name'] as String;
@@ -109,7 +108,8 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
             .map((e) => e['pokemon_v2_type']['name'] as String)
             .toList();
         final primaryType = types.isNotEmpty ? types.first : 'normal';
-        final gradient = typeGradients[primaryType] ?? typeGradients['normal']!;
+        final gradient =
+            typeGradients[primaryType] ?? typeGradients['normal']!;
 
         final stats = (p['pokemon_v2_pokemonstats'] as List)
             .map((s) => {
@@ -118,30 +118,34 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
         })
             .toList();
 
-        // Habilidades con descripción (short_effect)
+        // Abilities + descripción
         final rawAbilities = (p['pokemon_v2_pokemonabilities'] as List);
         final abilitiesWithDesc = rawAbilities.map<Map<String, String>>((a) {
           final ab = a['pokemon_v2_ability'] as Map;
           final descList =
               (ab['pokemon_v2_abilityeffecttexts'] as List?) ?? const [];
-          final desc = descList.isNotEmpty
-              ? (descList.first['short_effect'] as String)
-              : '';
+          final desc =
+          descList.isNotEmpty ? (descList.first['short_effect'] as String) : '';
           return {
             'name': ab['name'] as String,
             'desc': desc,
           };
         }).toList();
 
-        // NOTE: en el esquema Hasura de PokeAPI la relación desde pokemon suele
-        // llamarse "pokemon_v2_pokemonspecy". Si usas "pokemonspecies" te dará null.
+        // Species
         final species =
-        p['pokemon_v2_pokemonspecy'] as Map<String, dynamic>?; // <-- OJO
+        p['pokemon_v2_pokemonspecy'] as Map<String, dynamic>?;
 
-        // Flavor text + gender + evolución
         String dexEntry = '';
         String genderText = '—';
-        List<Map<String, dynamic>> evoSpecies = const [];
+
+        // Evolución (edges con método)
+        final List<_EvoEdge> evoEdges;
+
+        // ---- Forms/Megas/G-Max ----
+        final List<_FormCard> megaCards = [];
+        final List<_FormCard> gmaxCards = [];
+        final List<_FormCard> otherFormCards = [];
 
         if (species != null) {
           final flavors =
@@ -155,27 +159,61 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
           }
           genderText = _genderText(species['gender_rate'] as int?);
 
-          final chain =
-          species['pokemon_v2_evolutionchain'] as Map<String, dynamic>?;
-          if (chain != null) {
-            final sp =
-                (chain['pokemon_v2_pokemonspecies'] as List?) ?? const [];
-            evoSpecies = sp.map<Map<String, dynamic>>((e) {
-              final pidList = (e['pokemon_v2_pokemons'] as List?) ?? const [];
-              final firstId =
-              pidList.isNotEmpty ? (pidList.first['id'] as int) : null;
-              return {
-                'species_id': e['id'] as int,
-                'pokemon_id': firstId,
-                'name': e['name'] as String,
-                'from': e['evolves_from_species_id'],
-                'order': e['order'],
-              };
-            }).toList();
+          // --- Evolutions
+          evoEdges = _extractAndReduceEvolutionEdges(
+            species['pokemon_v2_evolutionchain'] as Map<String, dynamic>?,
+          );
+
+          // --- Forms (todas las variantes de la especie)
+          // --- Forms (todas las variantes de la especie)
+          final speciesPokemons = (species['pokemon_v2_pokemons'] as List?) ?? const [];
+          for (final pk in speciesPokemons) {
+            final int pid = pk['id'] as int;
+            final String pname = pk['name'] as String;
+
+            final pfList = (pk['pokemon_v2_pokemonforms'] as List?) ?? const [];
+            for (final f in pfList) {
+              final isMega = f['is_mega'] == true;
+              final isBattleOnly = f['is_battle_only'] == true;
+              final formName = (f['form_name'] as String?) ?? '';
+              final displayName = _formDisplayName(pname, formName, isMega);
+
+              final typesF = ((f['pokemon_v2_pokemonformtypes'] as List?) ?? [])
+                  .map((t) => (t['pokemon_v2_type'] as Map)['name'] as String)
+                  .toList();
+
+              final spritesList = (f['pokemon_v2_pokemonformsprites'] as List?) ?? const [];
+              // final dynamic spr = spritesList.isNotEmpty ? spritesList.first['sprites'] : null; // <- si lo quieres inspeccionar
+              final String front = _imageById(pid);
+
+              final card = _FormCard(
+                pokemonId: pid,
+                title: _titleCase(displayName),
+                tags: [
+                  if (isMega) 'Mega',
+                  if (!isMega && _isGmax(formName, pname)) 'G-Max',
+                  if (_isRegional(formName)) _regionalTag(formName),
+                  if (isBattleOnly && !_isGmax(formName, pname) && !isMega) 'Battle-only',
+                ],
+                imageUrl: front,
+                types: typesF.isNotEmpty ? typesF : types,
+              );
+
+              if (isMega) {
+                megaCards.add(card);
+              } else if (_isGmax(formName, pname)) {
+                gmaxCards.add(card);
+              } else if (!_isDefaultForm(formName)) {
+                otherFormCards.add(card);
+              }
+            }
           }
+
+        } else {
+          evoEdges = const [];
         }
 
-        // Movimientos: dedupe por nombre, quedándonos con la entrada más nueva (version_group_id desc)
+        // Movimientos (dedupe por nombre)
         final rawMoves = (p['pokemon_v2_pokemonmoves'] as List);
         final Map<String, Map<String, dynamic>> dedup = {};
         for (final m in rawMoves) {
@@ -185,8 +223,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
           if (dedup.containsKey(nameMv)) continue;
           dedup[nameMv] = {
             'name': nameMv,
-            'type':
-            (mv['pokemon_v2_type'] as Map)['name'] as String, // color/type
+            'type': (mv['pokemon_v2_type'] as Map)['name'] as String,
             'class': (mv['pokemon_v2_movedamageclass'] as Map?)?['name']
             as String? ??
                 'status',
@@ -195,7 +232,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
             'accuracy': mv['accuracy'],
             'level': m['level'],
             'method':
-            (m['pokemon_v2_movelearnmethod'] as Map)['name'] as String, // level-up|machine|tutor|egg
+            (m['pokemon_v2_movelearnmethod'] as Map)['name'] as String,
           };
         }
         final moves = dedup.values.toList();
@@ -219,7 +256,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
           child: Scaffold(
             body: Column(
               children: [
-                // Header with gradient
+                // Header con gradiente
                 Container(
                   decoration: BoxDecoration(gradient: gradient),
                   child: SafeArea(
@@ -245,14 +282,12 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
                                 ),
                                 Row(
                                   children: [
-                                    // Play cry
                                     InteractiveButton(
                                       onTap: _playCry,
                                       child: const Icon(Icons.volume_up,
                                           color: Colors.white),
                                     ),
                                     const SizedBox(width: 8),
-                                    // Favorite placeholder
                                     InteractiveButton(
                                       onTap: () {},
                                       child: const Icon(Icons.favorite_border,
@@ -264,8 +299,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
                             ),
                           ),
                         ),
-
-                        // Name, types, id
+                        // Nombre, tipos, id
                         StaggeredAnimationItem(
                           index: 1,
                           animationType: AnimationType.slideLeft,
@@ -314,8 +348,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
                             ),
                           ),
                         ),
-
-                        // Image
+                        // Imagen
                         AnimatedPokemonImage(
                           child: SizedBox(
                             height: 240,
@@ -355,11 +388,14 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
                                 unselectedLabelColor: Colors.grey,
                                 indicatorColor: gradient.colors.first,
                                 indicatorWeight: 3,
+                                isScrollable: true,
                                 tabs: const [
                                   Tab(text: 'About'),
                                   Tab(text: 'Base Stats'),
                                   Tab(text: 'Evolution'),
                                   Tab(text: 'Moves'),
+                                  Tab(text: 'Megas / G-Max'),
+                                  Tab(text: 'Forms'),
                                 ],
                               ),
                             ),
@@ -381,12 +417,21 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
                                   ),
                                   _buildBaseStatsTab(
                                       stats, gradient.colors.first),
-                                  _buildEvolutionTab(evoSpecies),
+                                  _buildEvolutionTab(evoEdges),
                                   _buildMovesTab(
                                     movesLevelUp: movesLevelUp,
                                     movesMachine: movesMachine,
                                     movesTutor: movesTutor,
                                     movesEgg: movesEgg,
+                                  ),
+                                  _buildFormsGrid(
+                                    // Megas y G-Max en una sola pestaña
+                                    [...megaCards, ...gmaxCards],
+                                    emptyText: 'No Mega/G-Max data',
+                                  ),
+                                  _buildFormsGrid(
+                                    otherFormCards,
+                                    emptyText: 'No alternate forms',
                                   ),
                                 ],
                               ),
@@ -432,7 +477,6 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
             '${(weight / 10).toStringAsFixed(1)} kg (${(weight * 2.205 / 10).toStringAsFixed(1)} lbs)',
           ),
           const SizedBox(height: 16),
-          // Abilities con descripción
           const Text('Abilities',
               style: TextStyle(
                   fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w500)),
@@ -490,38 +534,128 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
     );
   }
 
-  Widget _buildEvolutionTab(List<Map<String, dynamic>> evoSpecies) {
-    if (evoSpecies.isEmpty) {
+  // ---------- Evolution UI ----------
+  Widget _buildEvolutionTab(List<_EvoEdge> edges) {
+    if (edges.isEmpty) {
       return const Center(child: Text('No evolution data'));
     }
+
     return ListView.separated(
       padding: const EdgeInsets.all(16),
-      itemCount: evoSpecies.length,
+      itemCount: edges.length,
       separatorBuilder: (_, __) => const SizedBox(height: 12),
       itemBuilder: (context, i) {
-        final e = evoSpecies[i];
-        final pid = e['pokemon_id'] as int?;
-        final nm = _pretty(e['name'] as String);
-        return ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-          leading: pid == null
-              ? const SizedBox.shrink()
-              : Image.network(_imageById(pid), width: 56, height: 56),
-          title: Text(nm, style: const TextStyle(fontWeight: FontWeight.w600)),
-          subtitle:
-          e['from'] == null ? const Text('Base form') : Text('Evolves from #${e['from']}'),
-          onTap: pid == null
-              ? null
-              : () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) => PokemonDetailScreen(id: pid),
-            ));
-          },
+        final e = edges[i];
+
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.black12),
+            boxShadow: const [
+              BoxShadow(
+                blurRadius: 6,
+                offset: Offset(0, 2),
+                color: Color(0x11000000),
+              )
+            ],
+          ),
+          child: Row(
+            children: [
+              _EvoMonTile(name: _pretty(e.fromName), pokemonId: e.fromPokemonId),
+              const SizedBox(width: 8),
+              const Icon(Icons.arrow_forward, size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _EvoMonTile(name: _pretty(e.toName), pokemonId: e.toPokemonId),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: _buildMethodChips(e.method),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
   }
 
+  // ---------- Forms grid (Megas/G-Max y otras Forms) ----------
+  Widget _buildFormsGrid(List<_FormCard> items, {required String emptyText}) {
+    if (items.isEmpty) return Center(child: Text(emptyText));
+
+    return GridView.builder(
+      padding: const EdgeInsets.all(16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: .88),
+      itemCount: items.length,
+      itemBuilder: (ctx, i) {
+        final f = items[i];
+        final color = _typeColor(f.types.isNotEmpty ? f.types.first : 'normal');
+
+        return InkWell(
+          onTap: () {
+            Navigator.of(ctx).push(MaterialPageRoute(
+              builder: (_) => PokemonDetailScreen(id: f.pokemonId),
+            ));
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: color.withOpacity(.08),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: color.withOpacity(.25)),
+            ),
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Image.network(
+                      f.imageUrl ?? _imageById(f.pokemonId),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  f.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: [
+                    ...f.types.map((t) => Chip(
+                      label: Text(_titleCase(t)),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    )),
+                    ...f.tags.map((t) => Chip(
+                      label: Text(t),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    )),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // ---------- Moves ----------
   Widget _buildMovesTab({
     required List<Map<String, dynamic>> movesLevelUp,
     required List<Map<String, dynamic>> movesMachine,
@@ -536,18 +670,16 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child:
-            Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+            child: Text(title,
+                style:
+                const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
           ),
           ...list.map((m) {
             final t = m['type'] as String;
             final cls = m['class'] as String; // physical | special | status
             final color = _typeColor(t);
-            final badge = cls == 'physical'
-                ? '⚔'
-                : cls == 'special'
-                ? '✨'
-                : '★';
+            final badge =
+            cls == 'physical' ? '⚔' : cls == 'special' ? '✨' : '★';
             final pp = m['pp'];
             final pw = m['power'];
             final acc = m['accuracy'];
@@ -569,8 +701,8 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
               child: Row(
                 children: [
                   Container(
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                       color: color,
                       borderRadius: BorderRadius.circular(20),
@@ -649,6 +781,306 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
           ],
         ),
       ),
+    );
+  }
+
+  // --------- Evolución: helpers ---------
+
+  String _formDisplayName(String baseName, String formName, bool isMega) {
+    final bn = _titleCase(baseName);
+    final f = formName.trim().toLowerCase();
+
+    // Mega (X/Y si aplica)
+    if (isMega) {
+      if (f.contains('x')) return 'Mega $bn X';
+      if (f.contains('y')) return 'Mega $bn Y';
+      // Si no especifica X/Y
+      return 'Mega $bn';
+    }
+
+    // Gigantamax (por si alguien lo llama directo)
+    if (f.contains('gmax') || f.contains('gigantamax')) {
+      return '$bn (Gigantamax)';
+    }
+
+    // Regionales
+    if (f.contains('alola'))  return '$bn (Alola)';
+    if (f.contains('galar'))  return '$bn (Galar)';
+    if (f.contains('hisui'))  return '$bn (Hisui)';
+    if (f.contains('paldea')) return '$bn (Paldea)';
+
+    // Default / vacío
+    if (f.isEmpty || f == 'default') return bn;
+
+    // Otros casos (blade, shield, 10%, complete, dusk, etc.)
+    return '$bn (${_titleCase(formName)})';
+  }
+
+
+
+  int _evoScore(Map<String, dynamic> evo) {
+    final hasItem =
+        evo['item'] != null && (evo['item'] as String).isNotEmpty;
+    final hasLevel = evo['min_level'] != null;
+    final hasLocation =
+        evo['location'] != null && (evo['location'] as String).isNotEmpty;
+
+    int score = 0;
+    if (hasItem) score += 100;
+    if (hasLevel) score += 80;
+    if (!hasLocation) score += 20;
+    if (evo['min_happiness'] != null) score += 10;
+    if ((evo['time_of_day'] as String?)?.isNotEmpty == true) score += 6;
+    if (evo['needs_overworld_rain'] == true) score -= 2;
+    return score;
+  }
+
+  Map<String, dynamic> _normalizeEvo(Map<String, dynamic> raw) {
+    return {
+      'trigger': raw['pokemon_v2_evolutiontrigger']?['name'] as String? ?? '',
+      'item': raw['pokemon_v2_item']?['name'] as String? ?? '',
+      'min_level': raw['min_level'],
+      'min_happiness': raw['min_happiness'],
+      'min_beauty': raw['min_beauty'],
+      'min_affection': raw['min_affection'],
+      'time_of_day': raw['time_of_day'] as String? ?? '',
+      'needs_overworld_rain': raw['needs_overworld_rain'] == true,
+      'turn_upside_down': raw['turn_upside_down'] == true,
+      'move': raw['pokemon_v2_move']?['name'] as String? ?? '',
+      'location': raw['pokemon_v2_location']?['name'] as String? ?? '',
+      'type': raw['pokemon_v2_type']?['name'] as String? ?? '',
+      'held_item': raw['pokemon_v2_held_item']?['name'] as String? ??
+          raw['pokemon_v2_helditem']?['name'] as String? ?? '',
+      'trade_species': raw['pokemon_v2_tradespecies']?['name'] as String? ??
+          raw['trade_species']?['name'] as String? ?? '',
+    };
+  }
+
+  List<Widget> _buildMethodChips(Map<String, dynamic> evo) {
+    final chips = <Widget>[];
+
+    final trigger = (evo['item'] as String).isNotEmpty
+        ? 'Use ${_titleCase(evo['item'])} 💎'
+        : (evo['min_level'] != null
+        ? 'Level Up to Lv ${evo['min_level']} ⬆️'
+        : _titleCase((evo['trigger'] as String).replaceAll('-', ' ')));
+
+    chips.add(Chip(
+      label: Text(trigger, style: const TextStyle(fontWeight: FontWeight.w600)),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    ));
+
+    if ((evo['held_item'] as String).isNotEmpty) {
+      chips.add(Chip(
+        label: Text('Holding ${_titleCase(evo['held_item'])}'),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ));
+    }
+    if ((evo['time_of_day'] as String).isNotEmpty) {
+      final t = evo['time_of_day'] == 'night' ? 'Night 🌙' : 'Day ☀️';
+      chips.add(Chip(label: Text(t), materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
+    }
+    if (evo['min_happiness'] != null) {
+      chips.add(const Chip(label: Text('High Friendship 💞'), materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
+    }
+    if (evo['min_beauty'] != null) {
+      chips.add(const Chip(label: Text('High Beauty ✨'), materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
+    }
+    if (evo['min_affection'] != null) {
+      chips.add(const Chip(label: Text('High Affection 💗'), materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
+    }
+    if (evo['needs_overworld_rain'] == true) {
+      chips.add(const Chip(label: Text('Rain 🌧️'), materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
+    }
+    if ((evo['move'] as String).isNotEmpty) {
+      chips.add(Chip(
+        label: Text('Know ${_titleCase(evo['move'])} 📘'),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ));
+    }
+    if ((evo['type'] as String).isNotEmpty) {
+      chips.add(Chip(
+        label: Text('With ${_titleCase(evo['type'])} type'),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ));
+    }
+    final showLocation =
+        (evo['item'] as String).isEmpty && evo['min_level'] == null && (evo['location'] as String).isNotEmpty;
+    if (showLocation) {
+      chips.add(Chip(
+        label: Text('At ${_titleCase(evo['location'])} 📍'),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ));
+    }
+    if ((evo['trade_species'] as String).isNotEmpty) {
+      chips.add(Chip(
+        label: Text('Trade for ${_titleCase(evo['trade_species'])} 🔁'),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ));
+    }
+    if (evo['turn_upside_down'] == true) {
+      chips.add(const Chip(label: Text('Hold Upside Down 📱'), materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
+    }
+
+    return chips;
+  }
+
+  List<_EvoEdge> _extractAndReduceEvolutionEdges(
+      Map<String, dynamic>? chain) {
+    if (chain == null) return const [];
+
+    final all = (chain['pokemon_v2_pokemonspecies'] as List?) ?? const [];
+
+    // índice por species_id
+    final byId = <int, Map<String, dynamic>>{};
+    for (final s in all) {
+      byId[s['id'] as int] = s as Map<String, dynamic>;
+    }
+
+    // bucket por destino con todos los métodos
+    final Map<int, List<Map<String, dynamic>>> candidates = {};
+
+    for (final s in all) {
+      final childId = s['id'] as int;
+      final fromId = s['evolves_from_species_id'] as int?;
+      if (fromId == null) continue;
+
+      final evos = (s['pokemon_v2_pokemonevolutions'] as List?) ?? const [];
+      if (evos.isEmpty) continue;
+
+      final parent = byId[fromId];
+      if (parent == null) continue;
+
+      final childPokes = (s['pokemon_v2_pokemons'] as List?) ?? const [];
+      final childPid = childPokes.isNotEmpty ? (childPokes.first['id'] as int) : null;
+
+      final pp = (parent['pokemon_v2_pokemons'] as List?) ?? const [];
+      final parentPid = pp.isNotEmpty ? (pp.first['id'] as int) : null;
+
+      for (final ev in evos) {
+        final nrm = _normalizeEvo(ev as Map<String, dynamic>);
+        candidates.putIfAbsent(childId, () => []).add({
+          'from_species_id': fromId,
+          'from_pokemon_id': parentPid,
+          'from_name': parent['name'],
+          'to_species_id': childId,
+          'to_pokemon_id': childPid,
+          'to_name': s['name'],
+          'method': nrm,
+        });
+      }
+    }
+
+    // elegir mejor método por destino
+    final edges = <_EvoEdge>[];
+    for (final entry in candidates.entries) {
+      Map<String, dynamic>? best;
+      int bestScore = -999;
+      for (final cand in entry.value) {
+        final sc = _evoScore(cand['method'] as Map<String, dynamic>);
+        if (sc > bestScore) {
+          bestScore = sc;
+          best = cand;
+        }
+      }
+      if (best != null) {
+        edges.add(_EvoEdge(
+          fromSpeciesId: best['from_species_id'] as int,
+          fromPokemonId: best['from_pokemon_id'] as int?,
+          fromName: best['from_name'] as String,
+          toSpeciesId: best['to_species_id'] as int,
+          toPokemonId: best['to_pokemon_id'] as int?,
+          toName: best['to_name'] as String,
+          method: best['method'] as Map<String, dynamic>,
+        ));
+      }
+    }
+
+    edges.sort((a, b) => _pretty(a.toName).compareTo(_pretty(b.toName)));
+    return edges;
+  }
+
+  // --------- Forms helpers ---------
+  bool _isDefaultForm(String formName) =>
+      formName.isEmpty || formName == 'default';
+
+  bool _isGmax(String formName, String pname) {
+    final f = formName.toLowerCase();
+    final n = pname.toLowerCase();
+    return f.contains('gmax') || f.contains('gigantamax') || n.contains('gmax');
+  }
+
+  bool _isRegional(String formName) {
+    final f = formName.toLowerCase();
+    return f.contains('alola') ||
+        f.contains('galar') ||
+        f.contains('hisui') ||
+        f.contains('paldea');
+  }
+
+  String _regionalTag(String formName) {
+    final f = formName.toLowerCase();
+    if (f.contains('alola')) return 'Alola';
+    if (f.contains('galar')) return 'Galar';
+    if (f.contains('hisui')) return 'Hisui';
+    if (f.contains('paldea')) return 'Paldea';
+    return 'Regional';
+  }
+}
+
+class _EvoEdge {
+  final int fromSpeciesId;
+  final int? fromPokemonId;
+  final String fromName;
+  final int toSpeciesId;
+  final int? toPokemonId;
+  final String toName;
+  final Map<String, dynamic> method;
+
+  _EvoEdge({
+    required this.fromSpeciesId,
+    required this.fromPokemonId,
+    required this.fromName,
+    required this.toSpeciesId,
+    required this.toPokemonId,
+    required this.toName,
+    required this.method,
+  });
+}
+
+class _FormCard {
+  final int pokemonId;
+  final String title;
+  final List<String> types;
+  final List<String> tags;
+  final String? imageUrl;
+
+  _FormCard({
+    required this.pokemonId,
+    required this.title,
+    required this.types,
+    required this.tags,
+    required this.imageUrl,
+  });
+}
+
+class _EvoMonTile extends StatelessWidget {
+  final int? pokemonId;
+  final String name;
+  const _EvoMonTile({super.key, required this.pokemonId, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (pokemonId != null)
+          Image.network(_imageById(pokemonId!), width: 48, height: 48)
+        else
+          const SizedBox(width: 48, height: 48),
+        const SizedBox(width: 8),
+        Text(name, style: const TextStyle(fontWeight: FontWeight.w600)),
+      ],
     );
   }
 }

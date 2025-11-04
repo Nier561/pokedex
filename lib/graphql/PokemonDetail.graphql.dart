@@ -654,6 +654,324 @@ const documentNodeQueryPokemonDetailV3 = DocumentNode(definitions: [
                         ]),
                       ),
                       FieldNode(
+                        name: NameNode(value: 'pokemon_v2_pokemonevolutions'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FieldNode(
+                            name: NameNode(value: 'min_level'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null,
+                          ),
+                          FieldNode(
+                            name: NameNode(value: 'time_of_day'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null,
+                          ),
+                          FieldNode(
+                            name: NameNode(value: 'min_happiness'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null,
+                          ),
+                          FieldNode(
+                            name: NameNode(value: 'min_beauty'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null,
+                          ),
+                          FieldNode(
+                            name: NameNode(value: 'min_affection'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null,
+                          ),
+                          FieldNode(
+                            name: NameNode(value: 'needs_overworld_rain'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null,
+                          ),
+                          FieldNode(
+                            name: NameNode(value: 'turn_upside_down'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null,
+                          ),
+                          FieldNode(
+                            name: NameNode(value: 'trade_species_id'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null,
+                          ),
+                          FieldNode(
+                            name:
+                                NameNode(value: 'pokemon_v2_evolutiontrigger'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: SelectionSetNode(selections: [
+                              FieldNode(
+                                name: NameNode(value: 'name'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null,
+                              ),
+                              FieldNode(
+                                name: NameNode(value: '__typename'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null,
+                              ),
+                            ]),
+                          ),
+                          FieldNode(
+                            name: NameNode(value: 'pokemon_v2_item'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: SelectionSetNode(selections: [
+                              FieldNode(
+                                name: NameNode(value: 'name'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null,
+                              ),
+                              FieldNode(
+                                name: NameNode(value: '__typename'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null,
+                              ),
+                            ]),
+                          ),
+                          FieldNode(
+                            name: NameNode(value: 'pokemon_v2_move'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: SelectionSetNode(selections: [
+                              FieldNode(
+                                name: NameNode(value: 'name'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null,
+                              ),
+                              FieldNode(
+                                name: NameNode(value: '__typename'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null,
+                              ),
+                            ]),
+                          ),
+                          FieldNode(
+                            name: NameNode(value: 'pokemon_v2_type'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: SelectionSetNode(selections: [
+                              FieldNode(
+                                name: NameNode(value: 'name'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null,
+                              ),
+                              FieldNode(
+                                name: NameNode(value: '__typename'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null,
+                              ),
+                            ]),
+                          ),
+                          FieldNode(
+                            name: NameNode(value: 'pokemon_v2_location'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: SelectionSetNode(selections: [
+                              FieldNode(
+                                name: NameNode(value: 'name'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null,
+                              ),
+                              FieldNode(
+                                name: NameNode(value: '__typename'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null,
+                              ),
+                            ]),
+                          ),
+                          FieldNode(
+                            name: NameNode(value: '__typename'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null,
+                          ),
+                        ]),
+                      ),
+                      FieldNode(
+                        name: NameNode(value: '__typename'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                    ]),
+                  ),
+                  FieldNode(
+                    name: NameNode(value: '__typename'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null,
+                  ),
+                ]),
+              ),
+              FieldNode(
+                name: NameNode(value: 'pokemon_v2_pokemons'),
+                alias: null,
+                arguments: [],
+                directives: [],
+                selectionSet: SelectionSetNode(selections: [
+                  FieldNode(
+                    name: NameNode(value: 'id'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null,
+                  ),
+                  FieldNode(
+                    name: NameNode(value: 'name'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null,
+                  ),
+                  FieldNode(
+                    name: NameNode(value: 'pokemon_v2_pokemonforms'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: SelectionSetNode(selections: [
+                      FieldNode(
+                        name: NameNode(value: 'is_mega'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'is_battle_only'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'form_name'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'name'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'pokemon_v2_pokemonformtypes'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FieldNode(
+                            name: NameNode(value: 'pokemon_v2_type'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: SelectionSetNode(selections: [
+                              FieldNode(
+                                name: NameNode(value: 'name'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null,
+                              ),
+                              FieldNode(
+                                name: NameNode(value: '__typename'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null,
+                              ),
+                            ]),
+                          ),
+                          FieldNode(
+                            name: NameNode(value: '__typename'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null,
+                          ),
+                        ]),
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'pokemon_v2_pokemonformsprites'),
+                        alias: null,
+                        arguments: [
+                          ArgumentNode(
+                            name: NameNode(value: 'limit'),
+                            value: IntValueNode(value: '1'),
+                          )
+                        ],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FieldNode(
+                            name: NameNode(value: 'sprites'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null,
+                          ),
+                          FieldNode(
+                            name: NameNode(value: '__typename'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null,
+                          ),
+                        ]),
+                      ),
+                      FieldNode(
                         name: NameNode(value: '__typename'),
                         alias: null,
                         arguments: [],
@@ -775,6 +1093,13 @@ const documentNodeQueryPokemonDetailV3 = DocumentNode(definitions: [
                     selectionSet: null,
                   ),
                   FieldNode(
+                    name: NameNode(value: 'generation_id'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null,
+                  ),
+                  FieldNode(
                     name: NameNode(value: 'pokemon_v2_type'),
                     alias: null,
                     arguments: [],
@@ -817,13 +1142,6 @@ const documentNodeQueryPokemonDetailV3 = DocumentNode(definitions: [
                         selectionSet: null,
                       ),
                     ]),
-                  ),
-                  FieldNode(
-                    name: NameNode(value: 'generation_id'),
-                    alias: null,
-                    arguments: [],
-                    directives: [],
-                    selectionSet: null,
                   ),
                   FieldNode(
                     name: NameNode(value: '__typename'),
@@ -2548,6 +2866,7 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy {
     this.gender_rate,
     required this.pokemon_v2_pokemonspeciesflavortexts,
     this.pokemon_v2_evolutionchain,
+    required this.pokemon_v2_pokemons,
     this.$__typename = 'pokemon_v2_pokemonspecies',
   });
 
@@ -2557,6 +2876,7 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy {
     final l$pokemon_v2_pokemonspeciesflavortexts =
         json['pokemon_v2_pokemonspeciesflavortexts'];
     final l$pokemon_v2_evolutionchain = json['pokemon_v2_evolutionchain'];
+    final l$pokemon_v2_pokemons = json['pokemon_v2_pokemons'];
     final l$$__typename = json['__typename'];
     return Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy(
       gender_rate: (l$gender_rate as int?),
@@ -2570,6 +2890,11 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy {
           ? null
           : Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain
               .fromJson((l$pokemon_v2_evolutionchain as Map<String, dynamic>)),
+      pokemon_v2_pokemons: (l$pokemon_v2_pokemons as List<dynamic>)
+          .map((e) =>
+              Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons
+                  .fromJson((e as Map<String, dynamic>)))
+          .toList(),
       $__typename: (l$$__typename as String),
     );
   }
@@ -2582,6 +2907,10 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy {
 
   final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain?
       pokemon_v2_evolutionchain;
+
+  final List<
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons>
+      pokemon_v2_pokemons;
 
   final String $__typename;
 
@@ -2596,6 +2925,9 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy {
     final l$pokemon_v2_evolutionchain = pokemon_v2_evolutionchain;
     _resultData['pokemon_v2_evolutionchain'] =
         l$pokemon_v2_evolutionchain?.toJson();
+    final l$pokemon_v2_pokemons = pokemon_v2_pokemons;
+    _resultData['pokemon_v2_pokemons'] =
+        l$pokemon_v2_pokemons.map((e) => e.toJson()).toList();
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -2607,11 +2939,13 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy {
     final l$pokemon_v2_pokemonspeciesflavortexts =
         pokemon_v2_pokemonspeciesflavortexts;
     final l$pokemon_v2_evolutionchain = pokemon_v2_evolutionchain;
+    final l$pokemon_v2_pokemons = pokemon_v2_pokemons;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$gender_rate,
       Object.hashAll(l$pokemon_v2_pokemonspeciesflavortexts.map((v) => v)),
       l$pokemon_v2_evolutionchain,
+      Object.hashAll(l$pokemon_v2_pokemons.map((v) => v)),
       l$$__typename,
     ]);
   }
@@ -2654,6 +2988,18 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy {
     if (l$pokemon_v2_evolutionchain != lOther$pokemon_v2_evolutionchain) {
       return false;
     }
+    final l$pokemon_v2_pokemons = pokemon_v2_pokemons;
+    final lOther$pokemon_v2_pokemons = other.pokemon_v2_pokemons;
+    if (l$pokemon_v2_pokemons.length != lOther$pokemon_v2_pokemons.length) {
+      return false;
+    }
+    for (int i = 0; i < l$pokemon_v2_pokemons.length; i++) {
+      final l$pokemon_v2_pokemons$entry = l$pokemon_v2_pokemons[i];
+      final lOther$pokemon_v2_pokemons$entry = lOther$pokemon_v2_pokemons[i];
+      if (l$pokemon_v2_pokemons$entry != lOther$pokemon_v2_pokemons$entry) {
+        return false;
+      }
+    }
     final l$$__typename = $__typename;
     final lOther$$__typename = other.$__typename;
     if (l$$__typename != lOther$$__typename) {
@@ -2694,6 +3040,8 @@ abstract class CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v
         pokemon_v2_pokemonspeciesflavortexts,
     Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain?
         pokemon_v2_evolutionchain,
+    List<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons>?
+        pokemon_v2_pokemons,
     String? $__typename,
   });
   TRes pokemon_v2_pokemonspeciesflavortexts(
@@ -2704,6 +3052,12 @@ abstract class CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v
           _fn);
   CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain<
       TRes> get pokemon_v2_evolutionchain;
+  TRes pokemon_v2_pokemons(
+      Iterable<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons> Function(
+              Iterable<
+                  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons<
+                      Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons>>)
+          _fn);
 }
 
 class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy<
@@ -2729,6 +3083,7 @@ class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_po
     Object? gender_rate = _undefined,
     Object? pokemon_v2_pokemonspeciesflavortexts = _undefined,
     Object? pokemon_v2_evolutionchain = _undefined,
+    Object? pokemon_v2_pokemons = _undefined,
     Object? $__typename = _undefined,
   }) =>
       _then(
@@ -2746,6 +3101,11 @@ class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_po
             ? _instance.pokemon_v2_evolutionchain
             : (pokemon_v2_evolutionchain
                 as Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain?),
+        pokemon_v2_pokemons: pokemon_v2_pokemons == _undefined ||
+                pokemon_v2_pokemons == null
+            ? _instance.pokemon_v2_pokemons
+            : (pokemon_v2_pokemons as List<
+                Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons>),
         $__typename: $__typename == _undefined || $__typename == null
             ? _instance.$__typename
             : ($__typename as String),
@@ -2775,6 +3135,19 @@ class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_po
             local$pokemon_v2_evolutionchain,
             (e) => call(pokemon_v2_evolutionchain: e));
   }
+
+  TRes pokemon_v2_pokemons(
+          Iterable<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons> Function(
+                  Iterable<
+                      CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons<
+                          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons>>)
+              _fn) =>
+      call(
+          pokemon_v2_pokemons: _fn(_instance.pokemon_v2_pokemons.map((e) =>
+              CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons(
+                e,
+                (i) => i,
+              ))).toList());
 }
 
 class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy<
@@ -2793,6 +3166,8 @@ class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v
         pokemon_v2_pokemonspeciesflavortexts,
     Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain?
         pokemon_v2_evolutionchain,
+    List<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons>?
+        pokemon_v2_pokemons,
     String? $__typename,
   }) =>
       _res;
@@ -2804,6 +3179,8 @@ class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v
       get pokemon_v2_evolutionchain =>
           CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain
               .stub(_res);
+
+  pokemon_v2_pokemons(_fn) => _res;
 }
 
 class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemonspeciesflavortexts {
@@ -3146,6 +3523,7 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pok
     this.order,
     this.evolves_from_species_id,
     required this.pokemon_v2_pokemons,
+    required this.pokemon_v2_pokemonevolutions,
     this.$__typename = 'pokemon_v2_pokemonspecies',
   });
 
@@ -3156,6 +3534,7 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pok
     final l$order = json['order'];
     final l$evolves_from_species_id = json['evolves_from_species_id'];
     final l$pokemon_v2_pokemons = json['pokemon_v2_pokemons'];
+    final l$pokemon_v2_pokemonevolutions = json['pokemon_v2_pokemonevolutions'];
     final l$$__typename = json['__typename'];
     return Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies(
       id: (l$id as int),
@@ -3165,6 +3544,12 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pok
       pokemon_v2_pokemons: (l$pokemon_v2_pokemons as List<dynamic>)
           .map((e) =>
               Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemons
+                  .fromJson((e as Map<String, dynamic>)))
+          .toList(),
+      pokemon_v2_pokemonevolutions: (l$pokemon_v2_pokemonevolutions
+              as List<dynamic>)
+          .map((e) =>
+              Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions
                   .fromJson((e as Map<String, dynamic>)))
           .toList(),
       $__typename: (l$$__typename as String),
@@ -3183,6 +3568,10 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pok
           Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemons>
       pokemon_v2_pokemons;
 
+  final List<
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions>
+      pokemon_v2_pokemonevolutions;
+
   final String $__typename;
 
   Map<String, dynamic> toJson() {
@@ -3198,6 +3587,9 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pok
     final l$pokemon_v2_pokemons = pokemon_v2_pokemons;
     _resultData['pokemon_v2_pokemons'] =
         l$pokemon_v2_pokemons.map((e) => e.toJson()).toList();
+    final l$pokemon_v2_pokemonevolutions = pokemon_v2_pokemonevolutions;
+    _resultData['pokemon_v2_pokemonevolutions'] =
+        l$pokemon_v2_pokemonevolutions.map((e) => e.toJson()).toList();
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -3210,6 +3602,7 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pok
     final l$order = order;
     final l$evolves_from_species_id = evolves_from_species_id;
     final l$pokemon_v2_pokemons = pokemon_v2_pokemons;
+    final l$pokemon_v2_pokemonevolutions = pokemon_v2_pokemonevolutions;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
@@ -3217,6 +3610,7 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pok
       l$order,
       l$evolves_from_species_id,
       Object.hashAll(l$pokemon_v2_pokemons.map((v) => v)),
+      Object.hashAll(l$pokemon_v2_pokemonevolutions.map((v) => v)),
       l$$__typename,
     ]);
   }
@@ -3263,6 +3657,23 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pok
         return false;
       }
     }
+    final l$pokemon_v2_pokemonevolutions = pokemon_v2_pokemonevolutions;
+    final lOther$pokemon_v2_pokemonevolutions =
+        other.pokemon_v2_pokemonevolutions;
+    if (l$pokemon_v2_pokemonevolutions.length !=
+        lOther$pokemon_v2_pokemonevolutions.length) {
+      return false;
+    }
+    for (int i = 0; i < l$pokemon_v2_pokemonevolutions.length; i++) {
+      final l$pokemon_v2_pokemonevolutions$entry =
+          l$pokemon_v2_pokemonevolutions[i];
+      final lOther$pokemon_v2_pokemonevolutions$entry =
+          lOther$pokemon_v2_pokemonevolutions[i];
+      if (l$pokemon_v2_pokemonevolutions$entry !=
+          lOther$pokemon_v2_pokemonevolutions$entry) {
+        return false;
+      }
+    }
     final l$$__typename = $__typename;
     final lOther$$__typename = other.$__typename;
     if (l$$__typename != lOther$$__typename) {
@@ -3304,6 +3715,8 @@ abstract class CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v
     int? evolves_from_species_id,
     List<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemons>?
         pokemon_v2_pokemons,
+    List<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions>?
+        pokemon_v2_pokemonevolutions,
     String? $__typename,
   });
   TRes pokemon_v2_pokemons(
@@ -3311,6 +3724,12 @@ abstract class CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v
               Iterable<
                   CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemons<
                       Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemons>>)
+          _fn);
+  TRes pokemon_v2_pokemonevolutions(
+      Iterable<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions> Function(
+              Iterable<
+                  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions<
+                      Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions>>)
           _fn);
 }
 
@@ -3339,6 +3758,7 @@ class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_po
     Object? order = _undefined,
     Object? evolves_from_species_id = _undefined,
     Object? pokemon_v2_pokemons = _undefined,
+    Object? pokemon_v2_pokemonevolutions = _undefined,
     Object? $__typename = _undefined,
   }) =>
       _then(
@@ -3356,6 +3776,12 @@ class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_po
             ? _instance.pokemon_v2_pokemons
             : (pokemon_v2_pokemons as List<
                 Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemons>),
+        pokemon_v2_pokemonevolutions: pokemon_v2_pokemonevolutions ==
+                    _undefined ||
+                pokemon_v2_pokemonevolutions == null
+            ? _instance.pokemon_v2_pokemonevolutions
+            : (pokemon_v2_pokemonevolutions as List<
+                Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions>),
         $__typename: $__typename == _undefined || $__typename == null
             ? _instance.$__typename
             : ($__typename as String),
@@ -3373,6 +3799,20 @@ class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_po
                 e,
                 (i) => i,
               ))).toList());
+
+  TRes pokemon_v2_pokemonevolutions(
+          Iterable<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions> Function(
+                  Iterable<
+                      CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions<
+                          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions>>)
+              _fn) =>
+      call(
+          pokemon_v2_pokemonevolutions: _fn(
+              _instance.pokemon_v2_pokemonevolutions.map((e) =>
+                  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions(
+                    e,
+                    (i) => i,
+                  ))).toList());
 }
 
 class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies<
@@ -3392,11 +3832,15 @@ class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v
     int? evolves_from_species_id,
     List<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemons>?
         pokemon_v2_pokemons,
+    List<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions>?
+        pokemon_v2_pokemonevolutions,
     String? $__typename,
   }) =>
       _res;
 
   pokemon_v2_pokemons(_fn) => _res;
+
+  pokemon_v2_pokemonevolutions(_fn) => _res;
 }
 
 class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemons {
@@ -3537,6 +3981,2272 @@ class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v
 
   call({
     int? id,
+    String? $__typename,
+  }) =>
+      _res;
+}
+
+class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions {
+  Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions({
+    this.min_level,
+    this.time_of_day,
+    this.min_happiness,
+    this.min_beauty,
+    this.min_affection,
+    required this.needs_overworld_rain,
+    required this.turn_upside_down,
+    this.trade_species_id,
+    this.pokemon_v2_evolutiontrigger,
+    this.pokemon_v2_item,
+    this.pokemon_v2_move,
+    this.pokemon_v2_type,
+    this.pokemon_v2_location,
+    this.$__typename = 'pokemon_v2_pokemonevolution',
+  });
+
+  factory Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions.fromJson(
+      Map<String, dynamic> json) {
+    final l$min_level = json['min_level'];
+    final l$time_of_day = json['time_of_day'];
+    final l$min_happiness = json['min_happiness'];
+    final l$min_beauty = json['min_beauty'];
+    final l$min_affection = json['min_affection'];
+    final l$needs_overworld_rain = json['needs_overworld_rain'];
+    final l$turn_upside_down = json['turn_upside_down'];
+    final l$trade_species_id = json['trade_species_id'];
+    final l$pokemon_v2_evolutiontrigger = json['pokemon_v2_evolutiontrigger'];
+    final l$pokemon_v2_item = json['pokemon_v2_item'];
+    final l$pokemon_v2_move = json['pokemon_v2_move'];
+    final l$pokemon_v2_type = json['pokemon_v2_type'];
+    final l$pokemon_v2_location = json['pokemon_v2_location'];
+    final l$$__typename = json['__typename'];
+    return Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions(
+      min_level: (l$min_level as int?),
+      time_of_day: (l$time_of_day as String?),
+      min_happiness: (l$min_happiness as int?),
+      min_beauty: (l$min_beauty as int?),
+      min_affection: (l$min_affection as int?),
+      needs_overworld_rain: (l$needs_overworld_rain as bool),
+      turn_upside_down: (l$turn_upside_down as bool),
+      trade_species_id: (l$trade_species_id as int?),
+      pokemon_v2_evolutiontrigger: l$pokemon_v2_evolutiontrigger == null
+          ? null
+          : Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger
+              .fromJson(
+                  (l$pokemon_v2_evolutiontrigger as Map<String, dynamic>)),
+      pokemon_v2_item: l$pokemon_v2_item == null
+          ? null
+          : Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item
+              .fromJson((l$pokemon_v2_item as Map<String, dynamic>)),
+      pokemon_v2_move: l$pokemon_v2_move == null
+          ? null
+          : Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move
+              .fromJson((l$pokemon_v2_move as Map<String, dynamic>)),
+      pokemon_v2_type: l$pokemon_v2_type == null
+          ? null
+          : Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type
+              .fromJson((l$pokemon_v2_type as Map<String, dynamic>)),
+      pokemon_v2_location: l$pokemon_v2_location == null
+          ? null
+          : Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location
+              .fromJson((l$pokemon_v2_location as Map<String, dynamic>)),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final int? min_level;
+
+  final String? time_of_day;
+
+  final int? min_happiness;
+
+  final int? min_beauty;
+
+  final int? min_affection;
+
+  final bool needs_overworld_rain;
+
+  final bool turn_upside_down;
+
+  final int? trade_species_id;
+
+  final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger?
+      pokemon_v2_evolutiontrigger;
+
+  final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item?
+      pokemon_v2_item;
+
+  final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move?
+      pokemon_v2_move;
+
+  final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type?
+      pokemon_v2_type;
+
+  final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location?
+      pokemon_v2_location;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$min_level = min_level;
+    _resultData['min_level'] = l$min_level;
+    final l$time_of_day = time_of_day;
+    _resultData['time_of_day'] = l$time_of_day;
+    final l$min_happiness = min_happiness;
+    _resultData['min_happiness'] = l$min_happiness;
+    final l$min_beauty = min_beauty;
+    _resultData['min_beauty'] = l$min_beauty;
+    final l$min_affection = min_affection;
+    _resultData['min_affection'] = l$min_affection;
+    final l$needs_overworld_rain = needs_overworld_rain;
+    _resultData['needs_overworld_rain'] = l$needs_overworld_rain;
+    final l$turn_upside_down = turn_upside_down;
+    _resultData['turn_upside_down'] = l$turn_upside_down;
+    final l$trade_species_id = trade_species_id;
+    _resultData['trade_species_id'] = l$trade_species_id;
+    final l$pokemon_v2_evolutiontrigger = pokemon_v2_evolutiontrigger;
+    _resultData['pokemon_v2_evolutiontrigger'] =
+        l$pokemon_v2_evolutiontrigger?.toJson();
+    final l$pokemon_v2_item = pokemon_v2_item;
+    _resultData['pokemon_v2_item'] = l$pokemon_v2_item?.toJson();
+    final l$pokemon_v2_move = pokemon_v2_move;
+    _resultData['pokemon_v2_move'] = l$pokemon_v2_move?.toJson();
+    final l$pokemon_v2_type = pokemon_v2_type;
+    _resultData['pokemon_v2_type'] = l$pokemon_v2_type?.toJson();
+    final l$pokemon_v2_location = pokemon_v2_location;
+    _resultData['pokemon_v2_location'] = l$pokemon_v2_location?.toJson();
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$min_level = min_level;
+    final l$time_of_day = time_of_day;
+    final l$min_happiness = min_happiness;
+    final l$min_beauty = min_beauty;
+    final l$min_affection = min_affection;
+    final l$needs_overworld_rain = needs_overworld_rain;
+    final l$turn_upside_down = turn_upside_down;
+    final l$trade_species_id = trade_species_id;
+    final l$pokemon_v2_evolutiontrigger = pokemon_v2_evolutiontrigger;
+    final l$pokemon_v2_item = pokemon_v2_item;
+    final l$pokemon_v2_move = pokemon_v2_move;
+    final l$pokemon_v2_type = pokemon_v2_type;
+    final l$pokemon_v2_location = pokemon_v2_location;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$min_level,
+      l$time_of_day,
+      l$min_happiness,
+      l$min_beauty,
+      l$min_affection,
+      l$needs_overworld_rain,
+      l$turn_upside_down,
+      l$trade_species_id,
+      l$pokemon_v2_evolutiontrigger,
+      l$pokemon_v2_item,
+      l$pokemon_v2_move,
+      l$pokemon_v2_type,
+      l$pokemon_v2_location,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$min_level = min_level;
+    final lOther$min_level = other.min_level;
+    if (l$min_level != lOther$min_level) {
+      return false;
+    }
+    final l$time_of_day = time_of_day;
+    final lOther$time_of_day = other.time_of_day;
+    if (l$time_of_day != lOther$time_of_day) {
+      return false;
+    }
+    final l$min_happiness = min_happiness;
+    final lOther$min_happiness = other.min_happiness;
+    if (l$min_happiness != lOther$min_happiness) {
+      return false;
+    }
+    final l$min_beauty = min_beauty;
+    final lOther$min_beauty = other.min_beauty;
+    if (l$min_beauty != lOther$min_beauty) {
+      return false;
+    }
+    final l$min_affection = min_affection;
+    final lOther$min_affection = other.min_affection;
+    if (l$min_affection != lOther$min_affection) {
+      return false;
+    }
+    final l$needs_overworld_rain = needs_overworld_rain;
+    final lOther$needs_overworld_rain = other.needs_overworld_rain;
+    if (l$needs_overworld_rain != lOther$needs_overworld_rain) {
+      return false;
+    }
+    final l$turn_upside_down = turn_upside_down;
+    final lOther$turn_upside_down = other.turn_upside_down;
+    if (l$turn_upside_down != lOther$turn_upside_down) {
+      return false;
+    }
+    final l$trade_species_id = trade_species_id;
+    final lOther$trade_species_id = other.trade_species_id;
+    if (l$trade_species_id != lOther$trade_species_id) {
+      return false;
+    }
+    final l$pokemon_v2_evolutiontrigger = pokemon_v2_evolutiontrigger;
+    final lOther$pokemon_v2_evolutiontrigger =
+        other.pokemon_v2_evolutiontrigger;
+    if (l$pokemon_v2_evolutiontrigger != lOther$pokemon_v2_evolutiontrigger) {
+      return false;
+    }
+    final l$pokemon_v2_item = pokemon_v2_item;
+    final lOther$pokemon_v2_item = other.pokemon_v2_item;
+    if (l$pokemon_v2_item != lOther$pokemon_v2_item) {
+      return false;
+    }
+    final l$pokemon_v2_move = pokemon_v2_move;
+    final lOther$pokemon_v2_move = other.pokemon_v2_move;
+    if (l$pokemon_v2_move != lOther$pokemon_v2_move) {
+      return false;
+    }
+    final l$pokemon_v2_type = pokemon_v2_type;
+    final lOther$pokemon_v2_type = other.pokemon_v2_type;
+    if (l$pokemon_v2_type != lOther$pokemon_v2_type) {
+      return false;
+    }
+    final l$pokemon_v2_location = pokemon_v2_location;
+    final lOther$pokemon_v2_location = other.pokemon_v2_location;
+    if (l$pokemon_v2_location != lOther$pokemon_v2_location) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+extension UtilityExtension$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions
+    on Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions {
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions<
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions>
+      get copyWith =>
+          CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions(
+            this,
+            (i) => i,
+          );
+}
+
+abstract class CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions<
+    TRes> {
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions(
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions
+        instance,
+    TRes Function(
+            Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions)
+        then,
+  ) = _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions;
+
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions.stub(
+          TRes res) =
+      _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions;
+
+  TRes call({
+    int? min_level,
+    String? time_of_day,
+    int? min_happiness,
+    int? min_beauty,
+    int? min_affection,
+    bool? needs_overworld_rain,
+    bool? turn_upside_down,
+    int? trade_species_id,
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger?
+        pokemon_v2_evolutiontrigger,
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item?
+        pokemon_v2_item,
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move?
+        pokemon_v2_move,
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type?
+        pokemon_v2_type,
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location?
+        pokemon_v2_location,
+    String? $__typename,
+  });
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger<
+      TRes> get pokemon_v2_evolutiontrigger;
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item<
+      TRes> get pokemon_v2_item;
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move<
+      TRes> get pokemon_v2_move;
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type<
+      TRes> get pokemon_v2_type;
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location<
+      TRes> get pokemon_v2_location;
+}
+
+class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions<
+            TRes> {
+  _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions(
+    this._instance,
+    this._then,
+  );
+
+  final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions
+      _instance;
+
+  final TRes Function(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions)
+      _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? min_level = _undefined,
+    Object? time_of_day = _undefined,
+    Object? min_happiness = _undefined,
+    Object? min_beauty = _undefined,
+    Object? min_affection = _undefined,
+    Object? needs_overworld_rain = _undefined,
+    Object? turn_upside_down = _undefined,
+    Object? trade_species_id = _undefined,
+    Object? pokemon_v2_evolutiontrigger = _undefined,
+    Object? pokemon_v2_item = _undefined,
+    Object? pokemon_v2_move = _undefined,
+    Object? pokemon_v2_type = _undefined,
+    Object? pokemon_v2_location = _undefined,
+    Object? $__typename = _undefined,
+  }) =>
+      _then(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions(
+        min_level:
+            min_level == _undefined ? _instance.min_level : (min_level as int?),
+        time_of_day: time_of_day == _undefined
+            ? _instance.time_of_day
+            : (time_of_day as String?),
+        min_happiness: min_happiness == _undefined
+            ? _instance.min_happiness
+            : (min_happiness as int?),
+        min_beauty: min_beauty == _undefined
+            ? _instance.min_beauty
+            : (min_beauty as int?),
+        min_affection: min_affection == _undefined
+            ? _instance.min_affection
+            : (min_affection as int?),
+        needs_overworld_rain:
+            needs_overworld_rain == _undefined || needs_overworld_rain == null
+                ? _instance.needs_overworld_rain
+                : (needs_overworld_rain as bool),
+        turn_upside_down:
+            turn_upside_down == _undefined || turn_upside_down == null
+                ? _instance.turn_upside_down
+                : (turn_upside_down as bool),
+        trade_species_id: trade_species_id == _undefined
+            ? _instance.trade_species_id
+            : (trade_species_id as int?),
+        pokemon_v2_evolutiontrigger: pokemon_v2_evolutiontrigger == _undefined
+            ? _instance.pokemon_v2_evolutiontrigger
+            : (pokemon_v2_evolutiontrigger
+                as Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger?),
+        pokemon_v2_item: pokemon_v2_item == _undefined
+            ? _instance.pokemon_v2_item
+            : (pokemon_v2_item
+                as Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item?),
+        pokemon_v2_move: pokemon_v2_move == _undefined
+            ? _instance.pokemon_v2_move
+            : (pokemon_v2_move
+                as Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move?),
+        pokemon_v2_type: pokemon_v2_type == _undefined
+            ? _instance.pokemon_v2_type
+            : (pokemon_v2_type
+                as Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type?),
+        pokemon_v2_location: pokemon_v2_location == _undefined
+            ? _instance.pokemon_v2_location
+            : (pokemon_v2_location
+                as Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location?),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
+
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger<
+      TRes> get pokemon_v2_evolutiontrigger {
+    final local$pokemon_v2_evolutiontrigger =
+        _instance.pokemon_v2_evolutiontrigger;
+    return local$pokemon_v2_evolutiontrigger == null
+        ? CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger
+            .stub(_then(_instance))
+        : CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger(
+            local$pokemon_v2_evolutiontrigger,
+            (e) => call(pokemon_v2_evolutiontrigger: e));
+  }
+
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item<
+      TRes> get pokemon_v2_item {
+    final local$pokemon_v2_item = _instance.pokemon_v2_item;
+    return local$pokemon_v2_item == null
+        ? CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item
+            .stub(_then(_instance))
+        : CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item(
+            local$pokemon_v2_item, (e) => call(pokemon_v2_item: e));
+  }
+
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move<
+      TRes> get pokemon_v2_move {
+    final local$pokemon_v2_move = _instance.pokemon_v2_move;
+    return local$pokemon_v2_move == null
+        ? CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move
+            .stub(_then(_instance))
+        : CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move(
+            local$pokemon_v2_move, (e) => call(pokemon_v2_move: e));
+  }
+
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type<
+      TRes> get pokemon_v2_type {
+    final local$pokemon_v2_type = _instance.pokemon_v2_type;
+    return local$pokemon_v2_type == null
+        ? CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type
+            .stub(_then(_instance))
+        : CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type(
+            local$pokemon_v2_type, (e) => call(pokemon_v2_type: e));
+  }
+
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location<
+      TRes> get pokemon_v2_location {
+    final local$pokemon_v2_location = _instance.pokemon_v2_location;
+    return local$pokemon_v2_location == null
+        ? CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location
+            .stub(_then(_instance))
+        : CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location(
+            local$pokemon_v2_location, (e) => call(pokemon_v2_location: e));
+  }
+}
+
+class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions<
+            TRes> {
+  _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions(
+      this._res);
+
+  TRes _res;
+
+  call({
+    int? min_level,
+    String? time_of_day,
+    int? min_happiness,
+    int? min_beauty,
+    int? min_affection,
+    bool? needs_overworld_rain,
+    bool? turn_upside_down,
+    int? trade_species_id,
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger?
+        pokemon_v2_evolutiontrigger,
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item?
+        pokemon_v2_item,
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move?
+        pokemon_v2_move,
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type?
+        pokemon_v2_type,
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location?
+        pokemon_v2_location,
+    String? $__typename,
+  }) =>
+      _res;
+
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger<
+          TRes>
+      get pokemon_v2_evolutiontrigger =>
+          CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger
+              .stub(_res);
+
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item<
+          TRes>
+      get pokemon_v2_item =>
+          CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item
+              .stub(_res);
+
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move<
+          TRes>
+      get pokemon_v2_move =>
+          CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move
+              .stub(_res);
+
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type<
+          TRes>
+      get pokemon_v2_type =>
+          CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type
+              .stub(_res);
+
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location<
+          TRes>
+      get pokemon_v2_location =>
+          CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location
+              .stub(_res);
+}
+
+class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger {
+  Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger({
+    required this.name,
+    this.$__typename = 'pokemon_v2_evolutiontrigger',
+  });
+
+  factory Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger.fromJson(
+      Map<String, dynamic> json) {
+    final l$name = json['name'];
+    final l$$__typename = json['__typename'];
+    return Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger(
+      name: (l$name as String),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String name;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$name = name;
+    _resultData['name'] = l$name;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$name = name;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$name,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+extension UtilityExtension$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger
+    on Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger {
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger<
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger>
+      get copyWith =>
+          CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger(
+            this,
+            (i) => i,
+          );
+}
+
+abstract class CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger<
+    TRes> {
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger(
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger
+        instance,
+    TRes Function(
+            Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger)
+        then,
+  ) = _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger;
+
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger.stub(
+          TRes res) =
+      _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger;
+
+  TRes call({
+    String? name,
+    String? $__typename,
+  });
+}
+
+class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger<
+            TRes> {
+  _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger(
+    this._instance,
+    this._then,
+  );
+
+  final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger
+      _instance;
+
+  final TRes Function(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger)
+      _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? name = _undefined,
+    Object? $__typename = _undefined,
+  }) =>
+      _then(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger(
+        name: name == _undefined || name == null
+            ? _instance.name
+            : (name as String),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
+}
+
+class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger<
+            TRes> {
+  _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_evolutiontrigger(
+      this._res);
+
+  TRes _res;
+
+  call({
+    String? name,
+    String? $__typename,
+  }) =>
+      _res;
+}
+
+class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item {
+  Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item({
+    required this.name,
+    this.$__typename = 'pokemon_v2_item',
+  });
+
+  factory Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item.fromJson(
+      Map<String, dynamic> json) {
+    final l$name = json['name'];
+    final l$$__typename = json['__typename'];
+    return Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item(
+      name: (l$name as String),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String name;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$name = name;
+    _resultData['name'] = l$name;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$name = name;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$name,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+extension UtilityExtension$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item
+    on Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item {
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item<
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item>
+      get copyWith =>
+          CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item(
+            this,
+            (i) => i,
+          );
+}
+
+abstract class CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item<
+    TRes> {
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item(
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item
+        instance,
+    TRes Function(
+            Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item)
+        then,
+  ) = _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item;
+
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item.stub(
+          TRes res) =
+      _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item;
+
+  TRes call({
+    String? name,
+    String? $__typename,
+  });
+}
+
+class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item<
+            TRes> {
+  _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item(
+    this._instance,
+    this._then,
+  );
+
+  final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item
+      _instance;
+
+  final TRes Function(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item)
+      _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? name = _undefined,
+    Object? $__typename = _undefined,
+  }) =>
+      _then(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item(
+        name: name == _undefined || name == null
+            ? _instance.name
+            : (name as String),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
+}
+
+class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item<
+            TRes> {
+  _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_item(
+      this._res);
+
+  TRes _res;
+
+  call({
+    String? name,
+    String? $__typename,
+  }) =>
+      _res;
+}
+
+class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move {
+  Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move({
+    required this.name,
+    this.$__typename = 'pokemon_v2_move',
+  });
+
+  factory Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move.fromJson(
+      Map<String, dynamic> json) {
+    final l$name = json['name'];
+    final l$$__typename = json['__typename'];
+    return Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move(
+      name: (l$name as String),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String name;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$name = name;
+    _resultData['name'] = l$name;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$name = name;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$name,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+extension UtilityExtension$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move
+    on Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move {
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move<
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move>
+      get copyWith =>
+          CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move(
+            this,
+            (i) => i,
+          );
+}
+
+abstract class CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move<
+    TRes> {
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move(
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move
+        instance,
+    TRes Function(
+            Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move)
+        then,
+  ) = _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move;
+
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move.stub(
+          TRes res) =
+      _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move;
+
+  TRes call({
+    String? name,
+    String? $__typename,
+  });
+}
+
+class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move<
+            TRes> {
+  _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move(
+    this._instance,
+    this._then,
+  );
+
+  final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move
+      _instance;
+
+  final TRes Function(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move)
+      _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? name = _undefined,
+    Object? $__typename = _undefined,
+  }) =>
+      _then(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move(
+        name: name == _undefined || name == null
+            ? _instance.name
+            : (name as String),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
+}
+
+class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move<
+            TRes> {
+  _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_move(
+      this._res);
+
+  TRes _res;
+
+  call({
+    String? name,
+    String? $__typename,
+  }) =>
+      _res;
+}
+
+class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type {
+  Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type({
+    required this.name,
+    this.$__typename = 'pokemon_v2_type',
+  });
+
+  factory Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type.fromJson(
+      Map<String, dynamic> json) {
+    final l$name = json['name'];
+    final l$$__typename = json['__typename'];
+    return Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type(
+      name: (l$name as String),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String name;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$name = name;
+    _resultData['name'] = l$name;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$name = name;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$name,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+extension UtilityExtension$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type
+    on Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type {
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type<
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type>
+      get copyWith =>
+          CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type(
+            this,
+            (i) => i,
+          );
+}
+
+abstract class CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type<
+    TRes> {
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type(
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type
+        instance,
+    TRes Function(
+            Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type)
+        then,
+  ) = _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type;
+
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type.stub(
+          TRes res) =
+      _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type;
+
+  TRes call({
+    String? name,
+    String? $__typename,
+  });
+}
+
+class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type<
+            TRes> {
+  _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type(
+    this._instance,
+    this._then,
+  );
+
+  final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type
+      _instance;
+
+  final TRes Function(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type)
+      _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? name = _undefined,
+    Object? $__typename = _undefined,
+  }) =>
+      _then(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type(
+        name: name == _undefined || name == null
+            ? _instance.name
+            : (name as String),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
+}
+
+class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type<
+            TRes> {
+  _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_type(
+      this._res);
+
+  TRes _res;
+
+  call({
+    String? name,
+    String? $__typename,
+  }) =>
+      _res;
+}
+
+class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location {
+  Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location({
+    required this.name,
+    this.$__typename = 'pokemon_v2_location',
+  });
+
+  factory Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location.fromJson(
+      Map<String, dynamic> json) {
+    final l$name = json['name'];
+    final l$$__typename = json['__typename'];
+    return Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location(
+      name: (l$name as String),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String name;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$name = name;
+    _resultData['name'] = l$name;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$name = name;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$name,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+extension UtilityExtension$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location
+    on Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location {
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location<
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location>
+      get copyWith =>
+          CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location(
+            this,
+            (i) => i,
+          );
+}
+
+abstract class CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location<
+    TRes> {
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location(
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location
+        instance,
+    TRes Function(
+            Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location)
+        then,
+  ) = _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location;
+
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location.stub(
+          TRes res) =
+      _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location;
+
+  TRes call({
+    String? name,
+    String? $__typename,
+  });
+}
+
+class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location<
+            TRes> {
+  _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location(
+    this._instance,
+    this._then,
+  );
+
+  final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location
+      _instance;
+
+  final TRes Function(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location)
+      _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? name = _undefined,
+    Object? $__typename = _undefined,
+  }) =>
+      _then(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location(
+        name: name == _undefined || name == null
+            ? _instance.name
+            : (name as String),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
+}
+
+class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location<
+            TRes> {
+  _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_evolutionchain$pokemon_v2_pokemonspecies$pokemon_v2_pokemonevolutions$pokemon_v2_location(
+      this._res);
+
+  TRes _res;
+
+  call({
+    String? name,
+    String? $__typename,
+  }) =>
+      _res;
+}
+
+class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons {
+  Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons({
+    required this.id,
+    required this.name,
+    required this.pokemon_v2_pokemonforms,
+    this.$__typename = 'pokemon_v2_pokemon',
+  });
+
+  factory Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons.fromJson(
+      Map<String, dynamic> json) {
+    final l$id = json['id'];
+    final l$name = json['name'];
+    final l$pokemon_v2_pokemonforms = json['pokemon_v2_pokemonforms'];
+    final l$$__typename = json['__typename'];
+    return Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons(
+      id: (l$id as int),
+      name: (l$name as String),
+      pokemon_v2_pokemonforms: (l$pokemon_v2_pokemonforms as List<dynamic>)
+          .map((e) =>
+              Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms
+                  .fromJson((e as Map<String, dynamic>)))
+          .toList(),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final int id;
+
+  final String name;
+
+  final List<
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms>
+      pokemon_v2_pokemonforms;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$id = id;
+    _resultData['id'] = l$id;
+    final l$name = name;
+    _resultData['name'] = l$name;
+    final l$pokemon_v2_pokemonforms = pokemon_v2_pokemonforms;
+    _resultData['pokemon_v2_pokemonforms'] =
+        l$pokemon_v2_pokemonforms.map((e) => e.toJson()).toList();
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$id = id;
+    final l$name = name;
+    final l$pokemon_v2_pokemonforms = pokemon_v2_pokemonforms;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$id,
+      l$name,
+      Object.hashAll(l$pokemon_v2_pokemonforms.map((v) => v)),
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$id = id;
+    final lOther$id = other.id;
+    if (l$id != lOther$id) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$pokemon_v2_pokemonforms = pokemon_v2_pokemonforms;
+    final lOther$pokemon_v2_pokemonforms = other.pokemon_v2_pokemonforms;
+    if (l$pokemon_v2_pokemonforms.length !=
+        lOther$pokemon_v2_pokemonforms.length) {
+      return false;
+    }
+    for (int i = 0; i < l$pokemon_v2_pokemonforms.length; i++) {
+      final l$pokemon_v2_pokemonforms$entry = l$pokemon_v2_pokemonforms[i];
+      final lOther$pokemon_v2_pokemonforms$entry =
+          lOther$pokemon_v2_pokemonforms[i];
+      if (l$pokemon_v2_pokemonforms$entry !=
+          lOther$pokemon_v2_pokemonforms$entry) {
+        return false;
+      }
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+extension UtilityExtension$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons
+    on Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons {
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons<
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons>
+      get copyWith =>
+          CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons(
+            this,
+            (i) => i,
+          );
+}
+
+abstract class CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons<
+    TRes> {
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons(
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons
+        instance,
+    TRes Function(
+            Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons)
+        then,
+  ) = _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons;
+
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons.stub(
+          TRes res) =
+      _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons;
+
+  TRes call({
+    int? id,
+    String? name,
+    List<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms>?
+        pokemon_v2_pokemonforms,
+    String? $__typename,
+  });
+  TRes pokemon_v2_pokemonforms(
+      Iterable<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms> Function(
+              Iterable<
+                  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms<
+                      Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms>>)
+          _fn);
+}
+
+class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons<
+            TRes> {
+  _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons(
+    this._instance,
+    this._then,
+  );
+
+  final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons
+      _instance;
+
+  final TRes Function(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons)
+      _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? id = _undefined,
+    Object? name = _undefined,
+    Object? pokemon_v2_pokemonforms = _undefined,
+    Object? $__typename = _undefined,
+  }) =>
+      _then(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons(
+        id: id == _undefined || id == null ? _instance.id : (id as int),
+        name: name == _undefined || name == null
+            ? _instance.name
+            : (name as String),
+        pokemon_v2_pokemonforms: pokemon_v2_pokemonforms == _undefined ||
+                pokemon_v2_pokemonforms == null
+            ? _instance.pokemon_v2_pokemonforms
+            : (pokemon_v2_pokemonforms as List<
+                Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms>),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
+
+  TRes pokemon_v2_pokemonforms(
+          Iterable<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms> Function(
+                  Iterable<
+                      CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms<
+                          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms>>)
+              _fn) =>
+      call(
+          pokemon_v2_pokemonforms: _fn(_instance.pokemon_v2_pokemonforms.map((e) =>
+              CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms(
+                e,
+                (i) => i,
+              ))).toList());
+}
+
+class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons<
+            TRes> {
+  _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons(
+      this._res);
+
+  TRes _res;
+
+  call({
+    int? id,
+    String? name,
+    List<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms>?
+        pokemon_v2_pokemonforms,
+    String? $__typename,
+  }) =>
+      _res;
+
+  pokemon_v2_pokemonforms(_fn) => _res;
+}
+
+class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms {
+  Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms({
+    required this.is_mega,
+    required this.is_battle_only,
+    required this.form_name,
+    required this.name,
+    required this.pokemon_v2_pokemonformtypes,
+    required this.pokemon_v2_pokemonformsprites,
+    this.$__typename = 'pokemon_v2_pokemonform',
+  });
+
+  factory Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms.fromJson(
+      Map<String, dynamic> json) {
+    final l$is_mega = json['is_mega'];
+    final l$is_battle_only = json['is_battle_only'];
+    final l$form_name = json['form_name'];
+    final l$name = json['name'];
+    final l$pokemon_v2_pokemonformtypes = json['pokemon_v2_pokemonformtypes'];
+    final l$pokemon_v2_pokemonformsprites =
+        json['pokemon_v2_pokemonformsprites'];
+    final l$$__typename = json['__typename'];
+    return Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms(
+      is_mega: (l$is_mega as bool),
+      is_battle_only: (l$is_battle_only as bool),
+      form_name: (l$form_name as String),
+      name: (l$name as String),
+      pokemon_v2_pokemonformtypes: (l$pokemon_v2_pokemonformtypes
+              as List<dynamic>)
+          .map((e) =>
+              Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes
+                  .fromJson((e as Map<String, dynamic>)))
+          .toList(),
+      pokemon_v2_pokemonformsprites: (l$pokemon_v2_pokemonformsprites
+              as List<dynamic>)
+          .map((e) =>
+              Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites
+                  .fromJson((e as Map<String, dynamic>)))
+          .toList(),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final bool is_mega;
+
+  final bool is_battle_only;
+
+  final String form_name;
+
+  final String name;
+
+  final List<
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes>
+      pokemon_v2_pokemonformtypes;
+
+  final List<
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites>
+      pokemon_v2_pokemonformsprites;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$is_mega = is_mega;
+    _resultData['is_mega'] = l$is_mega;
+    final l$is_battle_only = is_battle_only;
+    _resultData['is_battle_only'] = l$is_battle_only;
+    final l$form_name = form_name;
+    _resultData['form_name'] = l$form_name;
+    final l$name = name;
+    _resultData['name'] = l$name;
+    final l$pokemon_v2_pokemonformtypes = pokemon_v2_pokemonformtypes;
+    _resultData['pokemon_v2_pokemonformtypes'] =
+        l$pokemon_v2_pokemonformtypes.map((e) => e.toJson()).toList();
+    final l$pokemon_v2_pokemonformsprites = pokemon_v2_pokemonformsprites;
+    _resultData['pokemon_v2_pokemonformsprites'] =
+        l$pokemon_v2_pokemonformsprites.map((e) => e.toJson()).toList();
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$is_mega = is_mega;
+    final l$is_battle_only = is_battle_only;
+    final l$form_name = form_name;
+    final l$name = name;
+    final l$pokemon_v2_pokemonformtypes = pokemon_v2_pokemonformtypes;
+    final l$pokemon_v2_pokemonformsprites = pokemon_v2_pokemonformsprites;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$is_mega,
+      l$is_battle_only,
+      l$form_name,
+      l$name,
+      Object.hashAll(l$pokemon_v2_pokemonformtypes.map((v) => v)),
+      Object.hashAll(l$pokemon_v2_pokemonformsprites.map((v) => v)),
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$is_mega = is_mega;
+    final lOther$is_mega = other.is_mega;
+    if (l$is_mega != lOther$is_mega) {
+      return false;
+    }
+    final l$is_battle_only = is_battle_only;
+    final lOther$is_battle_only = other.is_battle_only;
+    if (l$is_battle_only != lOther$is_battle_only) {
+      return false;
+    }
+    final l$form_name = form_name;
+    final lOther$form_name = other.form_name;
+    if (l$form_name != lOther$form_name) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$pokemon_v2_pokemonformtypes = pokemon_v2_pokemonformtypes;
+    final lOther$pokemon_v2_pokemonformtypes =
+        other.pokemon_v2_pokemonformtypes;
+    if (l$pokemon_v2_pokemonformtypes.length !=
+        lOther$pokemon_v2_pokemonformtypes.length) {
+      return false;
+    }
+    for (int i = 0; i < l$pokemon_v2_pokemonformtypes.length; i++) {
+      final l$pokemon_v2_pokemonformtypes$entry =
+          l$pokemon_v2_pokemonformtypes[i];
+      final lOther$pokemon_v2_pokemonformtypes$entry =
+          lOther$pokemon_v2_pokemonformtypes[i];
+      if (l$pokemon_v2_pokemonformtypes$entry !=
+          lOther$pokemon_v2_pokemonformtypes$entry) {
+        return false;
+      }
+    }
+    final l$pokemon_v2_pokemonformsprites = pokemon_v2_pokemonformsprites;
+    final lOther$pokemon_v2_pokemonformsprites =
+        other.pokemon_v2_pokemonformsprites;
+    if (l$pokemon_v2_pokemonformsprites.length !=
+        lOther$pokemon_v2_pokemonformsprites.length) {
+      return false;
+    }
+    for (int i = 0; i < l$pokemon_v2_pokemonformsprites.length; i++) {
+      final l$pokemon_v2_pokemonformsprites$entry =
+          l$pokemon_v2_pokemonformsprites[i];
+      final lOther$pokemon_v2_pokemonformsprites$entry =
+          lOther$pokemon_v2_pokemonformsprites[i];
+      if (l$pokemon_v2_pokemonformsprites$entry !=
+          lOther$pokemon_v2_pokemonformsprites$entry) {
+        return false;
+      }
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+extension UtilityExtension$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms
+    on Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms {
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms<
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms>
+      get copyWith =>
+          CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms(
+            this,
+            (i) => i,
+          );
+}
+
+abstract class CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms<
+    TRes> {
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms(
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms
+        instance,
+    TRes Function(
+            Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms)
+        then,
+  ) = _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms;
+
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms.stub(
+          TRes res) =
+      _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms;
+
+  TRes call({
+    bool? is_mega,
+    bool? is_battle_only,
+    String? form_name,
+    String? name,
+    List<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes>?
+        pokemon_v2_pokemonformtypes,
+    List<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites>?
+        pokemon_v2_pokemonformsprites,
+    String? $__typename,
+  });
+  TRes pokemon_v2_pokemonformtypes(
+      Iterable<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes> Function(
+              Iterable<
+                  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes<
+                      Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes>>)
+          _fn);
+  TRes pokemon_v2_pokemonformsprites(
+      Iterable<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites> Function(
+              Iterable<
+                  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites<
+                      Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites>>)
+          _fn);
+}
+
+class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms<
+            TRes> {
+  _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms(
+    this._instance,
+    this._then,
+  );
+
+  final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms
+      _instance;
+
+  final TRes Function(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms)
+      _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? is_mega = _undefined,
+    Object? is_battle_only = _undefined,
+    Object? form_name = _undefined,
+    Object? name = _undefined,
+    Object? pokemon_v2_pokemonformtypes = _undefined,
+    Object? pokemon_v2_pokemonformsprites = _undefined,
+    Object? $__typename = _undefined,
+  }) =>
+      _then(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms(
+        is_mega: is_mega == _undefined || is_mega == null
+            ? _instance.is_mega
+            : (is_mega as bool),
+        is_battle_only: is_battle_only == _undefined || is_battle_only == null
+            ? _instance.is_battle_only
+            : (is_battle_only as bool),
+        form_name: form_name == _undefined || form_name == null
+            ? _instance.form_name
+            : (form_name as String),
+        name: name == _undefined || name == null
+            ? _instance.name
+            : (name as String),
+        pokemon_v2_pokemonformtypes: pokemon_v2_pokemonformtypes ==
+                    _undefined ||
+                pokemon_v2_pokemonformtypes == null
+            ? _instance.pokemon_v2_pokemonformtypes
+            : (pokemon_v2_pokemonformtypes as List<
+                Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes>),
+        pokemon_v2_pokemonformsprites: pokemon_v2_pokemonformsprites ==
+                    _undefined ||
+                pokemon_v2_pokemonformsprites == null
+            ? _instance.pokemon_v2_pokemonformsprites
+            : (pokemon_v2_pokemonformsprites as List<
+                Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites>),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
+
+  TRes pokemon_v2_pokemonformtypes(
+          Iterable<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes> Function(
+                  Iterable<
+                      CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes<
+                          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes>>)
+              _fn) =>
+      call(
+          pokemon_v2_pokemonformtypes: _fn(_instance.pokemon_v2_pokemonformtypes
+              .map((e) =>
+                  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes(
+                    e,
+                    (i) => i,
+                  ))).toList());
+
+  TRes pokemon_v2_pokemonformsprites(
+          Iterable<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites> Function(
+                  Iterable<
+                      CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites<
+                          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites>>)
+              _fn) =>
+      call(
+          pokemon_v2_pokemonformsprites: _fn(
+              _instance.pokemon_v2_pokemonformsprites.map((e) =>
+                  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites(
+                    e,
+                    (i) => i,
+                  ))).toList());
+}
+
+class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms<
+            TRes> {
+  _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms(
+      this._res);
+
+  TRes _res;
+
+  call({
+    bool? is_mega,
+    bool? is_battle_only,
+    String? form_name,
+    String? name,
+    List<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes>?
+        pokemon_v2_pokemonformtypes,
+    List<Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites>?
+        pokemon_v2_pokemonformsprites,
+    String? $__typename,
+  }) =>
+      _res;
+
+  pokemon_v2_pokemonformtypes(_fn) => _res;
+
+  pokemon_v2_pokemonformsprites(_fn) => _res;
+}
+
+class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes {
+  Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes({
+    this.pokemon_v2_type,
+    this.$__typename = 'pokemon_v2_pokemonformtype',
+  });
+
+  factory Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes.fromJson(
+      Map<String, dynamic> json) {
+    final l$pokemon_v2_type = json['pokemon_v2_type'];
+    final l$$__typename = json['__typename'];
+    return Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes(
+      pokemon_v2_type: l$pokemon_v2_type == null
+          ? null
+          : Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type
+              .fromJson((l$pokemon_v2_type as Map<String, dynamic>)),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type?
+      pokemon_v2_type;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$pokemon_v2_type = pokemon_v2_type;
+    _resultData['pokemon_v2_type'] = l$pokemon_v2_type?.toJson();
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$pokemon_v2_type = pokemon_v2_type;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$pokemon_v2_type,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$pokemon_v2_type = pokemon_v2_type;
+    final lOther$pokemon_v2_type = other.pokemon_v2_type;
+    if (l$pokemon_v2_type != lOther$pokemon_v2_type) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+extension UtilityExtension$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes
+    on Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes {
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes<
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes>
+      get copyWith =>
+          CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes(
+            this,
+            (i) => i,
+          );
+}
+
+abstract class CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes<
+    TRes> {
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes(
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes
+        instance,
+    TRes Function(
+            Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes)
+        then,
+  ) = _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes;
+
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes.stub(
+          TRes res) =
+      _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes;
+
+  TRes call({
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type?
+        pokemon_v2_type,
+    String? $__typename,
+  });
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type<
+      TRes> get pokemon_v2_type;
+}
+
+class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes<
+            TRes> {
+  _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes(
+    this._instance,
+    this._then,
+  );
+
+  final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes
+      _instance;
+
+  final TRes Function(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes)
+      _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? pokemon_v2_type = _undefined,
+    Object? $__typename = _undefined,
+  }) =>
+      _then(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes(
+        pokemon_v2_type: pokemon_v2_type == _undefined
+            ? _instance.pokemon_v2_type
+            : (pokemon_v2_type
+                as Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type?),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
+
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type<
+      TRes> get pokemon_v2_type {
+    final local$pokemon_v2_type = _instance.pokemon_v2_type;
+    return local$pokemon_v2_type == null
+        ? CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type
+            .stub(_then(_instance))
+        : CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type(
+            local$pokemon_v2_type, (e) => call(pokemon_v2_type: e));
+  }
+}
+
+class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes<
+            TRes> {
+  _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes(
+      this._res);
+
+  TRes _res;
+
+  call({
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type?
+        pokemon_v2_type,
+    String? $__typename,
+  }) =>
+      _res;
+
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type<
+          TRes>
+      get pokemon_v2_type =>
+          CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type
+              .stub(_res);
+}
+
+class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type {
+  Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type({
+    required this.name,
+    this.$__typename = 'pokemon_v2_type',
+  });
+
+  factory Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type.fromJson(
+      Map<String, dynamic> json) {
+    final l$name = json['name'];
+    final l$$__typename = json['__typename'];
+    return Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type(
+      name: (l$name as String),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String name;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$name = name;
+    _resultData['name'] = l$name;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$name = name;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$name,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+extension UtilityExtension$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type
+    on Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type {
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type<
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type>
+      get copyWith =>
+          CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type(
+            this,
+            (i) => i,
+          );
+}
+
+abstract class CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type<
+    TRes> {
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type(
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type
+        instance,
+    TRes Function(
+            Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type)
+        then,
+  ) = _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type;
+
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type.stub(
+          TRes res) =
+      _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type;
+
+  TRes call({
+    String? name,
+    String? $__typename,
+  });
+}
+
+class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type<
+            TRes> {
+  _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type(
+    this._instance,
+    this._then,
+  );
+
+  final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type
+      _instance;
+
+  final TRes Function(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type)
+      _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? name = _undefined,
+    Object? $__typename = _undefined,
+  }) =>
+      _then(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type(
+        name: name == _undefined || name == null
+            ? _instance.name
+            : (name as String),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
+}
+
+class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type<
+            TRes> {
+  _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformtypes$pokemon_v2_type(
+      this._res);
+
+  TRes _res;
+
+  call({
+    String? name,
+    String? $__typename,
+  }) =>
+      _res;
+}
+
+class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites {
+  Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites({
+    required this.sprites,
+    this.$__typename = 'pokemon_v2_pokemonformsprites',
+  });
+
+  factory Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites.fromJson(
+      Map<String, dynamic> json) {
+    final l$sprites = json['sprites'];
+    final l$$__typename = json['__typename'];
+    return Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites(
+      sprites: (l$sprites as String),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String sprites;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$sprites = sprites;
+    _resultData['sprites'] = l$sprites;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$sprites = sprites;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$sprites,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$sprites = sprites;
+    final lOther$sprites = other.sprites;
+    if (l$sprites != lOther$sprites) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+extension UtilityExtension$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites
+    on Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites {
+  CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites<
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites>
+      get copyWith =>
+          CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites(
+            this,
+            (i) => i,
+          );
+}
+
+abstract class CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites<
+    TRes> {
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites(
+    Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites
+        instance,
+    TRes Function(
+            Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites)
+        then,
+  ) = _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites;
+
+  factory CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites.stub(
+          TRes res) =
+      _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites;
+
+  TRes call({
+    String? sprites,
+    String? $__typename,
+  });
+}
+
+class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites<
+            TRes> {
+  _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites(
+    this._instance,
+    this._then,
+  );
+
+  final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites
+      _instance;
+
+  final TRes Function(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites)
+      _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? sprites = _undefined,
+    Object? $__typename = _undefined,
+  }) =>
+      _then(
+          Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites(
+        sprites: sprites == _undefined || sprites == null
+            ? _instance.sprites
+            : (sprites as String),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
+}
+
+class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites<
+        TRes>
+    implements
+        CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites<
+            TRes> {
+  _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonspecy$pokemon_v2_pokemons$pokemon_v2_pokemonforms$pokemon_v2_pokemonformsprites(
+      this._res);
+
+  TRes _res;
+
+  call({
+    String? sprites,
     String? $__typename,
   }) =>
       _res;
@@ -3951,9 +6661,9 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pok
     this.power,
     this.pp,
     this.accuracy,
+    this.generation_id,
     this.pokemon_v2_type,
     this.pokemon_v2_movedamageclass,
-    this.generation_id,
     this.$__typename = 'pokemon_v2_move',
   });
 
@@ -3963,15 +6673,16 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pok
     final l$power = json['power'];
     final l$pp = json['pp'];
     final l$accuracy = json['accuracy'];
+    final l$generation_id = json['generation_id'];
     final l$pokemon_v2_type = json['pokemon_v2_type'];
     final l$pokemon_v2_movedamageclass = json['pokemon_v2_movedamageclass'];
-    final l$generation_id = json['generation_id'];
     final l$$__typename = json['__typename'];
     return Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pokemon_v2_move(
       name: (l$name as String),
       power: (l$power as int?),
       pp: (l$pp as int?),
       accuracy: (l$accuracy as int?),
+      generation_id: (l$generation_id as int?),
       pokemon_v2_type: l$pokemon_v2_type == null
           ? null
           : Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pokemon_v2_move$pokemon_v2_type
@@ -3980,7 +6691,6 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pok
           ? null
           : Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pokemon_v2_move$pokemon_v2_movedamageclass
               .fromJson((l$pokemon_v2_movedamageclass as Map<String, dynamic>)),
-      generation_id: (l$generation_id as int?),
       $__typename: (l$$__typename as String),
     );
   }
@@ -3993,13 +6703,13 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pok
 
   final int? accuracy;
 
+  final int? generation_id;
+
   final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pokemon_v2_move$pokemon_v2_type?
       pokemon_v2_type;
 
   final Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pokemon_v2_move$pokemon_v2_movedamageclass?
       pokemon_v2_movedamageclass;
-
-  final int? generation_id;
 
   final String $__typename;
 
@@ -4013,13 +6723,13 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pok
     _resultData['pp'] = l$pp;
     final l$accuracy = accuracy;
     _resultData['accuracy'] = l$accuracy;
+    final l$generation_id = generation_id;
+    _resultData['generation_id'] = l$generation_id;
     final l$pokemon_v2_type = pokemon_v2_type;
     _resultData['pokemon_v2_type'] = l$pokemon_v2_type?.toJson();
     final l$pokemon_v2_movedamageclass = pokemon_v2_movedamageclass;
     _resultData['pokemon_v2_movedamageclass'] =
         l$pokemon_v2_movedamageclass?.toJson();
-    final l$generation_id = generation_id;
-    _resultData['generation_id'] = l$generation_id;
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -4031,18 +6741,18 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pok
     final l$power = power;
     final l$pp = pp;
     final l$accuracy = accuracy;
+    final l$generation_id = generation_id;
     final l$pokemon_v2_type = pokemon_v2_type;
     final l$pokemon_v2_movedamageclass = pokemon_v2_movedamageclass;
-    final l$generation_id = generation_id;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$name,
       l$power,
       l$pp,
       l$accuracy,
+      l$generation_id,
       l$pokemon_v2_type,
       l$pokemon_v2_movedamageclass,
-      l$generation_id,
       l$$__typename,
     ]);
   }
@@ -4077,6 +6787,11 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pok
     if (l$accuracy != lOther$accuracy) {
       return false;
     }
+    final l$generation_id = generation_id;
+    final lOther$generation_id = other.generation_id;
+    if (l$generation_id != lOther$generation_id) {
+      return false;
+    }
     final l$pokemon_v2_type = pokemon_v2_type;
     final lOther$pokemon_v2_type = other.pokemon_v2_type;
     if (l$pokemon_v2_type != lOther$pokemon_v2_type) {
@@ -4085,11 +6800,6 @@ class Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pok
     final l$pokemon_v2_movedamageclass = pokemon_v2_movedamageclass;
     final lOther$pokemon_v2_movedamageclass = other.pokemon_v2_movedamageclass;
     if (l$pokemon_v2_movedamageclass != lOther$pokemon_v2_movedamageclass) {
-      return false;
-    }
-    final l$generation_id = generation_id;
-    final lOther$generation_id = other.generation_id;
-    if (l$generation_id != lOther$generation_id) {
       return false;
     }
     final l$$__typename = $__typename;
@@ -4131,11 +6841,11 @@ abstract class CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v
     int? power,
     int? pp,
     int? accuracy,
+    int? generation_id,
     Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pokemon_v2_move$pokemon_v2_type?
         pokemon_v2_type,
     Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pokemon_v2_move$pokemon_v2_movedamageclass?
         pokemon_v2_movedamageclass,
-    int? generation_id,
     String? $__typename,
   });
   CopyWith$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pokemon_v2_move$pokemon_v2_type<
@@ -4168,9 +6878,9 @@ class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_po
     Object? power = _undefined,
     Object? pp = _undefined,
     Object? accuracy = _undefined,
+    Object? generation_id = _undefined,
     Object? pokemon_v2_type = _undefined,
     Object? pokemon_v2_movedamageclass = _undefined,
-    Object? generation_id = _undefined,
     Object? $__typename = _undefined,
   }) =>
       _then(
@@ -4182,6 +6892,9 @@ class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_po
         pp: pp == _undefined ? _instance.pp : (pp as int?),
         accuracy:
             accuracy == _undefined ? _instance.accuracy : (accuracy as int?),
+        generation_id: generation_id == _undefined
+            ? _instance.generation_id
+            : (generation_id as int?),
         pokemon_v2_type: pokemon_v2_type == _undefined
             ? _instance.pokemon_v2_type
             : (pokemon_v2_type
@@ -4190,9 +6903,6 @@ class _CopyWithImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_po
             ? _instance.pokemon_v2_movedamageclass
             : (pokemon_v2_movedamageclass
                 as Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pokemon_v2_move$pokemon_v2_movedamageclass?),
-        generation_id: generation_id == _undefined
-            ? _instance.generation_id
-            : (generation_id as int?),
         $__typename: $__typename == _undefined || $__typename == null
             ? _instance.$__typename
             : ($__typename as String),
@@ -4236,11 +6946,11 @@ class _CopyWithStubImpl$Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v
     int? power,
     int? pp,
     int? accuracy,
+    int? generation_id,
     Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pokemon_v2_move$pokemon_v2_type?
         pokemon_v2_type,
     Query$PokemonDetailV3$pokemon_v2_pokemon_by_pk$pokemon_v2_pokemonmoves$pokemon_v2_move$pokemon_v2_movedamageclass?
         pokemon_v2_movedamageclass,
-    int? generation_id,
     String? $__typename,
   }) =>
       _res;
