@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:pokedex/api.dart';
 import 'package:pokedex/screens/list_screen.dart';
@@ -28,6 +29,7 @@ class PokeDexApp extends StatelessWidget {
         theme: ThemeData(
           colorSchemeSeed: Colors.red,
           useMaterial3: true,
+          textTheme: GoogleFonts.poppinsTextTheme(),
         ),
         // Rutas simples
         routes: {
