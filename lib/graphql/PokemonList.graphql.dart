@@ -126,7 +126,6 @@ class _CopyWithImpl$Variables$Query$PokemonListV2<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? limit = _undefined,
     Object? offset = _undefined,
@@ -144,9 +143,8 @@ class _CopyWithStubImpl$Variables$Query$PokemonListV2<TRes>
     implements CopyWith$Variables$Query$PokemonListV2<TRes> {
   _CopyWithStubImpl$Variables$Query$PokemonListV2(this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
   call({
     int? limit,
     int? offset,
@@ -162,10 +160,10 @@ class Query$PokemonListV2 {
   });
 
   factory Query$PokemonListV2.fromJson(Map<String, dynamic> json) {
-    final l$pokemonV2Pokemon = json['pokemon_v2_pokemon'];
+    final l$pokemon_v2_pokemon = json['pokemon_v2_pokemon'];
     final l$$__typename = json['__typename'];
     return Query$PokemonListV2(
-      pokemon_v2_pokemon: (l$pokemonV2Pokemon as List<dynamic>)
+      pokemon_v2_pokemon: (l$pokemon_v2_pokemon as List<dynamic>)
           .map((e) => Query$PokemonListV2$pokemon_v2_pokemon.fromJson(
               (e as Map<String, dynamic>)))
           .toList(),
@@ -178,21 +176,21 @@ class Query$PokemonListV2 {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final resultData = <String, dynamic>{};
-    final l$pokemonV2Pokemon = pokemon_v2_pokemon;
-    resultData['pokemon_v2_pokemon'] =
-        l$pokemonV2Pokemon.map((e) => e.toJson()).toList();
+    final _resultData = <String, dynamic>{};
+    final l$pokemon_v2_pokemon = pokemon_v2_pokemon;
+    _resultData['pokemon_v2_pokemon'] =
+        l$pokemon_v2_pokemon.map((e) => e.toJson()).toList();
     final l$$__typename = $__typename;
-    resultData['__typename'] = l$$__typename;
-    return resultData;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
   }
 
   @override
   int get hashCode {
-    final l$pokemonV2Pokemon = pokemon_v2_pokemon;
+    final l$pokemon_v2_pokemon = pokemon_v2_pokemon;
     final l$$__typename = $__typename;
     return Object.hashAll([
-      Object.hashAll(l$pokemonV2Pokemon.map((v) => v)),
+      Object.hashAll(l$pokemon_v2_pokemon.map((v) => v)),
       l$$__typename,
     ]);
   }
@@ -205,15 +203,15 @@ class Query$PokemonListV2 {
     if (other is! Query$PokemonListV2 || runtimeType != other.runtimeType) {
       return false;
     }
-    final l$pokemonV2Pokemon = pokemon_v2_pokemon;
-    final lother$pokemonV2Pokemon = other.pokemon_v2_pokemon;
-    if (l$pokemonV2Pokemon.length != lother$pokemonV2Pokemon.length) {
+    final l$pokemon_v2_pokemon = pokemon_v2_pokemon;
+    final lOther$pokemon_v2_pokemon = other.pokemon_v2_pokemon;
+    if (l$pokemon_v2_pokemon.length != lOther$pokemon_v2_pokemon.length) {
       return false;
     }
-    for (int i = 0; i < l$pokemonV2Pokemon.length; i++) {
-      final l$pokemonV2Pokemon$entry = l$pokemonV2Pokemon[i];
-      final lother$pokemonV2Pokemon$entry = lother$pokemonV2Pokemon[i];
-      if (l$pokemonV2Pokemon$entry != lother$pokemonV2Pokemon$entry) {
+    for (int i = 0; i < l$pokemon_v2_pokemon.length; i++) {
+      final l$pokemon_v2_pokemon$entry = l$pokemon_v2_pokemon[i];
+      final lOther$pokemon_v2_pokemon$entry = lOther$pokemon_v2_pokemon[i];
+      if (l$pokemon_v2_pokemon$entry != lOther$pokemon_v2_pokemon$entry) {
         return false;
       }
     }
@@ -252,7 +250,7 @@ abstract class CopyWith$Query$PokemonListV2<TRes> {
               Iterable<
                   CopyWith$Query$PokemonListV2$pokemon_v2_pokemon<
                       Query$PokemonListV2$pokemon_v2_pokemon>>)
-          fn);
+          _fn);
 }
 
 class _CopyWithImpl$Query$PokemonListV2<TRes>
@@ -268,7 +266,6 @@ class _CopyWithImpl$Query$PokemonListV2<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? pokemon_v2_pokemon = _undefined,
     Object? $__typename = _undefined,
@@ -284,15 +281,14 @@ class _CopyWithImpl$Query$PokemonListV2<TRes>
             : ($__typename as String),
       ));
 
-  @override
   TRes pokemon_v2_pokemon(
           Iterable<Query$PokemonListV2$pokemon_v2_pokemon> Function(
                   Iterable<
                       CopyWith$Query$PokemonListV2$pokemon_v2_pokemon<
                           Query$PokemonListV2$pokemon_v2_pokemon>>)
-              fn) =>
+              _fn) =>
       call(
-          pokemon_v2_pokemon: fn(_instance.pokemon_v2_pokemon
+          pokemon_v2_pokemon: _fn(_instance.pokemon_v2_pokemon
               .map((e) => CopyWith$Query$PokemonListV2$pokemon_v2_pokemon(
                     e,
                     (i) => i,
@@ -303,17 +299,15 @@ class _CopyWithStubImpl$Query$PokemonListV2<TRes>
     implements CopyWith$Query$PokemonListV2<TRes> {
   _CopyWithStubImpl$Query$PokemonListV2(this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
   call({
     List<Query$PokemonListV2$pokemon_v2_pokemon>? pokemon_v2_pokemon,
     String? $__typename,
   }) =>
       _res;
 
-  @override
-  pokemon_v2_pokemon(fn) => _res;
+  pokemon_v2_pokemon(_fn) => _res;
 }
 
 const documentNodeQueryPokemonListV2 = DocumentNode(definitions: [
@@ -472,12 +466,12 @@ class Query$PokemonListV2$pokemon_v2_pokemon {
       Map<String, dynamic> json) {
     final l$id = json['id'];
     final l$name = json['name'];
-    final l$pokemonV2Pokemontypes = json['pokemon_v2_pokemontypes'];
+    final l$pokemon_v2_pokemontypes = json['pokemon_v2_pokemontypes'];
     final l$$__typename = json['__typename'];
     return Query$PokemonListV2$pokemon_v2_pokemon(
       id: (l$id as int),
       name: (l$name as String),
-      pokemon_v2_pokemontypes: (l$pokemonV2Pokemontypes as List<dynamic>)
+      pokemon_v2_pokemontypes: (l$pokemon_v2_pokemontypes as List<dynamic>)
           .map((e) =>
               Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes
                   .fromJson((e as Map<String, dynamic>)))
@@ -496,29 +490,29 @@ class Query$PokemonListV2$pokemon_v2_pokemon {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final resultData = <String, dynamic>{};
+    final _resultData = <String, dynamic>{};
     final l$id = id;
-    resultData['id'] = l$id;
+    _resultData['id'] = l$id;
     final l$name = name;
-    resultData['name'] = l$name;
-    final l$pokemonV2Pokemontypes = pokemon_v2_pokemontypes;
-    resultData['pokemon_v2_pokemontypes'] =
-        l$pokemonV2Pokemontypes.map((e) => e.toJson()).toList();
+    _resultData['name'] = l$name;
+    final l$pokemon_v2_pokemontypes = pokemon_v2_pokemontypes;
+    _resultData['pokemon_v2_pokemontypes'] =
+        l$pokemon_v2_pokemontypes.map((e) => e.toJson()).toList();
     final l$$__typename = $__typename;
-    resultData['__typename'] = l$$__typename;
-    return resultData;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
   }
 
   @override
   int get hashCode {
     final l$id = id;
     final l$name = name;
-    final l$pokemonV2Pokemontypes = pokemon_v2_pokemontypes;
+    final l$pokemon_v2_pokemontypes = pokemon_v2_pokemontypes;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
       l$name,
-      Object.hashAll(l$pokemonV2Pokemontypes.map((v) => v)),
+      Object.hashAll(l$pokemon_v2_pokemontypes.map((v) => v)),
       l$$__typename,
     ]);
   }
@@ -542,18 +536,18 @@ class Query$PokemonListV2$pokemon_v2_pokemon {
     if (l$name != lOther$name) {
       return false;
     }
-    final l$pokemonV2Pokemontypes = pokemon_v2_pokemontypes;
-    final lother$pokemonV2Pokemontypes = other.pokemon_v2_pokemontypes;
-    if (l$pokemonV2Pokemontypes.length !=
-        lother$pokemonV2Pokemontypes.length) {
+    final l$pokemon_v2_pokemontypes = pokemon_v2_pokemontypes;
+    final lOther$pokemon_v2_pokemontypes = other.pokemon_v2_pokemontypes;
+    if (l$pokemon_v2_pokemontypes.length !=
+        lOther$pokemon_v2_pokemontypes.length) {
       return false;
     }
-    for (int i = 0; i < l$pokemonV2Pokemontypes.length; i++) {
-      final l$pokemonV2Pokemontypes$entry = l$pokemonV2Pokemontypes[i];
-      final lother$pokemonV2Pokemontypes$entry =
-          lother$pokemonV2Pokemontypes[i];
-      if (l$pokemonV2Pokemontypes$entry !=
-          lother$pokemonV2Pokemontypes$entry) {
+    for (int i = 0; i < l$pokemon_v2_pokemontypes.length; i++) {
+      final l$pokemon_v2_pokemontypes$entry = l$pokemon_v2_pokemontypes[i];
+      final lOther$pokemon_v2_pokemontypes$entry =
+          lOther$pokemon_v2_pokemontypes[i];
+      if (l$pokemon_v2_pokemontypes$entry !=
+          lOther$pokemon_v2_pokemontypes$entry) {
         return false;
       }
     }
@@ -597,7 +591,7 @@ abstract class CopyWith$Query$PokemonListV2$pokemon_v2_pokemon<TRes> {
               Iterable<
                   CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
                       Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes>>)
-          fn);
+          _fn);
 }
 
 class _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon<TRes>
@@ -613,7 +607,6 @@ class _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? id = _undefined,
     Object? name = _undefined,
@@ -635,15 +628,14 @@ class _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon<TRes>
             : ($__typename as String),
       ));
 
-  @override
   TRes pokemon_v2_pokemontypes(
           Iterable<Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes> Function(
                   Iterable<
                       CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
                           Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes>>)
-              fn) =>
+              _fn) =>
       call(
-          pokemon_v2_pokemontypes: fn(_instance.pokemon_v2_pokemontypes.map((e) =>
+          pokemon_v2_pokemontypes: _fn(_instance.pokemon_v2_pokemontypes.map((e) =>
               CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes(
                 e,
                 (i) => i,
@@ -654,9 +646,8 @@ class _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon<TRes>
     implements CopyWith$Query$PokemonListV2$pokemon_v2_pokemon<TRes> {
   _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon(this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
   call({
     int? id,
     String? name,
@@ -666,8 +657,7 @@ class _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon<TRes>
   }) =>
       _res;
 
-  @override
-  pokemon_v2_pokemontypes(fn) => _res;
+  pokemon_v2_pokemontypes(_fn) => _res;
 }
 
 class Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes {
@@ -678,13 +668,13 @@ class Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes {
 
   factory Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes.fromJson(
       Map<String, dynamic> json) {
-    final l$pokemonV2Type = json['pokemon_v2_type'];
+    final l$pokemon_v2_type = json['pokemon_v2_type'];
     final l$$__typename = json['__typename'];
     return Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes(
-      pokemon_v2_type: l$pokemonV2Type == null
+      pokemon_v2_type: l$pokemon_v2_type == null
           ? null
           : Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type
-              .fromJson((l$pokemonV2Type as Map<String, dynamic>)),
+              .fromJson((l$pokemon_v2_type as Map<String, dynamic>)),
       $__typename: (l$$__typename as String),
     );
   }
@@ -695,20 +685,20 @@ class Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final resultData = <String, dynamic>{};
-    final l$pokemonV2Type = pokemon_v2_type;
-    resultData['pokemon_v2_type'] = l$pokemonV2Type?.toJson();
+    final _resultData = <String, dynamic>{};
+    final l$pokemon_v2_type = pokemon_v2_type;
+    _resultData['pokemon_v2_type'] = l$pokemon_v2_type?.toJson();
     final l$$__typename = $__typename;
-    resultData['__typename'] = l$$__typename;
-    return resultData;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
   }
 
   @override
   int get hashCode {
-    final l$pokemonV2Type = pokemon_v2_type;
+    final l$pokemon_v2_type = pokemon_v2_type;
     final l$$__typename = $__typename;
     return Object.hashAll([
-      l$pokemonV2Type,
+      l$pokemon_v2_type,
       l$$__typename,
     ]);
   }
@@ -723,9 +713,9 @@ class Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes {
         runtimeType != other.runtimeType) {
       return false;
     }
-    final l$pokemonV2Type = pokemon_v2_type;
-    final lother$pokemonV2Type = other.pokemon_v2_type;
-    if (l$pokemonV2Type != lother$pokemonV2Type) {
+    final l$pokemon_v2_type = pokemon_v2_type;
+    final lOther$pokemon_v2_type = other.pokemon_v2_type;
+    if (l$pokemon_v2_type != lOther$pokemon_v2_type) {
       return false;
     }
     final l$$__typename = $__typename;
@@ -788,7 +778,6 @@ class _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontyp
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? pokemon_v2_type = _undefined,
     Object? $__typename = _undefined,
@@ -803,15 +792,14 @@ class _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontyp
             : ($__typename as String),
       ));
 
-  @override
   CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
       TRes> get pokemon_v2_type {
-    final local$pokemonV2Type = _instance.pokemon_v2_type;
-    return local$pokemonV2Type == null
+    final local$pokemon_v2_type = _instance.pokemon_v2_type;
+    return local$pokemon_v2_type == null
         ? CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type
             .stub(_then(_instance))
         : CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type(
-            local$pokemonV2Type, (e) => call(pokemon_v2_type: e));
+            local$pokemon_v2_type, (e) => call(pokemon_v2_type: e));
   }
 }
 
@@ -823,9 +811,8 @@ class _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemo
   _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes(
       this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
   call({
     Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type?
         pokemon_v2_type,
@@ -833,7 +820,6 @@ class _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemo
   }) =>
       _res;
 
-  @override
   CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
           TRes>
       get pokemon_v2_type =>
@@ -862,12 +848,12 @@ class Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final resultData = <String, dynamic>{};
+    final _resultData = <String, dynamic>{};
     final l$name = name;
-    resultData['name'] = l$name;
+    _resultData['name'] = l$name;
     final l$$__typename = $__typename;
-    resultData['__typename'] = l$$__typename;
-    return resultData;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
   }
 
   @override
@@ -954,7 +940,6 @@ class _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontyp
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? name = _undefined,
     Object? $__typename = _undefined,
@@ -978,9 +963,8 @@ class _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemo
   _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type(
       this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
   call({
     String? name,
     String? $__typename,

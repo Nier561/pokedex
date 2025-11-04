@@ -126,7 +126,7 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
                     final client = GraphQLProvider.of(context).value;
                     client.query(
                       QueryOptions(
-                        document: documentNodeQueryPokemonDetailV2,
+                        document: documentNodeQueryPokemonDetailV3,
                         variables: {'id': id},
                         fetchPolicy: FetchPolicy.cacheFirst,
                       ),
