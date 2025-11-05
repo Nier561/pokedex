@@ -101,16 +101,24 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Pokédex')),
-      body: Query(
-        // Usa el documentNode generado por graphql_codegen para tu query de lista
-        options: QueryOptions(
-          document: documentNodeQueryPokemonListV2,
-          // Primer batch con búsqueda actual (name ilike)
-          variables: {'limit': _pageSize, 'offset': 0, 'search': '%%'},
-          // Usa cache y refresca en segundo plano para evitar errores intermitentes
-          fetchPolicy: FetchPolicy.cacheAndNetwork,
-          errorPolicy: ErrorPolicy.ignore,
+      body: NestedScrollView(
+        floatHeaderSlivers: true,
+        headerSliverBuilder: (context, innerBoxIsScrolled) => const [
+          SliverAppBar(
+            title: Text('Pokédex'),
+            floating: true,
+            snap: true,
+          ),
+        ],
+        body: Query(
+          // Usa el documentNode generado por graphql_codegen para tu query de lista
+          options: QueryOptions(
+            document: documentNodeQueryPokemonListV2,
+            // Primer batch con búsqueda actual (name ilike)
+            variables: {'limit': _pageSize, 'offset': 0, 'search': '%%'},
+            // Usa cache y refresca en segundo plano para evitar errores intermitentes
+            fetchPolicy: FetchPolicy.cacheAndNetwork,
+            errorPolicy: ErrorPolicy.ignore,
         ),
         builder: (result, {fetchMore, refetch}) {
           // Conectar el listener una única vez cuando ya hay fetchMore disponible.
@@ -353,6 +361,7 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
             ],
           );
         },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _openFilterSheet,
