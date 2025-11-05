@@ -6,3 +6,4 @@ targets:
           schema: lib/graphql/service/schema.graphqls
           queries_glob: lib/graphql/service/**/*.graphql
           output: lib/graphql/generated/graphql_api.graphql.dart
+

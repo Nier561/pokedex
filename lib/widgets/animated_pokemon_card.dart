@@ -6,6 +6,7 @@ class AnimatedPokemonCard extends StatefulWidget {
   final String name;
   final List<String> types;
   final String imageUrl;
+  final String? fallbackImageUrl;
   final LinearGradient background;
   final VoidCallback? onTap;
   final int index;
@@ -15,6 +16,7 @@ class AnimatedPokemonCard extends StatefulWidget {
     required this.name,
     required this.types,
     required this.imageUrl,
+    this.fallbackImageUrl,
     required this.background,
     this.onTap,
     required this.index,
@@ -103,6 +105,7 @@ class _AnimatedPokemonCardState extends State<AnimatedPokemonCard>
                     name: widget.name,
                     types: widget.types,
                     imageUrl: widget.imageUrl,
+                    fallbackImageUrl: widget.fallbackImageUrl,
                     background: widget.background,
                   ),
                 ),

@@ -7,6 +7,7 @@ class PokemonCard extends StatelessWidget {
   final String name;
   final List<String> types;
   final String imageUrl;
+  final String? fallbackImageUrl;
   final LinearGradient? background;
 
   const PokemonCard({
@@ -14,6 +15,7 @@ class PokemonCard extends StatelessWidget {
     required this.name,
     required this.types,
     required this.imageUrl,
+    this.fallbackImageUrl,
     this.background,
   });
 
@@ -132,6 +134,25 @@ class PokemonCard extends StatelessWidget {
                               // Hint de decodificación para reducir trabajo de imagen
                               cacheWidth: imageSize.round(),
                               cacheHeight: imageSize.round(),
+                              // Si la imagen oficial falla (404/timeout), intenta sprite clásico
+                              errorBuilder: (context, error, stackTrace) {
+                                if (fallbackImageUrl != null && fallbackImageUrl!.isNotEmpty) {
+                                  return Image.network(
+                                    fallbackImageUrl!,
+                                    width: imageSize,
+                                    height: imageSize,
+                                    fit: BoxFit.contain,
+                                    filterQuality: FilterQuality.low,
+                                    cacheWidth: imageSize.round(),
+                                    cacheHeight: imageSize.round(),
+                                    // Si también falla, muestra un placeholder local
+                                    errorBuilder: (context, _, __) {
+                                      return _PlaceholderImage(size: imageSize);
+                                    },
+                                  );
+                                }
+                                return _PlaceholderImage(size: imageSize);
+                              },
                             ),
                           ),
                         ),
@@ -144,6 +165,29 @@ class PokemonCard extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _PlaceholderImage extends StatelessWidget {
+  final double size;
+  const _PlaceholderImage({required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
+        color: Color(0x11FFFFFF),
+      ),
+      child: Image.asset(
+        'assets/images/pokedex icono 2.webp',
+        width: size * 0.6,
+        height: size * 0.6,
+        fit: BoxFit.contain,
+      ),
     );
   }
 }
