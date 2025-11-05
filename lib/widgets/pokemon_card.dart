@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/widgets/type_badge.dart';
 import 'package:pokedex/widgets/type_gradients.dart';
 
+/// Tarjeta base que muestra nombre, tipos e imagen de un Pokémon.
 class PokemonCard extends StatelessWidget {
   final String name;
   final List<String> types;
@@ -169,6 +170,7 @@ class PokemonCard extends StatelessWidget {
   }
 }
 
+/// Placeholder local mostrado si falla la carga de sprites remotos.
 class _PlaceholderImage extends StatelessWidget {
   final double size;
   const _PlaceholderImage({required this.size});

@@ -1,3 +1,5 @@
+/// Pantalla principal que muestra el listado de Pokémon con filtros,
+/// paginación infinita y búsqueda local.
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:pokedex/graphql/PokemonList.graphql.dart';
@@ -7,14 +9,15 @@ import 'package:pokedex/widgets/page_transitions.dart';
 import 'package:pokedex/screens/detail_screen.dart';
 import 'package:pokedex/widgets/animated_pokemon_card.dart';
 
-/// Imagen oficial por ID.
+/// Construye la URL de la ilustración oficial (alta resolución) para el ID dado.
 String _imageById(int id) =>
     'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png';
 
-/// Sprite clásico por ID (fallback)
+/// Construye la URL del sprite clásico (8-bit) que actúa como fallback visual.
 String _spriteById(int id) =>
     'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$id.png';
 
+/// Widget que contiene la grilla principal y expone la pantalla de listado.
 class PokemonListScreen extends StatefulWidget {
   const PokemonListScreen({super.key});
 
@@ -22,6 +25,7 @@ class PokemonListScreen extends StatefulWidget {
   State<PokemonListScreen> createState() => _PokemonListScreenState();
 }
 
+/// Lógica de estado del listado: maneja filtros, búsqueda, prefetch y paginado.
 class _PokemonListScreenState extends State<PokemonListScreen> {
   // Controlador de scroll para detectar “fin de lista”.
   final _scroll = ScrollController();
@@ -40,6 +44,7 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
   String? _filterType;
   int? _filterGen; // 1..9
 
+  /// Catálogo completo de tipos disponible en la PokéAPI.
   static const List<String> _allTypes = [
     'normal',
     'fire',
@@ -61,6 +66,7 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
     'fairy',
   ];
 
+  /// Rango de IDs asociado a cada generación (pares `[inicio, fin]`).
   static const Map<int, List<int>> _genRanges = {
     1: [1, 151],
     2: [152, 251],
@@ -112,12 +118,15 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
     super.dispose();
   }
 
+  /// Normaliza el input del usuario al patrón `ILIKE` usado por la PokéAPI.
   String _sqlLike(String q) {
     final t = q.trim();
     if (t.isEmpty) return '%%';
     return '%${t.toLowerCase()}%';
   }
 
+  /// Realiza un request masivo para cachear todas las especies y permitir
+  /// filtros instantáneos sin depender del `fetchMore` incremental.
   Future<void> _prefetchAll() async {
     if (_prefetchingAll || !mounted) return;
     setState(() => _prefetchingAll = true);
@@ -145,6 +154,7 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
     }
   }
 
+  /// Aplica filtros en memoria (nombre, tipo y generación) sobre la lista.
   List _applyClientFilter(List pokes) {
     // Filtrar solo por nombre (case-insensitive, parcial)
     final q = _search.trim().toLowerCase();
@@ -494,6 +504,8 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
     );
   }
 
+  /// Muestra el modal de filtros y actualiza el estado cuando el usuario
+  /// confirma la selección.
   void _openFilterSheet() {
     String? tempType = _filterType;
     int? tempGen = _filterGen;
@@ -599,6 +611,8 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
   }
 
   /// Dispara `fetchMore` si no está cargando y si aún hay registros en el backend.
+  /// Dispara `fetchMore` únicamente cuando existen más páginas disponibles y
+  /// no hay otra petición en curso.
   void _maybeFetchMore(QueryResult result, FetchMore? fetchMore) {
     if (fetchMore == null) return;
 

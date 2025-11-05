@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// Colección de rutas personalizadas para crear transiciones animadas
+/// reutilizables dentro de la aplicación.
 /// Transición de página con efecto de deslizamiento desde la derecha
 class SlideRightPageRoute<T> extends PageRouteBuilder<T> {
   final Widget child;
@@ -125,7 +127,8 @@ class SlideUpPageRoute<T> extends PageRouteBuilder<T> {
         );
 }
 
-/// Extensión para facilitar la navegación con transiciones personalizadas
+/// Extensión para facilitar la navegación con las transiciones personalizadas
+/// definidas en este archivo.
 extension NavigatorExtensions on NavigatorState {
   Future<T?> pushWithSlideTransition<T extends Object?>(
     Widget page, {

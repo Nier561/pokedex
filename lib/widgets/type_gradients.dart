@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Utilidades de color que asignan gradientes y tonos sólidos a cada tipo.
 /// Gradientes por tipo de Pokémon para fondos de tarjetas.
 final Map<String, LinearGradient> typeGradients = {
   'grass': const LinearGradient(

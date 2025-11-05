@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/widgets/type_gradients.dart';
 
-/// Chip simple para mostrar el tipo del Pokémon.
-/// (Si quieres colores por tipo, mapea aquí por nombre.)
+/// Chip estilizado que muestra el tipo principal de un Pokémon.
+/// Usa el color calculado en `solidBadgeColorForType` para reforzar la identidad.
 class TypeBadge extends StatelessWidget {
   final String type;
   final Color? backgroundColor;

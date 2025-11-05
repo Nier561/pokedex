@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Colección de widgets que aportan animaciones a la pantalla de detalles.
 /// Widget que proporciona animaciones de entrada escalonadas para la vista de detalles
 class AnimatedDetailScreen extends StatefulWidget {
   final Widget child;
@@ -145,6 +146,7 @@ class _StaggeredAnimationItemState extends State<StaggeredAnimationItem>
     );
   }
 
+  /// Retorna el desplazamiento inicial según el tipo de animación elegido.
   Offset _getInitialOffset() {
     switch (widget.animationType) {
       case AnimationType.slideUp:
