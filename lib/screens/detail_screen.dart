@@ -46,7 +46,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
   @override
   void initState() {
     super.initState();
-    // +2 tabs: Megas/G-Max y Forms => total 6
+    // 6 tabs (About, Base, Evo, Moves, Megas/G-Max, Forms)
     _tabController = TabController(length: 6, vsync: this);
     _player.setSource(UrlSource(_cryById(widget.id))); // warm-up
   }
@@ -165,25 +165,26 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
           );
 
           // --- Forms (todas las variantes de la especie)
-          // --- Forms (todas las variantes de la especie)
-          final speciesPokemons = (species['pokemon_v2_pokemons'] as List?) ?? const [];
+          final speciesPokemons =
+              (species['pokemon_v2_pokemons'] as List?) ?? const [];
           for (final pk in speciesPokemons) {
             final int pid = pk['id'] as int;
             final String pname = pk['name'] as String;
 
-            final pfList = (pk['pokemon_v2_pokemonforms'] as List?) ?? const [];
+            final pfList =
+                (pk['pokemon_v2_pokemonforms'] as List?) ?? const [];
             for (final f in pfList) {
               final isMega = f['is_mega'] == true;
               final isBattleOnly = f['is_battle_only'] == true;
               final formName = (f['form_name'] as String?) ?? '';
               final displayName = _formDisplayName(pname, formName, isMega);
 
-              final typesF = ((f['pokemon_v2_pokemonformtypes'] as List?) ?? [])
-                  .map((t) => (t['pokemon_v2_type'] as Map)['name'] as String)
+              final typesF =
+              ((f['pokemon_v2_pokemonformtypes'] as List?) ?? [])
+                  .map((t) =>
+              (t['pokemon_v2_type'] as Map)['name'] as String)
                   .toList();
 
-              final spritesList = (f['pokemon_v2_pokemonformsprites'] as List?) ?? const [];
-              // final dynamic spr = spritesList.isNotEmpty ? spritesList.first['sprites'] : null; // <- si lo quieres inspeccionar
               final String front = _imageById(pid);
 
               final card = _FormCard(
@@ -193,7 +194,10 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
                   if (isMega) 'Mega',
                   if (!isMega && _isGmax(formName, pname)) 'G-Max',
                   if (_isRegional(formName)) _regionalTag(formName),
-                  if (isBattleOnly && !_isGmax(formName, pname) && !isMega) 'Battle-only',
+                  if (isBattleOnly &&
+                      !_isGmax(formName, pname) &&
+                      !isMega)
+                    'Battle-only',
                 ],
                 imageUrl: front,
                 types: typesF.isNotEmpty ? typesF : types,
@@ -208,7 +212,6 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
               }
             }
           }
-
         } else {
           evoEdges = const [];
         }
@@ -224,8 +227,8 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
           dedup[nameMv] = {
             'name': nameMv,
             'type': (mv['pokemon_v2_type'] as Map)['name'] as String,
-            'class': (mv['pokemon_v2_movedamageclass'] as Map?)?['name']
-            as String? ??
+            'class':
+            (mv['pokemon_v2_movedamageclass'] as Map?)?['name'] as String? ??
                 'status',
             'power': mv['power'],
             'pp': mv['pp'],
@@ -563,7 +566,17 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
           ),
           child: Row(
             children: [
-              _EvoMonTile(name: _pretty(e.fromName), pokemonId: e.fromPokemonId),
+              _EvoMonTile(
+                name: _pretty(e.fromName),
+                pokemonId: e.fromPokemonId,
+                onTap: e.fromPokemonId == null
+                    ? null
+                    : () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (_) =>
+                          PokemonDetailScreen(id: e.fromPokemonId!)),
+                ),
+              ),
               const SizedBox(width: 8),
               const Icon(Icons.arrow_forward, size: 20),
               const SizedBox(width: 8),
@@ -571,7 +584,17 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _EvoMonTile(name: _pretty(e.toName), pokemonId: e.toPokemonId),
+                    _EvoMonTile(
+                      name: _pretty(e.toName),
+                      pokemonId: e.toPokemonId,
+                      onTap: e.toPokemonId == null
+                          ? null
+                          : () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (_) =>
+                                PokemonDetailScreen(id: e.toPokemonId!)),
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 6,
@@ -595,11 +618,15 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: .88),
+          crossAxisCount: 2,
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          childAspectRatio: .88),
       itemCount: items.length,
       itemBuilder: (ctx, i) {
         final f = items[i];
-        final color = _typeColor(f.types.isNotEmpty ? f.types.first : 'normal');
+        final color =
+        _typeColor(f.types.isNotEmpty ? f.types.first : 'normal');
 
         return InkWell(
           onTap: () {
@@ -639,11 +666,13 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
                   children: [
                     ...f.types.map((t) => Chip(
                       label: Text(_titleCase(t)),
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      materialTapTargetSize:
+                      MaterialTapTargetSize.shrinkWrap,
                     )),
                     ...f.tags.map((t) => Chip(
                       label: Text(t),
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      materialTapTargetSize:
+                      MaterialTapTargetSize.shrinkWrap,
                     )),
                   ],
                 ),
@@ -692,7 +721,8 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
 
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              padding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: color.withOpacity(.25)),
@@ -794,33 +824,29 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
     if (isMega) {
       if (f.contains('x')) return 'Mega $bn X';
       if (f.contains('y')) return 'Mega $bn Y';
-      // Si no especifica X/Y
       return 'Mega $bn';
     }
 
-    // Gigantamax (por si alguien lo llama directo)
+    // Gigantamax
     if (f.contains('gmax') || f.contains('gigantamax')) {
       return '$bn (Gigantamax)';
     }
 
     // Regionales
-    if (f.contains('alola'))  return '$bn (Alola)';
-    if (f.contains('galar'))  return '$bn (Galar)';
-    if (f.contains('hisui'))  return '$bn (Hisui)';
+    if (f.contains('alola')) return '$bn (Alola)';
+    if (f.contains('galar')) return '$bn (Galar)';
+    if (f.contains('hisui')) return '$bn (Hisui)';
     if (f.contains('paldea')) return '$bn (Paldea)';
 
-    // Default / vacío
+    // Default
     if (f.isEmpty || f == 'default') return bn;
 
-    // Otros casos (blade, shield, 10%, complete, dusk, etc.)
+    // Otros casos
     return '$bn (${_titleCase(formName)})';
   }
 
-
-
   int _evoScore(Map<String, dynamic> evo) {
-    final hasItem =
-        evo['item'] != null && (evo['item'] as String).isNotEmpty;
+    final hasItem = evo['item'] != null && (evo['item'] as String).isNotEmpty;
     final hasLevel = evo['min_level'] != null;
     final hasLocation =
         evo['location'] != null && (evo['location'] as String).isNotEmpty;
@@ -837,7 +863,8 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
 
   Map<String, dynamic> _normalizeEvo(Map<String, dynamic> raw) {
     return {
-      'trigger': raw['pokemon_v2_evolutiontrigger']?['name'] as String? ?? '',
+      'trigger':
+      raw['pokemon_v2_evolutiontrigger']?['name'] as String? ?? '',
       'item': raw['pokemon_v2_item']?['name'] as String? ?? '',
       'min_level': raw['min_level'],
       'min_happiness': raw['min_happiness'],
@@ -850,9 +877,12 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
       'location': raw['pokemon_v2_location']?['name'] as String? ?? '',
       'type': raw['pokemon_v2_type']?['name'] as String? ?? '',
       'held_item': raw['pokemon_v2_held_item']?['name'] as String? ??
-          raw['pokemon_v2_helditem']?['name'] as String? ?? '',
-      'trade_species': raw['pokemon_v2_tradespecies']?['name'] as String? ??
-          raw['trade_species']?['name'] as String? ?? '',
+          raw['pokemon_v2_helditem']?['name'] as String? ??
+          '',
+      'trade_species':
+      raw['pokemon_v2_tradespecies']?['name'] as String? ??
+          raw['trade_species']?['name'] as String? ??
+          '',
     };
   }
 
@@ -860,9 +890,9 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
     final chips = <Widget>[];
 
     final trigger = (evo['item'] as String).isNotEmpty
-        ? 'Use ${_titleCase(evo['item'])} 💎'
+        ? 'Use ${_titleCase(evo["item"])} 💎'
         : (evo['min_level'] != null
-        ? 'Level Up to Lv ${evo['min_level']} ⬆️'
+        ? 'Level Up to Lv ${evo["min_level"]} ⬆️'
         : _titleCase((evo['trigger'] as String).replaceAll('-', ' ')));
 
     chips.add(Chip(
@@ -872,54 +902,67 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
 
     if ((evo['held_item'] as String).isNotEmpty) {
       chips.add(Chip(
-        label: Text('Holding ${_titleCase(evo['held_item'])}'),
+        label: Text('Holding ${_titleCase(evo["held_item"])}'),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ));
     }
     if ((evo['time_of_day'] as String).isNotEmpty) {
       final t = evo['time_of_day'] == 'night' ? 'Night 🌙' : 'Day ☀️';
-      chips.add(Chip(label: Text(t), materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
+      chips.add(Chip(
+          label: Text(t),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
     }
     if (evo['min_happiness'] != null) {
-      chips.add(const Chip(label: Text('High Friendship 💞'), materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
+      chips.add(const Chip(
+          label: Text('High Friendship 💞'),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
     }
     if (evo['min_beauty'] != null) {
-      chips.add(const Chip(label: Text('High Beauty ✨'), materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
+      chips.add(const Chip(
+          label: Text('High Beauty ✨'),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
     }
     if (evo['min_affection'] != null) {
-      chips.add(const Chip(label: Text('High Affection 💗'), materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
+      chips.add(const Chip(
+          label: Text('High Affection 💗'),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
     }
     if (evo['needs_overworld_rain'] == true) {
-      chips.add(const Chip(label: Text('Rain 🌧️'), materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
+      chips.add(const Chip(
+          label: Text('Rain 🌧️'),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
     }
     if ((evo['move'] as String).isNotEmpty) {
       chips.add(Chip(
-        label: Text('Know ${_titleCase(evo['move'])} 📘'),
+        label: Text('Know ${_titleCase(evo["move"])} 📘'),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ));
     }
     if ((evo['type'] as String).isNotEmpty) {
       chips.add(Chip(
-        label: Text('With ${_titleCase(evo['type'])} type'),
+        label: Text('With ${_titleCase(evo["type"])} type'),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ));
     }
-    final showLocation =
-        (evo['item'] as String).isEmpty && evo['min_level'] == null && (evo['location'] as String).isNotEmpty;
+    final showLocation = (evo['item'] as String).isEmpty &&
+        evo['min_level'] == null &&
+        (evo['location'] as String).isNotEmpty;
     if (showLocation) {
       chips.add(Chip(
-        label: Text('At ${_titleCase(evo['location'])} 📍'),
+        label: Text('At ${_titleCase(evo["location"])} 📍'),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ));
     }
     if ((evo['trade_species'] as String).isNotEmpty) {
       chips.add(Chip(
-        label: Text('Trade for ${_titleCase(evo['trade_species'])} 🔁'),
+        label: Text('Trade for ${_titleCase(evo["trade_species"])} 🔁'),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ));
     }
     if (evo['turn_upside_down'] == true) {
-      chips.add(const Chip(label: Text('Hold Upside Down 📱'), materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
+      chips.add(const Chip(
+          label: Text('Hold Upside Down 📱'),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
     }
 
     return chips;
@@ -952,7 +995,8 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
       if (parent == null) continue;
 
       final childPokes = (s['pokemon_v2_pokemons'] as List?) ?? const [];
-      final childPid = childPokes.isNotEmpty ? (childPokes.first['id'] as int) : null;
+      final childPid =
+      childPokes.isNotEmpty ? (childPokes.first['id'] as int) : null;
 
       final pp = (parent['pokemon_v2_pokemons'] as List?) ?? const [];
       final parentPid = pp.isNotEmpty ? (pp.first['id'] as int) : null;
@@ -996,7 +1040,11 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
       }
     }
 
-    edges.sort((a, b) => _pretty(a.toName).compareTo(_pretty(b.toName)));
+    // ORDEN CORRECTO: por especie origen y luego destino
+    edges.sort((a, b) {
+      final c1 = a.fromSpeciesId.compareTo(b.fromSpeciesId);
+      return c1 != 0 ? c1 : a.toSpeciesId.compareTo(b.toSpeciesId);
+    });
     return edges;
   }
 
@@ -1064,14 +1112,22 @@ class _FormCard {
   });
 }
 
+// EVO TILE CLICABLE
 class _EvoMonTile extends StatelessWidget {
   final int? pokemonId;
   final String name;
-  const _EvoMonTile({super.key, required this.pokemonId, required this.name});
+  final VoidCallback? onTap;
+
+  const _EvoMonTile({
+    super.key,
+    required this.pokemonId,
+    required this.name,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    final content = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         if (pokemonId != null)
@@ -1081,6 +1137,17 @@ class _EvoMonTile extends StatelessWidget {
         const SizedBox(width: 8),
         Text(name, style: const TextStyle(fontWeight: FontWeight.w600)),
       ],
+    );
+
+    if (onTap == null) return content;
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+        child: content,
+      ),
     );
   }
 }
