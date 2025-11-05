@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Componentes reutilizables para visualizar estadísticas base.
 /// Barra horizontal para una estadística base (HP, ATK, etc.)
 class StatBar extends StatelessWidget {
   final String label;
@@ -13,6 +14,7 @@ class StatBar extends StatelessWidget {
     this.color,
   });
 
+  /// Convierte el identificador crudo de la estadística a una etiqueta legible.
   String _getStatDisplayName(String statName) {
     switch (statName.toLowerCase()) {
       case 'hp':
@@ -32,6 +34,7 @@ class StatBar extends StatelessWidget {
     }
   }
 
+  /// Determina el color de la barra en función del valor de la estadística.
   Color _getStatColor(String statName) {
     // Color basado en el valor de la estadística
     if (value < 50) {

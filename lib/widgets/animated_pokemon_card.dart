@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/widgets/pokemon_card.dart';
 
+/// Utilidades para dotar a las tarjetas de Pokémon de animaciones y microinteracciones.
 /// Widget animado que envuelve una tarjeta de Pokémon con efectos de entrada
 class AnimatedPokemonCard extends StatefulWidget {
   final String name;

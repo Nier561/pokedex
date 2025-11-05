@@ -1,3 +1,6 @@
+/// Pantalla de detalle con información extensa de cada Pokémon, incluyendo
+/// estadísticas, movimientos, evoluciones, formas alternas y reproducción de
+/// su grito característico.
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -9,20 +12,27 @@ import 'package:pokedex/widgets/type_gradients.dart';
 import 'package:pokedex/widgets/start_bar.dart';
 import 'package:pokedex/widgets/animated_detail_screen.dart';
 
+/// Devuelve la URL de la ilustración oficial para un Pokémon específico.
 String _imageById(int id) =>
     'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png';
 
+/// Devuelve la URL del archivo de audio con el grito (cry) del Pokémon.
 String _cryById(int id) =>
     'https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/$id.ogg';
 
+/// Obtiene un color representativo para un tipo, usando el gradiente asociado.
 Color _typeColor(String type) {
   final g = typeGradients[type] ?? typeGradients['normal']!;
   return g.colors.first;
 }
 
+/// Convierte un texto a formato capitalizado preservando el resto del string.
 String _pretty(String s) => s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
+
+/// Convierte cadenas con guiones (e.g. `mr-mime`) a título legible (`Mr Mime`).
 String _titleCase(String s) => s.split('-').map((p) => _pretty(p)).join(' ');
 
+/// Formatea las probabilidades de aparición por género según la PokéAPI.
 String _genderText(num? genderRate) {
   if (genderRate == null || genderRate == -1) return 'Genderless';
   final female = (genderRate * 12.5);
@@ -30,6 +40,7 @@ String _genderText(num? genderRate) {
   return '♂ ${male.toStringAsFixed(1)}%    ♀ ${female.toStringAsFixed(1)}%';
 }
 
+/// Pantalla que muestra la ficha completa de un Pokémon, organizada en tabs.
 class PokemonDetailScreen extends StatefulWidget {
   final int id;
   // Lista de IDs para navegar al siguiente/anterior dentro de la misma lista
@@ -47,6 +58,7 @@ class PokemonDetailScreen extends StatefulWidget {
   State<PokemonDetailScreen> createState() => _PokemonDetailScreenState();
 }
 
+/// Maneja la carga de datos, animaciones y navegación lateral del detalle.
 class _PokemonDetailScreenState extends State<PokemonDetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
@@ -73,6 +85,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
     super.dispose();
   }
 
+  /// Reproduce el grito del Pokémon usando el paquete `audioplayers`.
   Future<void> _playCry() async {
     try {
       // Reproducir directamente con nueva fuente; el plugin maneja el cambio
@@ -80,6 +93,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
     } catch (_) {}
   }
 
+  /// Lanza la reproducción automática del grito la primera vez que se abre.
   void _maybeAutoplayCry() {
     if (_playedOnOpen) return;
     _playedOnOpen = true;
@@ -472,6 +486,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
     );
   }
 
+  /// Permite navegar al Pokémon anterior/siguiente al detectar un swipe.
   void _onHorizontalDragEnd(DragEndDetails details) {
     final v = details.primaryVelocity ?? 0;
     // v < 0: swipe izquierda -> siguiente; v > 0: swipe derecha -> anterior
@@ -512,6 +527,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
     );
   }
 
+  /// Construye la pestaña "About" con peso, altura, habilidades y flavor text.
   Widget _buildAboutTab(
       int height,
       int weight,
@@ -568,6 +584,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
     );
   }
 
+  /// Renderiza la pestaña de estadísticas base usando barras horizontales.
   Widget _buildBaseStatsTab(
       List<Map<String, dynamic>> stats,
       Color primaryColor,
@@ -597,6 +614,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
   }
 
   // ---------- Evolution UI ----------
+  /// Muestra la línea evolutiva en formato de lista con chips de método.
   Widget _buildEvolutionTab(List<_EvoEdge> edges) {
     if (edges.isEmpty) {
       return const Center(child: Text('No evolution data'));
@@ -671,6 +689,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
   }
 
   // ---------- Forms grid (Megas/G-Max y otras Forms) ----------
+  /// Construye una grilla de tarjetas para Megas, G-Max y otras formas.
   Widget _buildFormsGrid(List<_FormCard> items, {required String emptyText}) {
     if (items.isEmpty) return Center(child: Text(emptyText));
 
@@ -744,6 +763,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
   }
 
   // ---------- Moves ----------
+  /// Agrupa y muestra los movimientos aprendidos según el método de aprendizaje.
   Widget _buildMovesTab({
     required List<Map<String, dynamic>> movesLevelUp,
     required List<Map<String, dynamic>> movesMachine,
@@ -843,6 +863,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
     );
   }
 
+  /// Fila reutilizable para mostrar metadatos clave (altura, peso, etc.).
   Widget _buildInfoRow(String label, String value) {
     return InteractiveButton(
       onTap: () {},
@@ -875,6 +896,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
 
   // --------- Evolución: helpers ---------
 
+  /// Genera el nombre amigable a mostrar para una forma específica.
   String _formDisplayName(String baseName, String formName, bool isMega) {
     final bn = _titleCase(baseName);
     final f = formName.trim().toLowerCase();
@@ -904,6 +926,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
     return '$bn (${_titleCase(formName)})';
   }
 
+  /// Heurística para priorizar qué método de evolución mostrar cuando hay varios.
   int _evoScore(Map<String, dynamic> evo) {
     final hasItem = evo['item'] != null && (evo['item'] as String).isNotEmpty;
     final hasLevel = evo['min_level'] != null;
@@ -920,6 +943,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
     return score;
   }
 
+  /// Simplifica la estructura compleja del método de evolución de la API.
   Map<String, dynamic> _normalizeEvo(Map<String, dynamic> raw) {
     return {
       'trigger':
@@ -945,6 +969,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
     };
   }
 
+  /// Crea chips descriptivos para cada requisito del método de evolución.
   List<Widget> _buildMethodChips(Map<String, dynamic> evo) {
     final chips = <Widget>[];
 
@@ -1027,6 +1052,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
     return chips;
   }
 
+  /// Procesa el árbol de evoluciones bruto y genera una lista depurada de aristas.
   List<_EvoEdge> _extractAndReduceEvolutionEdges(
       Map<String, dynamic>? chain) {
     if (chain == null) return const [];
@@ -1108,15 +1134,18 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
   }
 
   // --------- Forms helpers ---------
+  /// Determina si el nombre corresponde a la forma por defecto.
   bool _isDefaultForm(String formName) =>
       formName.isEmpty || formName == 'default';
 
+  /// Detecta si una forma pertenece a las variantes Gigantamax.
   bool _isGmax(String formName, String pname) {
     final f = formName.toLowerCase();
     final n = pname.toLowerCase();
     return f.contains('gmax') || f.contains('gigantamax') || n.contains('gmax');
   }
 
+  /// Indica si la forma corresponde a una variante regional.
   bool _isRegional(String formName) {
     final f = formName.toLowerCase();
     return f.contains('alola') ||
@@ -1125,6 +1154,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
         f.contains('paldea');
   }
 
+  /// Devuelve la etiqueta textual apropiada para la región de la forma.
   String _regionalTag(String formName) {
     final f = formName.toLowerCase();
     if (f.contains('alola')) return 'Alola';
@@ -1135,6 +1165,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
   }
 }
 
+/// Representa una relación de evolución simplificada entre dos especies.
 class _EvoEdge {
   final int fromSpeciesId;
   final int? fromPokemonId;
@@ -1155,6 +1186,7 @@ class _EvoEdge {
   });
 }
 
+/// Información necesaria para renderizar una tarjeta de forma alternativa.
 class _FormCard {
   final int pokemonId;
   final String title;
@@ -1171,7 +1203,7 @@ class _FormCard {
   });
 }
 
-// EVO TILE CLICABLE
+/// Tile interactivo usado para representar un Pokémon en la sección de evolución.
 class _EvoMonTile extends StatelessWidget {
   final int? pokemonId;
   final String name;
