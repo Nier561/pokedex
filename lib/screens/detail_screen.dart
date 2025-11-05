@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:pokedex/widgets/page_transitions.dart';
 
 import 'package:pokedex/graphql/PokemonDetail.graphql.dart';
 import 'package:pokedex/widgets/type_badge.dart';
@@ -31,7 +32,16 @@ String _genderText(num? genderRate) {
 
 class PokemonDetailScreen extends StatefulWidget {
   final int id;
-  const PokemonDetailScreen({super.key, required this.id});
+  // Lista de IDs para navegar al siguiente/anterior dentro de la misma lista
+  final List<int>? listIds;
+  // Índice actual dentro de esa lista
+  final int? initialIndex;
+  const PokemonDetailScreen({
+    super.key,
+    required this.id,
+    this.listIds,
+    this.initialIndex,
+  });
 
   @override
   State<PokemonDetailScreen> createState() => _PokemonDetailScreenState();
@@ -42,13 +52,18 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
   late TabController _tabController;
   final _player = AudioPlayer();
   bool _playedOnOpen = false;
+  // Contexto de navegación dentro de la lista
+  late final List<int> _ids;
+  late final int _indexInList;
 
   @override
   void initState() {
     super.initState();
     // 6 tabs (About, Base, Evo, Moves, Megas/G-Max, Forms)
     _tabController = TabController(length: 6, vsync: this);
-    _player.setSource(UrlSource(_cryById(widget.id))); // warm-up
+    _ids = widget.listIds ?? const [];
+    _indexInList = widget.initialIndex ?? -1;
+    // Quitamos warm-up para evitar IllegalState al reconfigurar el MediaPlayer
   }
 
   @override
@@ -60,7 +75,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
 
   Future<void> _playCry() async {
     try {
-      await _player.stop();
+      // Reproducir directamente con nueva fuente; el plugin maneja el cambio
       await _player.play(UrlSource(_cryById(widget.id)));
     } catch (_) {}
   }
@@ -77,7 +92,8 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
       options: QueryOptions(
         document: documentNodeQueryPokemonDetailV3,
         variables: {'id': widget.id, 'langId': 9},
-        fetchPolicy: FetchPolicy.cacheFirst,
+        fetchPolicy: FetchPolicy.cacheAndNetwork,
+        errorPolicy: ErrorPolicy.ignore,
       ),
       builder: (result, {fetchMore, refetch}) {
         if (result.isLoading && result.data == null) {
@@ -256,9 +272,11 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
               (a['name'] as String).compareTo(b['name'] as String));
 
         return AnimatedDetailScreen(
-          child: Scaffold(
-            body: Column(
-              children: [
+          child: GestureDetector(
+            onHorizontalDragEnd: _onHorizontalDragEnd,
+            child: Scaffold(
+              body: Column(
+                children: [
                 // Header con gradiente
                 Container(
                   decoration: BoxDecoration(gradient: gradient),
@@ -447,9 +465,50 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen>
                 ),
               ],
             ),
+            ),
           ),
         );
       },
+    );
+  }
+
+  void _onHorizontalDragEnd(DragEndDetails details) {
+    final v = details.primaryVelocity ?? 0;
+    // v < 0: swipe izquierda -> siguiente; v > 0: swipe derecha -> anterior
+    int? targetIndex;
+    int? targetId;
+
+    if (_ids.isNotEmpty && _indexInList >= 0) {
+      if (v < 0 && _indexInList + 1 < _ids.length) {
+        targetIndex = _indexInList + 1;
+        targetId = _ids[targetIndex];
+      } else if (v > 0 && _indexInList - 1 >= 0) {
+        targetIndex = _indexInList - 1;
+        targetId = _ids[targetIndex];
+      }
+    } else {
+      // Fallback: navegar por ID secuencial
+      if (v < 0) {
+        targetId = widget.id + 1;
+      } else if (v > 0) {
+        targetId = widget.id - 1;
+      }
+      if (targetId != null && targetId < 1) targetId = null;
+    }
+
+    if (targetId == null) return;
+    // Detener audio antes de navegar para evitar estados inválidos del MediaPlayer
+    try { _player.stop(); } catch (_) {}
+    // Reemplazar la ruta actual en lugar de apilar otra pantalla de detalle,
+    // así el botón atrás siempre regresa a la lista inicial.
+    Navigator.of(context).pushReplacement(
+      ScaleFadePageRoute(
+        child: PokemonDetailScreen(
+          id: targetId,
+          listIds: _ids.isNotEmpty ? _ids : null,
+          initialIndex: targetIndex,
+        ),
+      ),
     );
   }
 

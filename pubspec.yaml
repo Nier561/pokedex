@@ -42,6 +42,7 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   gql: any
+  gql_dedupe_link: ^2.0.4-alpha+1715521079596
   google_fonts: ^6.3.2
 dev_dependencies:
   flutter_test:
