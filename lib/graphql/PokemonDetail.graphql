@@ -1,4 +1,4 @@
-# language_id: 9 = English (7 = Spanish)
+# language_id: 9 = English
 query PokemonDetailV3($id: Int!, $langId: Int! = 9) {
     pokemon_v2_pokemon_by_pk(id: $id) {
         id
@@ -6,50 +6,63 @@ query PokemonDetailV3($id: Int!, $langId: Int! = 9) {
         height
         weight
 
-        # Tipos y stats
+        # --- Tipos y Eficacia ---
         pokemon_v2_pokemontypes {
-            pokemon_v2_type { name }
+            pokemon_v2_type {
+                name
+                pokemon_v2_typeefficacies {
+                    damage_factor
+                    target_type_id
+                }
+            }
         }
+
+        # --- Stats ---
         pokemon_v2_pokemonstats {
             base_stat
             pokemon_v2_stat { name }
         }
 
-        # Habilidades con short_effect en el idioma pedido
+        # --- Habilidades ---
         pokemon_v2_pokemonabilities {
             is_hidden
             pokemon_v2_ability {
                 name
-                pokemon_v2_abilityeffecttexts(
-                    where: { language_id: { _eq: $langId } }
-                    limit: 1
-                ) { short_effect }
+                pokemon_v2_abilityeffecttexts(where: {language_id: {_eq: $langId}}, limit: 1) {
+                    short_effect
+                }
             }
         }
 
-        # ---------- ESPECIE (dex entry, cadena de evolución y TODAS LAS FORMAS) ----------
-        # Nota: en el esquema Hasura público de PokeAPI, desde "pokemon" la relación se llama "pokemonspecy".
+        # --- Especie ---
         pokemon_v2_pokemonspecy {
             gender_rate
+            generation_id
 
-            # Dex entry más reciente en el idioma solicitado
+            pokemon_v2_pokemonegggroups {
+                pokemon_v2_egggroup { name }
+            }
+
+            pokemon_v2_generation {
+                pokemon_v2_region { name }
+            }
+
             pokemon_v2_pokemonspeciesflavortexts(
-                where: { language_id: { _eq: $langId } }
-                order_by: { version_id: desc }
+                where: {language_id: {_eq: $langId}}
+                order_by: {version_id: desc}
                 limit: 1
-            ) { flavor_text }
+            ) {
+                flavor_text
+            }
 
-            # Cadena de evolución completa + métodos
+            # Cadena de Evolución
             pokemon_v2_evolutionchain {
-                pokemon_v2_pokemonspecies(order_by: { order: asc }) {
+                pokemon_v2_pokemonspecies(order_by: {order: asc}) {
                     id
                     name
                     order
                     evolves_from_species_id
-
-                    # Para poder navegar al detalle, necesitamos un pokemon_id por species
                     pokemon_v2_pokemons(limit: 1) { id }
-
                     pokemon_v2_pokemonevolutions {
                         min_level
                         time_of_day
@@ -58,19 +71,20 @@ query PokemonDetailV3($id: Int!, $langId: Int! = 9) {
                         min_affection
                         needs_overworld_rain
                         turn_upside_down
+                        gender_id
+                        relative_physical_stats
                         trade_species_id
-
                         pokemon_v2_evolutiontrigger { name }
-                        pokemon_v2_item       { name }
-                        pokemon_v2_move       { name }
-                        pokemon_v2_type       { name }
-                        pokemon_v2_location   { name }
+                        pokemon_v2_item { name }
+                        pokemon_v2_move { name }
+                        pokemon_v2_type { name }
+                        pokemon_v2_location { name }
+                        # pokemon_v2_held_item omitido temporalmente por incompatibilidad de esquema
                     }
                 }
             }
 
-            # --- TODAS LAS FORMAS DE LA ESPECIE ---
-            # Traemos los pokémon que pertenecen a la especie y, para cada uno, sus "pokemonforms".
+            # Formas
             pokemon_v2_pokemons {
                 id
                 name
@@ -79,22 +93,18 @@ query PokemonDetailV3($id: Int!, $langId: Int! = 9) {
                     is_battle_only
                     form_name
                     name
-                    # Tipos por forma
                     pokemon_v2_pokemonformtypes {
                         pokemon_v2_type { name }
                     }
-                    # No dependemos de este JSON; usamos official-artwork por id,
-                    # pero lo dejamos por si quieres parsearlo luego
-                    pokemon_v2_pokemonformsprites(limit: 1) { sprites }
                 }
             }
         }
 
-        # Movimientos (ordenamos por version_group_id desc para quedarnos con lo más reciente)
-        pokemon_v2_pokemonmoves(order_by: [{ version_group_id: desc }, { level: asc }]) {
+        # --- Movimientos ---
+        pokemon_v2_pokemonmoves(order_by: [{version_group_id: desc}, {level: asc}]) {
             level
             version_group_id
-            pokemon_v2_movelearnmethod { name } # level-up | machine | tutor | egg
+            pokemon_v2_movelearnmethod { name }
             pokemon_v2_move {
                 name
                 power
@@ -102,7 +112,14 @@ query PokemonDetailV3($id: Int!, $langId: Int! = 9) {
                 accuracy
                 generation_id
                 pokemon_v2_type { name }
-                pokemon_v2_movedamageclass { name } # physical | special | status
+                pokemon_v2_movedamageclass { name }
+                pokemon_v2_moveflavortexts(
+                    where: {language_id: {_eq: $langId}}
+                    order_by: {version_group_id: desc}
+                    limit: 1
+                ) {
+                    flavor_text
+                }
             }
         }
     }

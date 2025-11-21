@@ -7,6 +7,10 @@ query PokemonListV2($limit: Int!, $offset: Int!, $search: String) {
     ) {
         id
         name
+        # Necesario para mapear a regiones o filtrar por generación
+        pokemon_v2_pokemonspecy {
+            generation_id
+        }
         pokemon_v2_pokemontypes {
             pokemon_v2_type {
                 name

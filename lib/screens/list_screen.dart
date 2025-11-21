@@ -1,113 +1,65 @@
-/// Pantalla principal que muestra el listado de Pokémon con filtros,
-/// paginación infinita y búsqueda local.
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:pokedex/services/favorites_store.dart'; // Store de favoritos
 import 'package:pokedex/graphql/PokemonList.graphql.dart';
 import 'package:pokedex/graphql/PokemonDetail.graphql.dart';
+import 'package:pokedex/models/pokemon_list_dto.dart';
 import 'package:pokedex/widgets/type_gradients.dart';
 import 'package:pokedex/widgets/page_transitions.dart';
 import 'package:pokedex/screens/detail_screen.dart';
 import 'package:pokedex/widgets/animated_pokemon_card.dart';
 
-/// Construye la URL de la ilustración oficial (alta resolución) para el ID dado.
-String _imageById(int id) =>
-    'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png';
+enum SortMode { id, name }
 
-/// Construye la URL del sprite clásico (8-bit) que actúa como fallback visual.
-String _spriteById(int id) =>
-    'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$id.png';
-
-/// Widget que contiene la grilla principal y expone la pantalla de listado.
 class PokemonListScreen extends StatefulWidget {
-  const PokemonListScreen({super.key});
+  final int? initialGeneration;
+  const PokemonListScreen({super.key, this.initialGeneration});
 
   @override
   State<PokemonListScreen> createState() => _PokemonListScreenState();
 }
 
-/// Lógica de estado del listado: maneja filtros, búsqueda, prefetch y paginado.
 class _PokemonListScreenState extends State<PokemonListScreen> {
-  // Controlador de scroll para detectar “fin de lista”.
   final _scroll = ScrollController();
-
-  // Tamaño de página para cada fetch: menor para respuestas más rápidas
   static const _pageSize = 32;
-
-  // Estado local para saber si ya pedimos el primer batch.
   bool _mountedListener = false;
 
-  // Texto de búsqueda y debounce para evitar refetch excesivo.
   String _search = '';
   final TextEditingController _searchController = TextEditingController();
 
-  // Filtros: tipo y generación
-  String? _filterType;
-  int? _filterGen; // 1..9
+  // Filtros
+  List<String> _selectedTypes = [];
+  int? _userSelectedGen;
 
-  /// Catálogo completo de tipos disponible en la PokéAPI.
-  static const List<String> _allTypes = [
-    'normal',
-    'fire',
-    'water',
-    'grass',
-    'electric',
-    'ice',
-    'fighting',
-    'poison',
-    'ground',
-    'flying',
-    'psychic',
-    'bug',
-    'rock',
-    'ghost',
-    'dragon',
-    'dark',
-    'steel',
-    'fairy',
-  ];
+  // Ordenamiento y Favoritos
+  SortMode _sortMode = SortMode.id;
+  bool _showOnlyFavorites = false;
 
-  /// Rango de IDs asociado a cada generación (pares `[inicio, fin]`).
+  static const Map<int, int> _genMaxIds = {
+    1: 151, 2: 251, 3: 386, 4: 493,
+    5: 649, 6: 721, 7: 809, 8: 898, 9: 1010,
+  };
   static const Map<int, List<int>> _genRanges = {
-    1: [1, 151],
-    2: [152, 251],
-    3: [252, 386],
-    4: [387, 493],
-    5: [494, 649],
-    6: [650, 721],
-    7: [722, 809],
-    8: [810, 898],
-    9: [899, 1010],
+    1: [1, 151], 2: [152, 251], 3: [252, 386], 4: [387, 493],
+    5: [494, 649], 6: [650, 721], 7: [722, 809], 8: [810, 898], 9: [899, 1010],
   };
-
-  // Lista blanca de especies base que usan guion en su nombre oficial
-  // y deben aparecer en la lista principal.
+  static const List<String> _allTypes = [
+    'normal', 'fire', 'water', 'grass', 'electric', 'ice', 'fighting',
+    'poison', 'ground', 'flying', 'psychic', 'bug', 'rock', 'ghost',
+    'dragon', 'dark', 'steel', 'fairy',
+  ];
   static const Set<String> _hyphenBaseWhitelist = {
-    'ho-oh',
-    'porygon-z',
-    'type-null',
-    'jangmo-o',
-    'hakamo-o',
-    'kommo-o',
-    'tapu-koko',
-    'tapu-lele',
-    'tapu-bulu',
-    'tapu-fini',
-    'mr-mime',
-    'mr-rime',
-    'mime-jr',
-    'nidoran-f',
-    'nidoran-m',
+    'ho-oh', 'porygon-z', 'type-null', 'jangmo-o', 'hakamo-o', 'kommo-o',
+    'tapu-koko', 'tapu-lele', 'tapu-bulu', 'tapu-fini', 'mr-mime', 'mr-rime',
+    'mime-jr', 'nidoran-f', 'nidoran-m',
   };
 
-  // Prefetch de toda la lista para filtros instantáneos
-  List<Map<String, dynamic>>? _allPokes;
+  List<PokemonListDto>? _allPokes;
   bool _prefetchingAll = false;
 
   @override
   void initState() {
     super.initState();
-    // El listener se agrega en build (cuando tenemos acceso al Query), una sola vez.
-    // Prefetch de todo el catálogo en background para filtros por tipo/generación
     WidgetsBinding.instance.addPostFrameCallback((_) => _prefetchAll());
   }
 
@@ -118,530 +70,355 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
     super.dispose();
   }
 
-  /// Normaliza el input del usuario al patrón `ILIKE` usado por la PokéAPI.
-  String _sqlLike(String q) {
-    final t = q.trim();
-    if (t.isEmpty) return '%%';
-    return '%${t.toLowerCase()}%';
-  }
-
-  /// Realiza un request masivo para cachear todas las especies y permitir
-  /// filtros instantáneos sin depender del `fetchMore` incremental.
   Future<void> _prefetchAll() async {
     if (_prefetchingAll || !mounted) return;
     setState(() => _prefetchingAll = true);
     try {
       final client = GraphQLProvider.of(context).value;
-      // Un solo request grande (one-shot) para traer todo el catálogo
-      const int bigLimit =
-          2000; // suficientemente grande para cubrir todas las entradas
-      final res = await client.query(
-        QueryOptions(
-          document: documentNodeQueryPokemonListV2,
-          variables: {'limit': bigLimit, 'offset': 0, 'search': '%%'},
-          fetchPolicy: FetchPolicy.networkOnly,
-        ),
-      );
-      final List data = (res.data?['pokemon_v2_pokemon'] as List?) ?? const [];
-      final List<Map<String, dynamic>> allAsMaps = data
-          .map((e) => Map<String, dynamic>.from(e as Map))
-          .toList();
-      if (mounted) setState(() => _allPokes = allAsMaps);
-    } catch (_) {
-      // En caso de fallo, seguimos con paginación normal
-    } finally {
+      final res = await client.query(QueryOptions(
+        document: documentNodeQueryPokemonListV2,
+        variables: {'limit': 2000, 'offset': 0, 'search': '%%'},
+        fetchPolicy: FetchPolicy.networkOnly,
+      ));
+      final rawList = (res.data?['pokemon_v2_pokemon'] as List?) ?? [];
+      final dtos = rawList.map((e) => PokemonListDto.fromMap(e)).toList();
+      if (mounted) setState(() => _allPokes = dtos);
+    } catch (_) {} finally {
       if (mounted) setState(() => _prefetchingAll = false);
     }
   }
 
-  /// Aplica filtros en memoria (nombre, tipo y generación) sobre la lista.
-  List _applyClientFilter(List pokes) {
-    // Filtrar solo por nombre (case-insensitive, parcial)
+  List<PokemonListDto> _applyClientFilter(List<PokemonListDto> pokes) {
     final q = _search.trim().toLowerCase();
-    return pokes.where((e) {
-      final p = e as Map<String, dynamic>;
-      final name = (p['name'] as String).toLowerCase();
+    final int? regionLimitId = widget.initialGeneration != null ? _genMaxIds[widget.initialGeneration] : null;
+    final favorites = FavoritesStore().favorites;
 
-      // Oculta todas las formas alternas que tengan '-' en el nombre.
-      // Excepciones:
-      // - Zygarde 50% se mantiene (otras formas de Zygarde se ocultan)
-      // - Especies base con guion en nombre oficial (lista blanca)
-      bool shouldHide(String n) {
-        if (n.startsWith('zygarde-')) {
-          // Solo se permite la forma 50%; el resto se oculta
-          return !n.contains('-50');
-        }
-        if (n.contains('-')) {
-          // Mantener visibles las especies base con guion
-          if (_hyphenBaseWhitelist.contains(n)) return false;
-          return true;
-        }
+    // 1. Filtrado
+    final filtered = pokes.where((p) {
+      // Región Global
+      if (regionLimitId != null && p.id > regionLimitId) return false;
+
+      // Variantes
+      final name = p.name.toLowerCase();
+      if (name.startsWith('zygarde-')) {
+        if (!name.contains('-50')) return false;
+      } else if (name.contains('-') && !_hyphenBaseWhitelist.contains(name)) {
         return false;
       }
 
-      if (shouldHide(name)) return false;
-      // Filtro por nombre
+      // Texto
       if (q.isNotEmpty && !name.contains(q)) return false;
-      // Filtro por tipo
-      if (_filterType != null) {
-        final types = (p['pokemon_v2_pokemontypes'] as List)
-            .map((e) => e['pokemon_v2_type']['name'] as String)
-            .toList();
-        if (!types.contains(_filterType)) return false;
+
+      // Favoritos
+      if (_showOnlyFavorites && !favorites.contains(p.id)) return false;
+
+      // Tipos
+      if (_selectedTypes.isNotEmpty) {
+        if (!_selectedTypes.every((t) => p.types.contains(t))) return false;
       }
-      // Filtro por generación (por rango de IDs)
-      if (_filterGen != null) {
-        final id = p['id'] as int;
-        final r = _genRanges[_filterGen]!;
-        if (id < r[0] || id > r[1]) return false;
+
+      // Generación Específica
+      if (_userSelectedGen != null) {
+        final range = _genRanges[_userSelectedGen]!;
+        if (p.id < range[0] || p.id > range[1]) return false;
       }
+
       return true;
     }).toList();
+
+    // 2. Ordenamiento
+    filtered.sort((a, b) {
+      if (_sortMode == SortMode.name) {
+        return a.name.compareTo(b.name);
+      }
+      return a.id.compareTo(b.id); // Default ID
+    });
+
+    return filtered;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
-        floatHeaderSlivers: true,
-        headerSliverBuilder: (context, innerBoxIsScrolled) => const [
-          SliverAppBar(title: Text('Pokédex'), floating: true, snap: true),
-        ],
-        body: Query(
-          // Usa el documentNode generado por graphql_codegen para tu query de lista
-          options: QueryOptions(
-            document: documentNodeQueryPokemonListV2,
-            // Primer batch con búsqueda actual (name ilike)
-            variables: {'limit': _pageSize, 'offset': 0, 'search': '%%'},
-            // Usa cache y refresca en segundo plano para evitar errores intermitentes
-            fetchPolicy: FetchPolicy.cacheAndNetwork,
-            errorPolicy: ErrorPolicy.ignore,
-          ),
-          builder: (result, {fetchMore, refetch}) {
-            // Conectar el listener una única vez cuando ya hay fetchMore disponible.
-            if (!_mountedListener && fetchMore != null) {
-              _mountedListener = true;
-              _scroll.addListener(() {
-                // Adelanta el prefetch: 800px antes del final
-                if (_scroll.position.pixels >
-                    _scroll.position.maxScrollExtent - 800) {
-                  final onlyTextSearching = _search.trim().isNotEmpty;
-                  // Permitimos fetchMore cuando NO hay texto en búsqueda.
-                  if (!onlyTextSearching &&
-                      _allPokes == null &&
-                      !_prefetchingAll) {
-                    _maybeFetchMore(result, fetchMore);
-                  }
-                }
-              });
-            }
+    String title = 'Pokédex';
+    if (widget.initialGeneration != null) title = 'Gen ${widget.initialGeneration} Dex';
 
-            // Estado de carga inicial
-            if (result.isLoading && result.data == null) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            // Errores
-            if (result.hasException) {
-              return RefreshIndicator(
-                onRefresh: () async {
-                  await refetch?.call();
-                },
-                child: ListView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  children: const [
-                    SizedBox(height: 80),
-                    Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.wifi_off, size: 64, color: Colors.black26),
-                          SizedBox(height: 12),
-                          Text(
-                            'No se pudo conectar con la PokéAPI',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black54,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 6),
-                            child: Text(
-                              'Desliza para reintentar',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.black38,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+    // Escuchamos a FavoritesStore para repintar si cambian los favoritos
+    return AnimatedBuilder(
+        animation: FavoritesStore(),
+        builder: (context, _) {
+          return Scaffold(
+            body: NestedScrollView(
+              floatHeaderSlivers: true,
+              headerSliverBuilder: (context, _) => [
+                SliverAppBar(
+                  title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  floating: true, snap: true, centerTitle: true,
+                  leading: widget.initialGeneration != null
+                      ? IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context))
+                      : null,
+                  actions: [
+                    // Toggle Favoritos
+                    IconButton(
+                      icon: Icon(_showOnlyFavorites ? Icons.favorite : Icons.favorite_border),
+                      color: _showOnlyFavorites ? Colors.red : null,
+                      onPressed: () => setState(() => _showOnlyFavorites = !_showOnlyFavorites),
+                    ),
+                    // Sort Menu
+                    PopupMenuButton<SortMode>(
+                      icon: const Icon(Icons.sort),
+                      onSelected: (s) => setState(() => _sortMode = s),
+                      itemBuilder: (context) => const [
+                        PopupMenuItem(value: SortMode.id, child: Text('Sort by ID (#)')),
+                        PopupMenuItem(value: SortMode.name, child: Text('Sort by Name (A-Z)')),
+                      ],
                     ),
                   ],
                 ),
-              );
-            }
-
-            // Fuente de datos: usa el prefetch completo si está disponible
-            final List pokes =
-                _allPokes ??
-                ((result.data?['pokemon_v2_pokemon'] as List?) ?? const []);
-            final List filtered = _applyClientFilter(pokes);
-            final List<int> filteredIds = filtered
-                .map<int>((e) => (e as Map<String, dynamic>)['id'] as int)
-                .toList();
-            final bool shouldShowLoader =
-                _allPokes == null &&
-                _search.trim().isEmpty &&
-                pokes.length % _pageSize == 0;
-
-            // UI: barra de búsqueda por nombre + grilla
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Buscar por nombre',
-                      prefixIcon: const Icon(Icons.search),
-                      suffixIcon: _search.isNotEmpty
-                          ? IconButton(
-                              icon: const Icon(Icons.clear),
-                              onPressed: () {
-                                setState(() {
-                                  _search = '';
-                                  _searchController.clear();
-                                });
-                              },
-                            )
-                          : null,
-                      filled: true,
-                      fillColor: Colors.white,
-                      hintStyle: const TextStyle(color: Colors.black54),
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 12,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: const BorderSide(color: Colors.transparent),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: const BorderSide(color: Colors.transparent),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: const BorderSide(
-                          color: Color(0xFF8B7ED8),
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                    style: const TextStyle(color: Colors.black87),
-                    cursorColor: const Color(0xFF8B7ED8),
-                    textInputAction: TextInputAction.search,
-                    keyboardType: TextInputType.text,
-                    onChanged: (value) {
-                      // Actualiza la lista al instante y permite escribir letra por letra
-                      setState(() => _search = value);
-                    },
-                  ),
+              ],
+              body: Query(
+                options: QueryOptions(
+                  document: documentNodeQueryPokemonListV2,
+                  variables: {'limit': _pageSize, 'offset': 0, 'search': '%%'},
+                  fetchPolicy: FetchPolicy.cacheAndNetwork,
                 ),
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () async {
-                      await refetch?.call();
-                      await _prefetchAll();
-                    },
-                    child: filtered.isEmpty
-                        ? ListView(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            children: [
-                              const SizedBox(height: 80),
-                              Center(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(
-                                      Icons.search_off,
-                                      size: 64,
-                                      color: Colors.black26,
-                                    ),
-                                    const SizedBox(height: 12),
-                                    Text(
-                                      _search.trim().isEmpty
-                                          ? 'No hay Pokémon disponibles'
-                                          : 'El Pokémon no existe',
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.black54,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    if (_search.trim().isNotEmpty)
-                                      const Padding(
-                                        padding: EdgeInsets.only(top: 6),
-                                        child: Text(
-                                          'Prueba con otro nombre',
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            color: Colors.black38,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          )
-                        : GridView.builder(
+                builder: (result, {fetchMore, refetch}) {
+                  if (!_mountedListener && fetchMore != null) {
+                    _mountedListener = true;
+                    _scroll.addListener(() {
+                      if (_scroll.position.pixels > _scroll.position.maxScrollExtent - 800) {
+                        final isFiltering = _search.isNotEmpty || _selectedTypes.isNotEmpty || _userSelectedGen != null || _showOnlyFavorites;
+                        if (!isFiltering && _allPokes == null && !_prefetchingAll) {
+                          _maybeFetchMore(result, fetchMore);
+                        }
+                      }
+                    });
+                  }
+
+                  if (result.isLoading && result.data == null) return const Center(child: CircularProgressIndicator());
+
+                  List<PokemonListDto> sourceList;
+                  if (_allPokes != null) {
+                    sourceList = _allPokes!;
+                  } else {
+                    final raw = (result.data?['pokemon_v2_pokemon'] as List?) ?? [];
+                    sourceList = raw.map((e) => PokemonListDto.fromMap(e)).toList();
+                  }
+
+                  final filtered = _applyClientFilter(sourceList);
+                  final filteredIds = filtered.map((e) => e.id).toList();
+
+                  return Column(
+                    children: [
+                      _buildSearchBar(),
+                      Expanded(
+                        child: RefreshIndicator(
+                          onRefresh: () async { await refetch?.call(); await _prefetchAll(); },
+                          child: filtered.isEmpty
+                              ? ListView(children: const [SizedBox(height: 80), Center(child: Text('No Pokémon found', style: TextStyle(color: Colors.grey, fontSize: 16)))])
+                              : GridView.builder(
                             controller: _scroll,
                             padding: const EdgeInsets.all(12),
-                            cacheExtent: 800,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 1.30,
-                                  mainAxisSpacing: 10,
-                                  crossAxisSpacing: 12,
-                                ),
-                            itemCount:
-                                filtered.length + (shouldShowLoader ? 1 : 0),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 1.30, mainAxisSpacing: 10, crossAxisSpacing: 12),
+                            itemCount: filtered.length,
                             itemBuilder: (context, index) {
-                              if (index >= filtered.length) {
-                                if (shouldShowLoader) {
-                                  _maybeFetchMore(result, fetchMore);
-                                  return const Center(
-                                    child: Padding(
-                                      padding: EdgeInsets.all(16),
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  );
-                                } else {
-                                  return const SizedBox.shrink();
-                                }
-                              }
-
-                              final p = filtered[index] as Map<String, dynamic>;
-                              final id = p['id'] as int;
-                              final name = p['name'] as String;
-                              final types =
-                                  (p['pokemon_v2_pokemontypes'] as List)
-                                      .map(
-                                        (e) =>
-                                            e['pokemon_v2_type']['name']
-                                                as String,
-                                      )
-                                      .toList();
-
-                              final primaryType = types.isNotEmpty
-                                  ? types.first
-                                  : 'normal';
+                              final p = filtered[index];
+                              final primaryType = p.types.isNotEmpty ? p.types.first : 'normal';
+                              final isFav = FavoritesStore().isFavorite(p.id);
 
                               return InteractivePokemonCard(
                                 onTap: () {
-                                  final client = GraphQLProvider.of(
-                                    context,
-                                  ).value;
-                                  client.query(
-                                    QueryOptions(
-                                      document:
-                                          documentNodeQueryPokemonDetailV3,
-                                      variables: {'id': id},
-                                      fetchPolicy: FetchPolicy.cacheFirst,
-                                    ),
-                                  );
-                                  Navigator.of(
-                                    context,
-                                  ).pushWithScaleFadeTransition(
+                                  GraphQLProvider.of(context).value.query(QueryOptions(
+                                    document: documentNodeQueryPokemonDetailV3,
+                                    variables: {'id': p.id},
+                                    fetchPolicy: FetchPolicy.cacheFirst,
+                                  ));
+                                  Navigator.of(context).pushWithScaleFadeTransition(
                                     PokemonDetailScreen(
-                                      id: id,
+                                      id: p.id,
                                       listIds: filteredIds,
                                       initialIndex: index,
+                                      genContext: widget.initialGeneration,
                                     ),
                                   );
                                 },
-                                child: AnimatedPokemonCard(
-                                  index: index,
-                                  name: (() {
-                                    String n = name;
-                                    // Mostrar Zygarde 50% como "Zygarde"
-                                    if (n.startsWith('zygarde-') &&
-                                        n.contains('-50')) {
-                                      n = 'zygarde';
-                                    }
-                                    return n[0].toUpperCase() + n.substring(1);
-                                  })(),
-                                  types: types,
-                                  imageUrl: _imageById(id),
-                                  // fallbackImageUrl: _spriteById(id),
-                                  background:
-                                      typeGradients[primaryType] ??
-                                      typeGradients['normal']!,
+                                child: Stack(
+                                  children: [
+                                    AnimatedPokemonCard(
+                                      index: index, name: p.displayName, types: p.types,
+                                      imageUrl: p.imageUrl, background: typeGradients[primaryType] ?? typeGradients['normal']!,
+                                    ),
+                                    if (isFav)
+                                      const Positioned(
+                                        top: 8, right: 8,
+                                        child: Icon(Icons.favorite, color: Colors.white, size: 18),
+                                      ),
+                                  ],
                                 ),
                               );
                             },
                           ),
-                  ),
-                ),
-              ],
-            );
-          },
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: _openFilterSheet,
+              backgroundColor: const Color(0xFF8B7ED8),
+              child: const Icon(Icons.tune, color: Colors.white),
+            ),
+          );
+        }
+    );
+  }
+
+  Widget _buildSearchBar() {
+    // ... (Sin cambios respecto al anterior) ...
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: TextField(
+        controller: _searchController,
+        decoration: InputDecoration(
+          hintText: 'Search Pokémon',
+          prefixIcon: const Icon(Icons.search, color: Colors.grey),
+          suffixIcon: _search.isNotEmpty ? IconButton(icon: const Icon(Icons.clear), onPressed: () => setState(() { _search = ''; _searchController.clear(); })) : null,
+          filled: true, fillColor: Colors.white,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+          contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _openFilterSheet,
-        backgroundColor: const Color(0xFF8B7ED8), // Color morado claro
-        elevation: 8,
-        shape: const CircleBorder(),
-        child: const Icon(Icons.tune, color: Colors.white, size: 24),
+        onChanged: (v) => setState(() => _search = v),
       ),
     );
   }
 
-  /// Muestra el modal de filtros y actualiza el estado cuando el usuario
-  /// confirma la selección.
   void _openFilterSheet() {
-    String? tempType = _filterType;
-    int? tempGen = _filterGen;
+    List<String> tempTypes = List.from(_selectedTypes);
+    int? tempGen = _userSelectedGen;
+    final int maxGenAvailable = widget.initialGeneration ?? 9;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
+      backgroundColor: Colors.transparent,
       builder: (ctx) {
-        return SafeArea(
-          child: FractionallySizedBox(
-            heightFactor: 0.85,
-            child: StatefulBuilder(
-              builder: (ctx, setModal) {
-                return SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Filtros',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.85,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            children: [
+              Center(child: Container(margin: const EdgeInsets.symmetric(vertical: 12), width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)))),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: StatefulBuilder(builder: (ctx, setModal) {
+                    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      const Text('Filters', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 24),
+
+                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                        const Text('Types', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey)),
+                        Text('${tempTypes.length}/2', style: TextStyle(color: tempTypes.length == 2 ? Colors.red : Colors.grey, fontWeight: FontWeight.bold)),
+                      ]),
                       const SizedBox(height: 12),
-                      const Text('Tipo'),
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: _allTypes.map((t) {
-                          final selected = tempType == t;
-                          return ChoiceChip(
-                            label: Text(t[0].toUpperCase() + t.substring(1)),
-                            selected: selected,
-                            onSelected: (s) {
-                              setModal(() {
-                                tempType = s ? t : null;
-                              });
-                            },
-                          );
-                        }).toList(),
-                      ),
-                      const SizedBox(height: 16),
-                      const Text('Generación'),
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: List.generate(9, (i) {
-                          final g = i + 1;
-                          return ChoiceChip(
-                            label: Text('Gen $g'),
-                            selected: tempGen == g,
-                            onSelected: (s) {
-                              setModal(() {
-                                tempGen = s ? g : null;
-                              });
-                            },
-                          );
-                        }),
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _filterType = null;
-                                _filterGen = null;
-                              });
-                              Navigator.pop(ctx);
-                            },
-                            child: const Text('Limpiar'),
+                      Wrap(spacing: 8, runSpacing: 8, children: _allTypes.map((t) {
+                        final isSel = tempTypes.contains(t);
+                        final typeColor = typeGradients[t]?.colors.first ?? Colors.grey;
+
+                        return FilterChip(
+                          label: Text(t[0].toUpperCase() + t.substring(1)),
+                          selected: isSel,
+                          onSelected: (selected) {
+                            setModal(() {
+                              if (selected) {
+                                if (tempTypes.length < 2) tempTypes.add(t);
+                              } else {
+                                tempTypes.remove(t);
+                              }
+                            });
+                          },
+                          backgroundColor: Colors.white,
+                          selectedColor: typeColor,
+                          checkmarkColor: Colors.white,
+                          labelStyle: TextStyle(
+                              color: isSel ? Colors.white : Colors.black87,
+                              fontWeight: isSel ? FontWeight.bold : FontWeight.normal
                           ),
-                          const SizedBox(width: 8),
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                _filterType = tempType;
-                                _filterGen = tempGen;
-                              });
-                              Navigator.pop(ctx);
-                            },
-                            child: const Text('Aplicar'),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            side: BorderSide(color: isSel ? Colors.transparent : Colors.grey[300]!),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
+                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+                        );
+                      }).toList()),
+
+                      const SizedBox(height: 24),
+                      const Text('Generation', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey)),
+                      const SizedBox(height: 12),
+                      Wrap(spacing: 8, runSpacing: 8, children: List.generate(maxGenAvailable, (i) {
+                        final g = i + 1;
+                        final isSel = tempGen == g;
+                        return FilterChip(
+                          label: Text('Gen $g'),
+                          selected: isSel,
+                          onSelected: (s) => setModal(() => tempGen = s ? g : null),
+                          backgroundColor: Colors.grey[100],
+                          selectedColor: const Color(0xFF8B7ED8),
+                          checkmarkColor: Colors.white,
+                          labelStyle: TextStyle(color: isSel ? Colors.white : Colors.black87),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide.none),
+                        );
+                      })),
+                      const SizedBox(height: 40),
+                    ]);
+                  }),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Row(children: [
+                  Expanded(child: OutlinedButton(
+                    onPressed: () {
+                      setState(() { _selectedTypes.clear(); _userSelectedGen = null; });
+                      Navigator.pop(ctx);
+                    },
+                    style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                    child: const Text('Reset'),
+                  )),
+                  const SizedBox(width: 16),
+                  Expanded(child: ElevatedButton(
+                    onPressed: () {
+                      setState(() { _selectedTypes = tempTypes; _userSelectedGen = tempGen; });
+                      Navigator.pop(ctx);
+                    },
+                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF8B7ED8), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                    child: const Text('Apply Filters'),
+                  )),
+                ]),
+              )
+            ],
           ),
         );
       },
     );
   }
 
-  /// Dispara `fetchMore` si no está cargando y si aún hay registros en el backend.
-  /// Dispara `fetchMore` únicamente cuando existen más páginas disponibles y
-  /// no hay otra petición en curso.
   void _maybeFetchMore(QueryResult result, FetchMore? fetchMore) {
-    if (fetchMore == null) return;
-
-    // Si ya está en isLoading de un fetchMore previo, no dispares otro.
-    if (result.isLoading) return;
-
-    final current = (result.data?['pokemon_v2_pokemon'] as List?) ?? const [];
-    final nextOffset = current.length; // usamos la cantidad actual como offset
-
-    fetchMore(
-      FetchMoreOptions(
-        // las variables nuevas para la siguiente página
-        variables: {'offset': nextOffset, 'limit': _pageSize, 'search': '%%'},
-        // cómo “apendar” los nuevos resultados al result viejo
-        updateQuery: (prev, fetched) {
-          final prevList = (prev?['pokemon_v2_pokemon'] as List?) ?? const [];
-          final newList = (fetched?['pokemon_v2_pokemon'] as List?) ?? const [];
-
-          // Si el backend no trajo nada, no toques el estado (evita loop)
-          if (newList.isEmpty) return prev;
-
-          // Clona prev y concatena
-          final merged = {
-            ...prev!,
-            'pokemon_v2_pokemon': [...prevList, ...newList],
-          };
-          return merged;
-        },
-      ),
-    );
+    if (fetchMore == null || result.isLoading) return;
+    final currentLen = (result.data?['pokemon_v2_pokemon'] as List?)?.length ?? 0;
+    fetchMore(FetchMoreOptions(
+      variables: {'offset': currentLen, 'limit': _pageSize, 'search': '%%'},
+      updateQuery: (prev, fetched) {
+        final p = (prev?['pokemon_v2_pokemon'] as List?) ?? [];
+        final n = (fetched?['pokemon_v2_pokemon'] as List?) ?? [];
+        if (n.isEmpty) return prev;
+        return { ...prev!, 'pokemon_v2_pokemon': [...p, ...n] };
+      },
+    ));
   }
 }
