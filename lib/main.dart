@@ -4,11 +4,11 @@ import 'package:pokedex/api.dart'; // Tu cliente GraphQL global
 import 'package:pokedex/screens/main_screen.dart'; // La nueva pantalla de inicio
 
 void main() {
-  runApp(const MyApp());
+  runApp(const PokeDexApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class PokeDexApp extends StatelessWidget {
+  const PokeDexApp({super.key});
 
   @override
   Widget build(BuildContext context) {
