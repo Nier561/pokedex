@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pokedex/screens/region_selection_screen.dart';
-import 'package:pokedex/widgets/page_transitions.dart';
+import 'package:pokedex/presentation/screens/region_selection_screen.dart';
+import 'package:pokedex/presentation/screens/list_screen.dart'; // Import para navegación directa si es necesaria
+import 'package:pokedex/presentation/widgets/page_transitions.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -37,7 +38,17 @@ class MainScreen extends StatelessWidget {
                 color: Colors.white,
                 textColor: const Color(0xFF6E95FC),
                 onTap: () {
-                  Navigator.push(context, ScaleFadePageRoute(child: const RegionSelectionScreen()));
+                  Navigator.push(context, SlideRightPageRoute(child: const PokemonListScreen()));
+                },
+              ),
+              const SizedBox(height: 20),
+              _MenuButton(
+                label: 'Regions',
+                icon: Icons.map,
+                color: Colors.white.withOpacity(0.2),
+                textColor: Colors.white,
+                onTap: () {
+                  Navigator.push(context, SlideRightPageRoute(child: const RegionSelectionScreen()));
                 },
               ),
               const SizedBox(height: 20),

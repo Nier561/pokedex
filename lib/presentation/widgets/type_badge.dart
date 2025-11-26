@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pokedex/widgets/type_gradients.dart';
+import 'package:pokedex/presentation/widgets/type_gradients.dart';
 
 class TypeBadge extends StatelessWidget {
   final String type;

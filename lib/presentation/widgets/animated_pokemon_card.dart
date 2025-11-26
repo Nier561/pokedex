@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pokedex/widgets/type_badge.dart'; // Asegúrate de importar TypeBadge
+import 'package:pokedex/presentation/widgets/type_badge.dart'; // Asegúrate de importar TypeBadge
 
 /// Widget animado que envuelve una tarjeta de Pokémon con efectos de entrada.
 class AnimatedPokemonCard extends StatefulWidget {

@@ -1,28 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:pokedex/services/favorites_store.dart'; // Store de favoritos
-import 'package:pokedex/graphql/PokemonList.graphql.dart';
-import 'package:pokedex/graphql/PokemonDetail.graphql.dart';
-import 'package:pokedex/models/pokemon_list_dto.dart';
-import 'package:pokedex/widgets/type_gradients.dart';
-import 'package:pokedex/widgets/page_transitions.dart';
-import 'package:pokedex/screens/detail_screen.dart';
-import 'package:pokedex/widgets/animated_pokemon_card.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pokedex/domain/entities/pokemon.dart';
+import 'package:pokedex/presentation/providers/pokemon_provider.dart';
+import 'package:pokedex/presentation/providers/favorites_provider.dart';
+import 'package:pokedex/presentation/screens/detail_screen.dart';
+import 'package:pokedex/presentation/widgets/type_gradients.dart';
+import 'package:pokedex/presentation/widgets/page_transitions.dart';
+import 'package:pokedex/presentation/widgets/animated_pokemon_card.dart';
 
 enum SortMode { id, name }
 
-class PokemonListScreen extends StatefulWidget {
+class PokemonListScreen extends ConsumerStatefulWidget {
   final int? initialGeneration;
   const PokemonListScreen({super.key, this.initialGeneration});
 
   @override
-  State<PokemonListScreen> createState() => _PokemonListScreenState();
+  ConsumerState<PokemonListScreen> createState() => _PokemonListScreenState();
 }
 
-class _PokemonListScreenState extends State<PokemonListScreen> {
+class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
   final _scroll = ScrollController();
-  static const _pageSize = 32;
-  bool _mountedListener = false;
 
   String _search = '';
   final TextEditingController _searchController = TextEditingController();
@@ -54,13 +51,24 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
     'mime-jr', 'nidoran-f', 'nidoran-m',
   };
 
-  List<PokemonListDto>? _allPokes;
-  bool _prefetchingAll = false;
-
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _prefetchAll());
+    // Carga inicial de datos paginados
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(pokemonListProvider.notifier).loadMore();
+      // El prefetch se dispara automáticamente al ser observado o leído si usamos FutureProvider
+    });
+
+    _scroll.addListener(() {
+      if (_scroll.position.pixels > _scroll.position.maxScrollExtent - 800) {
+        final isFiltering = _search.isNotEmpty || _selectedTypes.isNotEmpty || _userSelectedGen != null || _showOnlyFavorites;
+        // Solo cargamos más si NO estamos filtrando (o si la lógica de filtro lo requiere, pero mantenemos comportamiento original)
+        if (!isFiltering) {
+          ref.read(pokemonListProvider.notifier).loadMore();
+        }
+      }
+    });
   }
 
   @override
@@ -70,28 +78,11 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
     super.dispose();
   }
 
-  Future<void> _prefetchAll() async {
-    if (_prefetchingAll || !mounted) return;
-    setState(() => _prefetchingAll = true);
-    try {
-      final client = GraphQLProvider.of(context).value;
-      final res = await client.query(QueryOptions(
-        document: documentNodeQueryPokemonListV2,
-        variables: {'limit': 2000, 'offset': 0, 'search': '%%'},
-        fetchPolicy: FetchPolicy.networkOnly,
-      ));
-      final rawList = (res.data?['pokemon_v2_pokemon'] as List?) ?? [];
-      final dtos = rawList.map((e) => PokemonListDto.fromMap(e)).toList();
-      if (mounted) setState(() => _allPokes = dtos);
-    } catch (_) {} finally {
-      if (mounted) setState(() => _prefetchingAll = false);
-    }
-  }
-
-  List<PokemonListDto> _applyClientFilter(List<PokemonListDto> pokes) {
+  // Aplica filtros en cliente sobre la lista recibida
+  List<Pokemon> _applyClientFilter(List<Pokemon> pokes) {
     final q = _search.trim().toLowerCase();
     final int? regionLimitId = widget.initialGeneration != null ? _genMaxIds[widget.initialGeneration] : null;
-    final favorites = FavoritesStore().favorites;
+    final favorites = ref.watch(favoritesProvider);
 
     // 1. Filtrado
     final filtered = pokes.where((p) {
@@ -142,140 +133,120 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
     String title = 'Pokédex';
     if (widget.initialGeneration != null) title = 'Gen ${widget.initialGeneration} Dex';
 
-    // Escuchamos a FavoritesStore para repintar si cambian los favoritos
-    return AnimatedBuilder(
-        animation: FavoritesStore(),
-        builder: (context, _) {
-          return Scaffold(
-            body: NestedScrollView(
-              floatHeaderSlivers: true,
-              headerSliverBuilder: (context, _) => [
-                SliverAppBar(
-                  title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  floating: true, snap: true, centerTitle: true,
-                  leading: widget.initialGeneration != null
-                      ? IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context))
-                      : null,
-                  actions: [
-                    // Toggle Favoritos
-                    IconButton(
-                      icon: Icon(_showOnlyFavorites ? Icons.favorite : Icons.favorite_border),
-                      color: _showOnlyFavorites ? Colors.red : null,
-                      onPressed: () => setState(() => _showOnlyFavorites = !_showOnlyFavorites),
-                    ),
-                    // Sort Menu
-                    PopupMenuButton<SortMode>(
-                      icon: const Icon(Icons.sort),
-                      onSelected: (s) => setState(() => _sortMode = s),
-                      itemBuilder: (context) => const [
-                        PopupMenuItem(value: SortMode.id, child: Text('Sort by ID (#)')),
-                        PopupMenuItem(value: SortMode.name, child: Text('Sort by Name (A-Z)')),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-              body: Query(
-                options: QueryOptions(
-                  document: documentNodeQueryPokemonListV2,
-                  variables: {'limit': _pageSize, 'offset': 0, 'search': '%%'},
-                  fetchPolicy: FetchPolicy.cacheAndNetwork,
-                ),
-                builder: (result, {fetchMore, refetch}) {
-                  if (!_mountedListener && fetchMore != null) {
-                    _mountedListener = true;
-                    _scroll.addListener(() {
-                      if (_scroll.position.pixels > _scroll.position.maxScrollExtent - 800) {
-                        final isFiltering = _search.isNotEmpty || _selectedTypes.isNotEmpty || _userSelectedGen != null || _showOnlyFavorites;
-                        if (!isFiltering && _allPokes == null && !_prefetchingAll) {
-                          _maybeFetchMore(result, fetchMore);
-                        }
-                      }
-                    });
-                  }
+    // Obtenemos datos desde los providers
+    final listState = ref.watch(pokemonListProvider);
+    final allPokesAsync = ref.watch(allPokemonProvider); // Para filtros globales
 
-                  if (result.isLoading && result.data == null) return const Center(child: CircularProgressIndicator());
+    // Decidimos qué lista mostrar: la completa (para filtros) o la paginada
+    List<Pokemon> sourceList;
+    if (_search.isNotEmpty || _selectedTypes.isNotEmpty || _userSelectedGen != null || _showOnlyFavorites) {
+      // Si hay filtros activos, usamos la lista completa precargada (si está lista)
+      sourceList = allPokesAsync.value ?? listState.pokemons;
+    } else {
+      sourceList = listState.pokemons;
+    }
 
-                  List<PokemonListDto> sourceList;
-                  if (_allPokes != null) {
-                    sourceList = _allPokes!;
-                  } else {
-                    final raw = (result.data?['pokemon_v2_pokemon'] as List?) ?? [];
-                    sourceList = raw.map((e) => PokemonListDto.fromMap(e)).toList();
-                  }
+    final filtered = _applyClientFilter(sourceList);
+    final filteredIds = filtered.map((e) => e.id).toList();
 
-                  final filtered = _applyClientFilter(sourceList);
-                  final filteredIds = filtered.map((e) => e.id).toList();
-
-                  return Column(
-                    children: [
-                      _buildSearchBar(),
-                      Expanded(
-                        child: RefreshIndicator(
-                          onRefresh: () async { await refetch?.call(); await _prefetchAll(); },
-                          child: filtered.isEmpty
-                              ? ListView(children: const [SizedBox(height: 80), Center(child: Text('No Pokémon found', style: TextStyle(color: Colors.grey, fontSize: 16)))])
-                              : GridView.builder(
-                            controller: _scroll,
-                            padding: const EdgeInsets.all(12),
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 1.30, mainAxisSpacing: 10, crossAxisSpacing: 12),
-                            itemCount: filtered.length,
-                            itemBuilder: (context, index) {
-                              final p = filtered[index];
-                              final primaryType = p.types.isNotEmpty ? p.types.first : 'normal';
-                              final isFav = FavoritesStore().isFavorite(p.id);
-
-                              return InteractivePokemonCard(
-                                onTap: () {
-                                  GraphQLProvider.of(context).value.query(QueryOptions(
-                                    document: documentNodeQueryPokemonDetailV3,
-                                    variables: {'id': p.id},
-                                    fetchPolicy: FetchPolicy.cacheFirst,
-                                  ));
-                                  Navigator.of(context).pushWithScaleFadeTransition(
-                                    PokemonDetailScreen(
-                                      id: p.id,
-                                      listIds: filteredIds,
-                                      initialIndex: index,
-                                      genContext: widget.initialGeneration,
-                                    ),
-                                  );
-                                },
-                                child: Stack(
-                                  children: [
-                                    AnimatedPokemonCard(
-                                      index: index, name: p.displayName, types: p.types,
-                                      imageUrl: p.imageUrl, background: typeGradients[primaryType] ?? typeGradients['normal']!,
-                                    ),
-                                    if (isFav)
-                                      const Positioned(
-                                        top: 8, right: 8,
-                                        child: Icon(Icons.favorite, color: Colors.white, size: 18),
-                                      ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
+    return Scaffold(
+      body: NestedScrollView(
+        floatHeaderSlivers: true,
+        headerSliverBuilder: (context, _) => [
+          SliverAppBar(
+            title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+            floating: true, snap: true, centerTitle: true,
+            leading: widget.initialGeneration != null
+                ? IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context))
+                : null,
+            actions: [
+              // Toggle Favoritos
+              IconButton(
+                icon: Icon(_showOnlyFavorites ? Icons.favorite : Icons.favorite_border),
+                color: _showOnlyFavorites ? Colors.red : null,
+                onPressed: () => setState(() => _showOnlyFavorites = !_showOnlyFavorites),
+              ),
+              // Sort Menu
+              PopupMenuButton<SortMode>(
+                icon: const Icon(Icons.sort),
+                onSelected: (s) => setState(() => _sortMode = s),
+                itemBuilder: (context) => const [
+                  PopupMenuItem(value: SortMode.id, child: Text('Sort by ID (#)')),
+                  PopupMenuItem(value: SortMode.name, child: Text('Sort by Name (A-Z)')),
+                ],
+              ),
+            ],
+          ),
+        ],
+        body: Column(
+          children: [
+            _buildSearchBar(),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  // Reseteamos y recargamos
+                  // Nota: En una implementación real de Riverpod, invalidaríamos el provider.
+                  // Por simplicidad visual, llamamos loadMore si está vacío o manejamos la recarga.
+                  ref.refresh(pokemonListProvider);
+                  ref.refresh(allPokemonProvider);
                 },
+                child: filtered.isEmpty && !listState.isLoading && allPokesAsync.isLoading == false
+                    ? ListView(children: const [SizedBox(height: 80), Center(child: Text('No Pokémon found', style: TextStyle(color: Colors.grey, fontSize: 16)))])
+                    : GridView.builder(
+                  controller: _scroll,
+                  padding: const EdgeInsets.all(12),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 1.30, mainAxisSpacing: 10, crossAxisSpacing: 12),
+                  itemCount: filtered.length,
+                  itemBuilder: (context, index) {
+                    final p = filtered[index];
+                    final primaryType = p.types.isNotEmpty ? p.types.first : 'normal';
+                    // Observamos favoritos desde el provider
+                    final isFav = ref.watch(favoritesProvider.select((s) => s.contains(p.id)));
+
+                    return InteractivePokemonCard(
+                      onTap: () {
+                        // Navegación con Provider (pasamos el ID)
+                        Navigator.of(context).pushWithScaleFadeTransition(
+                          PokemonDetailScreen(
+                            id: p.id,
+                            listIds: filteredIds,
+                            initialIndex: index,
+                            genContext: widget.initialGeneration,
+                          ),
+                        );
+                      },
+                      child: Stack(
+                        children: [
+                          AnimatedPokemonCard(
+                            index: index, name: p.displayName, types: p.types,
+                            imageUrl: p.imageUrl, background: typeGradients[primaryType] ?? typeGradients['normal']!,
+                          ),
+                          if (isFav)
+                            const Positioned(
+                              top: 8, right: 8,
+                              child: Icon(Icons.favorite, color: Colors.white, size: 18),
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: _openFilterSheet,
-              backgroundColor: const Color(0xFF8B7ED8),
-              child: const Icon(Icons.tune, color: Colors.white),
-            ),
-          );
-        }
+            if (listState.isLoading && _search.isEmpty)
+              const Padding(padding: EdgeInsets.all(8.0), child: CircularProgressIndicator())
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _openFilterSheet,
+        backgroundColor: const Color(0xFF8B7ED8),
+        child: const Icon(Icons.tune, color: Colors.white),
+      ),
     );
   }
 
   Widget _buildSearchBar() {
-    // ... (Sin cambios respecto al anterior) ...
     return Padding(
       padding: const EdgeInsets.all(12),
       child: TextField(
@@ -406,19 +377,5 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
         );
       },
     );
-  }
-
-  void _maybeFetchMore(QueryResult result, FetchMore? fetchMore) {
-    if (fetchMore == null || result.isLoading) return;
-    final currentLen = (result.data?['pokemon_v2_pokemon'] as List?)?.length ?? 0;
-    fetchMore(FetchMoreOptions(
-      variables: {'offset': currentLen, 'limit': _pageSize, 'search': '%%'},
-      updateQuery: (prev, fetched) {
-        final p = (prev?['pokemon_v2_pokemon'] as List?) ?? [];
-        final n = (fetched?['pokemon_v2_pokemon'] as List?) ?? [];
-        if (n.isEmpty) return prev;
-        return { ...prev!, 'pokemon_v2_pokemon': [...p, ...n] };
-      },
-    ));
   }
 }

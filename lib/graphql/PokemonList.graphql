@@ -1,4 +1,4 @@
-query PokemonListV2($limit: Int!, $offset: Int!, $search: String) {
+query PokemonList($limit: Int!, $offset: Int!, $search: String) {
     pokemon_v2_pokemon(
         limit: $limit,
         offset: $offset,

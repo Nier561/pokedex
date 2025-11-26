@@ -30,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_riverpod: ^2.5.1
+
   graphql_flutter: ^5.1.1
   shared_preferences: ^2.2.2
   share_plus: ^9.0.0

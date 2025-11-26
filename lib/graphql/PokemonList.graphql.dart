@@ -1,20 +1,20 @@
 import 'package:gql/ast.dart';
 
-class Variables$Query$PokemonListV2 {
-  factory Variables$Query$PokemonListV2({
+class Variables$Query$PokemonList {
+  factory Variables$Query$PokemonList({
     required int limit,
     required int offset,
     String? search,
   }) =>
-      Variables$Query$PokemonListV2._({
+      Variables$Query$PokemonList._({
         r'limit': limit,
         r'offset': offset,
         if (search != null) r'search': search,
       });
 
-  Variables$Query$PokemonListV2._(this._$data);
+  Variables$Query$PokemonList._(this._$data);
 
-  factory Variables$Query$PokemonListV2.fromJson(Map<String, dynamic> data) {
+  factory Variables$Query$PokemonList.fromJson(Map<String, dynamic> data) {
     final result$data = <String, dynamic>{};
     final l$limit = data['limit'];
     result$data['limit'] = (l$limit as int);
@@ -24,7 +24,7 @@ class Variables$Query$PokemonListV2 {
       final l$search = data['search'];
       result$data['search'] = (l$search as String?);
     }
-    return Variables$Query$PokemonListV2._(result$data);
+    return Variables$Query$PokemonList._(result$data);
   }
 
   Map<String, dynamic> _$data;
@@ -48,8 +48,8 @@ class Variables$Query$PokemonListV2 {
     return result$data;
   }
 
-  CopyWith$Variables$Query$PokemonListV2<Variables$Query$PokemonListV2>
-      get copyWith => CopyWith$Variables$Query$PokemonListV2(
+  CopyWith$Variables$Query$PokemonList<Variables$Query$PokemonList>
+      get copyWith => CopyWith$Variables$Query$PokemonList(
             this,
             (i) => i,
           );
@@ -59,7 +59,7 @@ class Variables$Query$PokemonListV2 {
     if (identical(this, other)) {
       return true;
     }
-    if (other is! Variables$Query$PokemonListV2 ||
+    if (other is! Variables$Query$PokemonList ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -97,14 +97,14 @@ class Variables$Query$PokemonListV2 {
   }
 }
 
-abstract class CopyWith$Variables$Query$PokemonListV2<TRes> {
-  factory CopyWith$Variables$Query$PokemonListV2(
-    Variables$Query$PokemonListV2 instance,
-    TRes Function(Variables$Query$PokemonListV2) then,
-  ) = _CopyWithImpl$Variables$Query$PokemonListV2;
+abstract class CopyWith$Variables$Query$PokemonList<TRes> {
+  factory CopyWith$Variables$Query$PokemonList(
+    Variables$Query$PokemonList instance,
+    TRes Function(Variables$Query$PokemonList) then,
+  ) = _CopyWithImpl$Variables$Query$PokemonList;
 
-  factory CopyWith$Variables$Query$PokemonListV2.stub(TRes res) =
-      _CopyWithStubImpl$Variables$Query$PokemonListV2;
+  factory CopyWith$Variables$Query$PokemonList.stub(TRes res) =
+      _CopyWithStubImpl$Variables$Query$PokemonList;
 
   TRes call({
     int? limit,
@@ -113,16 +113,16 @@ abstract class CopyWith$Variables$Query$PokemonListV2<TRes> {
   });
 }
 
-class _CopyWithImpl$Variables$Query$PokemonListV2<TRes>
-    implements CopyWith$Variables$Query$PokemonListV2<TRes> {
-  _CopyWithImpl$Variables$Query$PokemonListV2(
+class _CopyWithImpl$Variables$Query$PokemonList<TRes>
+    implements CopyWith$Variables$Query$PokemonList<TRes> {
+  _CopyWithImpl$Variables$Query$PokemonList(
     this._instance,
     this._then,
   );
 
-  final Variables$Query$PokemonListV2 _instance;
+  final Variables$Query$PokemonList _instance;
 
-  final TRes Function(Variables$Query$PokemonListV2) _then;
+  final TRes Function(Variables$Query$PokemonList) _then;
 
   static const _undefined = <dynamic, dynamic>{};
 
@@ -131,7 +131,7 @@ class _CopyWithImpl$Variables$Query$PokemonListV2<TRes>
     Object? offset = _undefined,
     Object? search = _undefined,
   }) =>
-      _then(Variables$Query$PokemonListV2._({
+      _then(Variables$Query$PokemonList._({
         ..._instance._$data,
         if (limit != _undefined && limit != null) 'limit': (limit as int),
         if (offset != _undefined && offset != null) 'offset': (offset as int),
@@ -139,9 +139,9 @@ class _CopyWithImpl$Variables$Query$PokemonListV2<TRes>
       }));
 }
 
-class _CopyWithStubImpl$Variables$Query$PokemonListV2<TRes>
-    implements CopyWith$Variables$Query$PokemonListV2<TRes> {
-  _CopyWithStubImpl$Variables$Query$PokemonListV2(this._res);
+class _CopyWithStubImpl$Variables$Query$PokemonList<TRes>
+    implements CopyWith$Variables$Query$PokemonList<TRes> {
+  _CopyWithStubImpl$Variables$Query$PokemonList(this._res);
 
   TRes _res;
 
@@ -153,25 +153,25 @@ class _CopyWithStubImpl$Variables$Query$PokemonListV2<TRes>
       _res;
 }
 
-class Query$PokemonListV2 {
-  Query$PokemonListV2({
+class Query$PokemonList {
+  Query$PokemonList({
     required this.pokemon_v2_pokemon,
     this.$__typename = 'query_root',
   });
 
-  factory Query$PokemonListV2.fromJson(Map<String, dynamic> json) {
+  factory Query$PokemonList.fromJson(Map<String, dynamic> json) {
     final l$pokemon_v2_pokemon = json['pokemon_v2_pokemon'];
     final l$$__typename = json['__typename'];
-    return Query$PokemonListV2(
+    return Query$PokemonList(
       pokemon_v2_pokemon: (l$pokemon_v2_pokemon as List<dynamic>)
-          .map((e) => Query$PokemonListV2$pokemon_v2_pokemon.fromJson(
+          .map((e) => Query$PokemonList$pokemon_v2_pokemon.fromJson(
               (e as Map<String, dynamic>)))
           .toList(),
       $__typename: (l$$__typename as String),
     );
   }
 
-  final List<Query$PokemonListV2$pokemon_v2_pokemon> pokemon_v2_pokemon;
+  final List<Query$PokemonList$pokemon_v2_pokemon> pokemon_v2_pokemon;
 
   final String $__typename;
 
@@ -200,7 +200,7 @@ class Query$PokemonListV2 {
     if (identical(this, other)) {
       return true;
     }
-    if (other is! Query$PokemonListV2 || runtimeType != other.runtimeType) {
+    if (other is! Query$PokemonList || runtimeType != other.runtimeType) {
       return false;
     }
     final l$pokemon_v2_pokemon = pokemon_v2_pokemon;
@@ -224,45 +224,45 @@ class Query$PokemonListV2 {
   }
 }
 
-extension UtilityExtension$Query$PokemonListV2 on Query$PokemonListV2 {
-  CopyWith$Query$PokemonListV2<Query$PokemonListV2> get copyWith =>
-      CopyWith$Query$PokemonListV2(
+extension UtilityExtension$Query$PokemonList on Query$PokemonList {
+  CopyWith$Query$PokemonList<Query$PokemonList> get copyWith =>
+      CopyWith$Query$PokemonList(
         this,
         (i) => i,
       );
 }
 
-abstract class CopyWith$Query$PokemonListV2<TRes> {
-  factory CopyWith$Query$PokemonListV2(
-    Query$PokemonListV2 instance,
-    TRes Function(Query$PokemonListV2) then,
-  ) = _CopyWithImpl$Query$PokemonListV2;
+abstract class CopyWith$Query$PokemonList<TRes> {
+  factory CopyWith$Query$PokemonList(
+    Query$PokemonList instance,
+    TRes Function(Query$PokemonList) then,
+  ) = _CopyWithImpl$Query$PokemonList;
 
-  factory CopyWith$Query$PokemonListV2.stub(TRes res) =
-      _CopyWithStubImpl$Query$PokemonListV2;
+  factory CopyWith$Query$PokemonList.stub(TRes res) =
+      _CopyWithStubImpl$Query$PokemonList;
 
   TRes call({
-    List<Query$PokemonListV2$pokemon_v2_pokemon>? pokemon_v2_pokemon,
+    List<Query$PokemonList$pokemon_v2_pokemon>? pokemon_v2_pokemon,
     String? $__typename,
   });
   TRes pokemon_v2_pokemon(
-      Iterable<Query$PokemonListV2$pokemon_v2_pokemon> Function(
+      Iterable<Query$PokemonList$pokemon_v2_pokemon> Function(
               Iterable<
-                  CopyWith$Query$PokemonListV2$pokemon_v2_pokemon<
-                      Query$PokemonListV2$pokemon_v2_pokemon>>)
+                  CopyWith$Query$PokemonList$pokemon_v2_pokemon<
+                      Query$PokemonList$pokemon_v2_pokemon>>)
           _fn);
 }
 
-class _CopyWithImpl$Query$PokemonListV2<TRes>
-    implements CopyWith$Query$PokemonListV2<TRes> {
-  _CopyWithImpl$Query$PokemonListV2(
+class _CopyWithImpl$Query$PokemonList<TRes>
+    implements CopyWith$Query$PokemonList<TRes> {
+  _CopyWithImpl$Query$PokemonList(
     this._instance,
     this._then,
   );
 
-  final Query$PokemonListV2 _instance;
+  final Query$PokemonList _instance;
 
-  final TRes Function(Query$PokemonListV2) _then;
+  final TRes Function(Query$PokemonList) _then;
 
   static const _undefined = <dynamic, dynamic>{};
 
@@ -270,39 +270,39 @@ class _CopyWithImpl$Query$PokemonListV2<TRes>
     Object? pokemon_v2_pokemon = _undefined,
     Object? $__typename = _undefined,
   }) =>
-      _then(Query$PokemonListV2(
+      _then(Query$PokemonList(
         pokemon_v2_pokemon:
             pokemon_v2_pokemon == _undefined || pokemon_v2_pokemon == null
                 ? _instance.pokemon_v2_pokemon
                 : (pokemon_v2_pokemon
-                    as List<Query$PokemonListV2$pokemon_v2_pokemon>),
+                    as List<Query$PokemonList$pokemon_v2_pokemon>),
         $__typename: $__typename == _undefined || $__typename == null
             ? _instance.$__typename
             : ($__typename as String),
       ));
 
   TRes pokemon_v2_pokemon(
-          Iterable<Query$PokemonListV2$pokemon_v2_pokemon> Function(
+          Iterable<Query$PokemonList$pokemon_v2_pokemon> Function(
                   Iterable<
-                      CopyWith$Query$PokemonListV2$pokemon_v2_pokemon<
-                          Query$PokemonListV2$pokemon_v2_pokemon>>)
+                      CopyWith$Query$PokemonList$pokemon_v2_pokemon<
+                          Query$PokemonList$pokemon_v2_pokemon>>)
               _fn) =>
       call(
           pokemon_v2_pokemon: _fn(_instance.pokemon_v2_pokemon
-              .map((e) => CopyWith$Query$PokemonListV2$pokemon_v2_pokemon(
+              .map((e) => CopyWith$Query$PokemonList$pokemon_v2_pokemon(
                     e,
                     (i) => i,
                   ))).toList());
 }
 
-class _CopyWithStubImpl$Query$PokemonListV2<TRes>
-    implements CopyWith$Query$PokemonListV2<TRes> {
-  _CopyWithStubImpl$Query$PokemonListV2(this._res);
+class _CopyWithStubImpl$Query$PokemonList<TRes>
+    implements CopyWith$Query$PokemonList<TRes> {
+  _CopyWithStubImpl$Query$PokemonList(this._res);
 
   TRes _res;
 
   call({
-    List<Query$PokemonListV2$pokemon_v2_pokemon>? pokemon_v2_pokemon,
+    List<Query$PokemonList$pokemon_v2_pokemon>? pokemon_v2_pokemon,
     String? $__typename,
   }) =>
       _res;
@@ -310,10 +310,10 @@ class _CopyWithStubImpl$Query$PokemonListV2<TRes>
   pokemon_v2_pokemon(_fn) => _res;
 }
 
-const documentNodeQueryPokemonListV2 = DocumentNode(definitions: [
+const documentNodeQueryPokemonList = DocumentNode(definitions: [
   OperationDefinitionNode(
     type: OperationType.query,
-    name: NameNode(value: 'PokemonListV2'),
+    name: NameNode(value: 'PokemonList'),
     variableDefinitions: [
       VariableDefinitionNode(
         variable: VariableNode(name: NameNode(value: 'limit')),
@@ -476,8 +476,8 @@ const documentNodeQueryPokemonListV2 = DocumentNode(definitions: [
   ),
 ]);
 
-class Query$PokemonListV2$pokemon_v2_pokemon {
-  Query$PokemonListV2$pokemon_v2_pokemon({
+class Query$PokemonList$pokemon_v2_pokemon {
+  Query$PokemonList$pokemon_v2_pokemon({
     required this.id,
     required this.name,
     this.pokemon_v2_pokemonspecy,
@@ -485,23 +485,23 @@ class Query$PokemonListV2$pokemon_v2_pokemon {
     this.$__typename = 'pokemon_v2_pokemon',
   });
 
-  factory Query$PokemonListV2$pokemon_v2_pokemon.fromJson(
+  factory Query$PokemonList$pokemon_v2_pokemon.fromJson(
       Map<String, dynamic> json) {
     final l$id = json['id'];
     final l$name = json['name'];
     final l$pokemon_v2_pokemonspecy = json['pokemon_v2_pokemonspecy'];
     final l$pokemon_v2_pokemontypes = json['pokemon_v2_pokemontypes'];
     final l$$__typename = json['__typename'];
-    return Query$PokemonListV2$pokemon_v2_pokemon(
+    return Query$PokemonList$pokemon_v2_pokemon(
       id: (l$id as int),
       name: (l$name as String),
       pokemon_v2_pokemonspecy: l$pokemon_v2_pokemonspecy == null
           ? null
-          : Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy
+          : Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy
               .fromJson((l$pokemon_v2_pokemonspecy as Map<String, dynamic>)),
       pokemon_v2_pokemontypes: (l$pokemon_v2_pokemontypes as List<dynamic>)
           .map((e) =>
-              Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes
+              Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes
                   .fromJson((e as Map<String, dynamic>)))
           .toList(),
       $__typename: (l$$__typename as String),
@@ -512,10 +512,10 @@ class Query$PokemonListV2$pokemon_v2_pokemon {
 
   final String name;
 
-  final Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy?
+  final Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy?
       pokemon_v2_pokemonspecy;
 
-  final List<Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes>
+  final List<Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes>
       pokemon_v2_pokemontypes;
 
   final String $__typename;
@@ -558,7 +558,7 @@ class Query$PokemonListV2$pokemon_v2_pokemon {
     if (identical(this, other)) {
       return true;
     }
-    if (other is! Query$PokemonListV2$pokemon_v2_pokemon ||
+    if (other is! Query$PokemonList$pokemon_v2_pokemon ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -601,54 +601,54 @@ class Query$PokemonListV2$pokemon_v2_pokemon {
   }
 }
 
-extension UtilityExtension$Query$PokemonListV2$pokemon_v2_pokemon
-    on Query$PokemonListV2$pokemon_v2_pokemon {
-  CopyWith$Query$PokemonListV2$pokemon_v2_pokemon<
-          Query$PokemonListV2$pokemon_v2_pokemon>
-      get copyWith => CopyWith$Query$PokemonListV2$pokemon_v2_pokemon(
+extension UtilityExtension$Query$PokemonList$pokemon_v2_pokemon
+    on Query$PokemonList$pokemon_v2_pokemon {
+  CopyWith$Query$PokemonList$pokemon_v2_pokemon<
+          Query$PokemonList$pokemon_v2_pokemon>
+      get copyWith => CopyWith$Query$PokemonList$pokemon_v2_pokemon(
             this,
             (i) => i,
           );
 }
 
-abstract class CopyWith$Query$PokemonListV2$pokemon_v2_pokemon<TRes> {
-  factory CopyWith$Query$PokemonListV2$pokemon_v2_pokemon(
-    Query$PokemonListV2$pokemon_v2_pokemon instance,
-    TRes Function(Query$PokemonListV2$pokemon_v2_pokemon) then,
-  ) = _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon;
+abstract class CopyWith$Query$PokemonList$pokemon_v2_pokemon<TRes> {
+  factory CopyWith$Query$PokemonList$pokemon_v2_pokemon(
+    Query$PokemonList$pokemon_v2_pokemon instance,
+    TRes Function(Query$PokemonList$pokemon_v2_pokemon) then,
+  ) = _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon;
 
-  factory CopyWith$Query$PokemonListV2$pokemon_v2_pokemon.stub(TRes res) =
-      _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon;
+  factory CopyWith$Query$PokemonList$pokemon_v2_pokemon.stub(TRes res) =
+      _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon;
 
   TRes call({
     int? id,
     String? name,
-    Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy?
+    Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy?
         pokemon_v2_pokemonspecy,
-    List<Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes>?
+    List<Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes>?
         pokemon_v2_pokemontypes,
     String? $__typename,
   });
-  CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<TRes>
+  CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<TRes>
       get pokemon_v2_pokemonspecy;
   TRes pokemon_v2_pokemontypes(
-      Iterable<Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes> Function(
+      Iterable<Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes> Function(
               Iterable<
-                  CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
-                      Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes>>)
+                  CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
+                      Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes>>)
           _fn);
 }
 
-class _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon<TRes>
-    implements CopyWith$Query$PokemonListV2$pokemon_v2_pokemon<TRes> {
-  _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon(
+class _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon<TRes>
+    implements CopyWith$Query$PokemonList$pokemon_v2_pokemon<TRes> {
+  _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon(
     this._instance,
     this._then,
   );
 
-  final Query$PokemonListV2$pokemon_v2_pokemon _instance;
+  final Query$PokemonList$pokemon_v2_pokemon _instance;
 
-  final TRes Function(Query$PokemonListV2$pokemon_v2_pokemon) _then;
+  final TRes Function(Query$PokemonList$pokemon_v2_pokemon) _then;
 
   static const _undefined = <dynamic, dynamic>{};
 
@@ -659,7 +659,7 @@ class _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon<TRes>
     Object? pokemon_v2_pokemontypes = _undefined,
     Object? $__typename = _undefined,
   }) =>
-      _then(Query$PokemonListV2$pokemon_v2_pokemon(
+      _then(Query$PokemonList$pokemon_v2_pokemon(
         id: id == _undefined || id == null ? _instance.id : (id as int),
         name: name == _undefined || name == null
             ? _instance.name
@@ -667,78 +667,78 @@ class _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon<TRes>
         pokemon_v2_pokemonspecy: pokemon_v2_pokemonspecy == _undefined
             ? _instance.pokemon_v2_pokemonspecy
             : (pokemon_v2_pokemonspecy
-                as Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy?),
+                as Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy?),
         pokemon_v2_pokemontypes: pokemon_v2_pokemontypes == _undefined ||
                 pokemon_v2_pokemontypes == null
             ? _instance.pokemon_v2_pokemontypes
             : (pokemon_v2_pokemontypes as List<
-                Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes>),
+                Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes>),
         $__typename: $__typename == _undefined || $__typename == null
             ? _instance.$__typename
             : ($__typename as String),
       ));
 
-  CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<TRes>
+  CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<TRes>
       get pokemon_v2_pokemonspecy {
     final local$pokemon_v2_pokemonspecy = _instance.pokemon_v2_pokemonspecy;
     return local$pokemon_v2_pokemonspecy == null
-        ? CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy
+        ? CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy
             .stub(_then(_instance))
-        : CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy(
+        : CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy(
             local$pokemon_v2_pokemonspecy,
             (e) => call(pokemon_v2_pokemonspecy: e));
   }
 
   TRes pokemon_v2_pokemontypes(
-          Iterable<Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes> Function(
+          Iterable<Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes> Function(
                   Iterable<
-                      CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
-                          Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes>>)
+                      CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
+                          Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes>>)
               _fn) =>
       call(
           pokemon_v2_pokemontypes: _fn(_instance.pokemon_v2_pokemontypes.map((e) =>
-              CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes(
+              CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes(
                 e,
                 (i) => i,
               ))).toList());
 }
 
-class _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon<TRes>
-    implements CopyWith$Query$PokemonListV2$pokemon_v2_pokemon<TRes> {
-  _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon(this._res);
+class _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon<TRes>
+    implements CopyWith$Query$PokemonList$pokemon_v2_pokemon<TRes> {
+  _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon(this._res);
 
   TRes _res;
 
   call({
     int? id,
     String? name,
-    Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy?
+    Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy?
         pokemon_v2_pokemonspecy,
-    List<Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes>?
+    List<Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes>?
         pokemon_v2_pokemontypes,
     String? $__typename,
   }) =>
       _res;
 
-  CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<TRes>
+  CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<TRes>
       get pokemon_v2_pokemonspecy =>
-          CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy
+          CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy
               .stub(_res);
 
   pokemon_v2_pokemontypes(_fn) => _res;
 }
 
-class Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy {
-  Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy({
+class Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy {
+  Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy({
     this.generation_id,
     this.$__typename = 'pokemon_v2_pokemonspecies',
   });
 
-  factory Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy.fromJson(
+  factory Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy.fromJson(
       Map<String, dynamic> json) {
     final l$generation_id = json['generation_id'];
     final l$$__typename = json['__typename'];
-    return Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy(
+    return Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy(
       generation_id: (l$generation_id as int?),
       $__typename: (l$$__typename as String),
     );
@@ -773,7 +773,7 @@ class Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy {
       return true;
     }
     if (other
-            is! Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy ||
+            is! Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -791,29 +791,28 @@ class Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy {
   }
 }
 
-extension UtilityExtension$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy
-    on Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy {
-  CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<
-          Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy>
+extension UtilityExtension$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy
+    on Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy {
+  CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<
+          Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy>
       get copyWith =>
-          CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy(
+          CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy(
             this,
             (i) => i,
           );
 }
 
-abstract class CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<
+abstract class CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<
     TRes> {
-  factory CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy(
-    Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy instance,
-    TRes Function(
-            Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy)
+  factory CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy(
+    Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy instance,
+    TRes Function(Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy)
         then,
-  ) = _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy;
+  ) = _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy;
 
-  factory CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy.stub(
+  factory CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy.stub(
           TRes res) =
-      _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy;
+      _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy;
 
   TRes call({
     int? generation_id,
@@ -821,21 +820,20 @@ abstract class CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemo
   });
 }
 
-class _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<
+class _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<
         TRes>
     implements
-        CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<
+        CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<
             TRes> {
-  _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy(
+  _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy(
     this._instance,
     this._then,
   );
 
-  final Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy
-      _instance;
+  final Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy _instance;
 
   final TRes Function(
-      Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy) _then;
+      Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy) _then;
 
   static const _undefined = <dynamic, dynamic>{};
 
@@ -843,7 +841,7 @@ class _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspe
     Object? generation_id = _undefined,
     Object? $__typename = _undefined,
   }) =>
-      _then(Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy(
+      _then(Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy(
         generation_id: generation_id == _undefined
             ? _instance.generation_id
             : (generation_id as int?),
@@ -853,12 +851,12 @@ class _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspe
       ));
 }
 
-class _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<
+class _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<
         TRes>
     implements
-        CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<
+        CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<
             TRes> {
-  _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemonspecy(
+  _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy(
       this._res);
 
   TRes _res;
@@ -870,26 +868,26 @@ class _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemo
       _res;
 }
 
-class Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes {
-  Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes({
+class Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes {
+  Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes({
     this.pokemon_v2_type,
     this.$__typename = 'pokemon_v2_pokemontype',
   });
 
-  factory Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes.fromJson(
+  factory Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes.fromJson(
       Map<String, dynamic> json) {
     final l$pokemon_v2_type = json['pokemon_v2_type'];
     final l$$__typename = json['__typename'];
-    return Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes(
+    return Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes(
       pokemon_v2_type: l$pokemon_v2_type == null
           ? null
-          : Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type
+          : Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type
               .fromJson((l$pokemon_v2_type as Map<String, dynamic>)),
       $__typename: (l$$__typename as String),
     );
   }
 
-  final Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type?
+  final Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type?
       pokemon_v2_type;
 
   final String $__typename;
@@ -919,7 +917,7 @@ class Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes {
       return true;
     }
     if (other
-            is! Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes ||
+            is! Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -937,54 +935,52 @@ class Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes {
   }
 }
 
-extension UtilityExtension$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes
-    on Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes {
-  CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
-          Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes>
+extension UtilityExtension$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes
+    on Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes {
+  CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
+          Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes>
       get copyWith =>
-          CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes(
+          CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes(
             this,
             (i) => i,
           );
 }
 
-abstract class CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
+abstract class CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
     TRes> {
-  factory CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes(
-    Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes instance,
-    TRes Function(
-            Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes)
+  factory CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes(
+    Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes instance,
+    TRes Function(Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes)
         then,
-  ) = _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes;
+  ) = _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes;
 
-  factory CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes.stub(
+  factory CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes.stub(
           TRes res) =
-      _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes;
+      _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes;
 
   TRes call({
-    Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type?
+    Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type?
         pokemon_v2_type,
     String? $__typename,
   });
-  CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
+  CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
       TRes> get pokemon_v2_type;
 }
 
-class _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
+class _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
         TRes>
     implements
-        CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
+        CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
             TRes> {
-  _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes(
+  _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes(
     this._instance,
     this._then,
   );
 
-  final Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes
-      _instance;
+  final Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes _instance;
 
   final TRes Function(
-      Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes) _then;
+      Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes) _then;
 
   static const _undefined = <dynamic, dynamic>{};
 
@@ -992,62 +988,62 @@ class _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontyp
     Object? pokemon_v2_type = _undefined,
     Object? $__typename = _undefined,
   }) =>
-      _then(Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes(
+      _then(Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes(
         pokemon_v2_type: pokemon_v2_type == _undefined
             ? _instance.pokemon_v2_type
             : (pokemon_v2_type
-                as Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type?),
+                as Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type?),
         $__typename: $__typename == _undefined || $__typename == null
             ? _instance.$__typename
             : ($__typename as String),
       ));
 
-  CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
+  CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
       TRes> get pokemon_v2_type {
     final local$pokemon_v2_type = _instance.pokemon_v2_type;
     return local$pokemon_v2_type == null
-        ? CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type
+        ? CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type
             .stub(_then(_instance))
-        : CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type(
+        : CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type(
             local$pokemon_v2_type, (e) => call(pokemon_v2_type: e));
   }
 }
 
-class _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
+class _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
         TRes>
     implements
-        CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
+        CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
             TRes> {
-  _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes(
+  _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes(
       this._res);
 
   TRes _res;
 
   call({
-    Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type?
+    Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type?
         pokemon_v2_type,
     String? $__typename,
   }) =>
       _res;
 
-  CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
+  CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
           TRes>
       get pokemon_v2_type =>
-          CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type
+          CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type
               .stub(_res);
 }
 
-class Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type {
-  Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type({
+class Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type {
+  Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type({
     required this.name,
     this.$__typename = 'pokemon_v2_type',
   });
 
-  factory Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type.fromJson(
+  factory Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type.fromJson(
       Map<String, dynamic> json) {
     final l$name = json['name'];
     final l$$__typename = json['__typename'];
-    return Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type(
+    return Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type(
       name: (l$name as String),
       $__typename: (l$$__typename as String),
     );
@@ -1082,7 +1078,7 @@ class Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_
       return true;
     }
     if (other
-            is! Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type ||
+            is! Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -1100,30 +1096,30 @@ class Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_
   }
 }
 
-extension UtilityExtension$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type
-    on Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type {
-  CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
-          Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type>
+extension UtilityExtension$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type
+    on Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type {
+  CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
+          Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type>
       get copyWith =>
-          CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type(
+          CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type(
             this,
             (i) => i,
           );
 }
 
-abstract class CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
+abstract class CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
     TRes> {
-  factory CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type(
-    Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type
+  factory CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type(
+    Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type
         instance,
     TRes Function(
-            Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type)
+            Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type)
         then,
-  ) = _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type;
+  ) = _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type;
 
-  factory CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type.stub(
+  factory CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type.stub(
           TRes res) =
-      _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type;
+      _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type;
 
   TRes call({
     String? name,
@@ -1131,21 +1127,21 @@ abstract class CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemo
   });
 }
 
-class _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
+class _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
         TRes>
     implements
-        CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
+        CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
             TRes> {
-  _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type(
+  _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type(
     this._instance,
     this._then,
   );
 
-  final Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type
+  final Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type
       _instance;
 
   final TRes Function(
-          Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type)
+          Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type)
       _then;
 
   static const _undefined = <dynamic, dynamic>{};
@@ -1155,7 +1151,7 @@ class _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontyp
     Object? $__typename = _undefined,
   }) =>
       _then(
-          Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type(
+          Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type(
         name: name == _undefined || name == null
             ? _instance.name
             : (name as String),
@@ -1165,12 +1161,12 @@ class _CopyWithImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontyp
       ));
 }
 
-class _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
+class _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
         TRes>
     implements
-        CopyWith$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
+        CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type<
             TRes> {
-  _CopyWithStubImpl$Query$PokemonListV2$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type(
+  _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes$pokemon_v2_type(
       this._res);
 
   TRes _res;

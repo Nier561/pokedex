@@ -1,23 +1,24 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:screenshot/screenshot.dart';
 
-import 'package:pokedex/services/favorites_store.dart';
-import 'package:pokedex/widgets/page_transitions.dart';
-import 'package:pokedex/graphql/PokemonDetail.graphql.dart';
-import 'package:pokedex/models/pokemon_detail_dto.dart';
-import 'package:pokedex/widgets/type_badge.dart';
-import 'package:pokedex/widgets/type_gradients.dart';
-import 'package:pokedex/widgets/stat_bar.dart';
-import 'package:pokedex/widgets/matchup_grid.dart'; // Nuevo widget
-import 'package:pokedex/widgets/animated_detail_screen.dart';
+import 'package:pokedex/domain/entities/pokemon_detail.dart';
+import 'package:pokedex/data/models/pokemon_detail_dto.dart'; // Import para DTOs auxiliares
+import 'package:pokedex/presentation/providers/favorites_provider.dart';
+import 'package:pokedex/presentation/providers/pokemon_provider.dart';
+import 'package:pokedex/presentation/widgets/page_transitions.dart';
+import 'package:pokedex/presentation/widgets/type_badge.dart';
+import 'package:pokedex/presentation/widgets/type_gradients.dart';
+import 'package:pokedex/presentation/widgets/stat_bar.dart';
+import 'package:pokedex/presentation/widgets/matchup_grid.dart';
+import 'package:pokedex/presentation/widgets/animated_detail_screen.dart';
 
-class PokemonDetailScreen extends StatefulWidget {
+class PokemonDetailScreen extends ConsumerStatefulWidget {
   final int id;
   final List<int>? listIds;
   final int? initialIndex;
@@ -26,13 +27,13 @@ class PokemonDetailScreen extends StatefulWidget {
   const PokemonDetailScreen({super.key, required this.id, this.listIds, this.initialIndex, this.genContext});
 
   @override
-  State<PokemonDetailScreen> createState() => _PokemonDetailScreenState();
+  ConsumerState<PokemonDetailScreen> createState() => _PokemonDetailScreenState();
 }
 
-class _PokemonDetailScreenState extends State<PokemonDetailScreen> with SingleTickerProviderStateMixin {
+class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _player = AudioPlayer();
-  final _screenshotController = ScreenshotController(); // Controlador para captura
+  final _screenshotController = ScreenshotController();
 
   bool _playedOnOpen = false;
   late List<int> _ids;
@@ -59,8 +60,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> with SingleTi
     } catch (_) {}
   }
 
-  /// Genera una imagen de la tarjeta del Pokémon y abre el diálogo nativo de compartir.
-  Future<void> _sharePokemon(PokemonDetailDto p) async {
+  Future<void> _sharePokemon(PokemonDetail p) async {
     try {
       final Uint8List? image = await _screenshotController.captureFromWidget(
         Container(
@@ -95,111 +95,101 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> with SingleTi
 
   @override
   Widget build(BuildContext context) {
-    // Escuchamos cambios en favoritos
-    return AnimatedBuilder(
-        animation: FavoritesStore(),
-        builder: (context, _) {
-          final isFav = FavoritesStore().isFavorite(widget.id);
+    // Escuchamos favoritos desde Riverpod
+    final isFav = ref.watch(favoritesProvider.select((s) => s.contains(widget.id)));
 
-          return Query(
-            options: QueryOptions(
-              document: documentNodeQueryPokemonDetailV3,
-              variables: {'id': widget.id, 'langId': 9},
-              fetchPolicy: FetchPolicy.cacheAndNetwork,
-            ),
-            builder: (result, {fetchMore, refetch}) {
-              if (result.isLoading && result.data == null) return const Scaffold(body: Center(child: CircularProgressIndicator()));
-              final raw = result.data?['pokemon_v2_pokemon_by_pk'] as Map<String, dynamic>?;
-              if (raw == null) return const Scaffold(body: Center(child: Text('Not found')));
+    // --- CORRECCIÓN AQUÍ: Usamos la clase PokemonDetailParams ---
+    final detailAsync = ref.watch(pokemonDetailProvider(
+        PokemonDetailParams(id: widget.id, gen: widget.genContext)
+    ));
 
-              final p = PokemonDetailDto.fromMap(raw, targetGen: widget.genContext);
+    return detailAsync.when(
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (err, stack) => const Scaffold(body: Center(child: Text('Not found'))),
+      data: (p) {
+        if (!_playedOnOpen) { _playedOnOpen = true; _playCry(); }
 
-              if (!_playedOnOpen) { _playedOnOpen = true; _playCry(); }
+        final type = p.types.isNotEmpty ? p.types.first : 'normal';
+        final gradient = typeGradients[type] ?? typeGradients['normal']!;
+        final color = gradient.colors.first;
 
-              final type = p.types.isNotEmpty ? p.types.first : 'normal';
-              final gradient = typeGradients[type] ?? typeGradients['normal']!;
-              final color = gradient.colors.first;
+        final movesLvl = p.moves.where((m) => m.learnMethod == 'level-up').toList()..sort((a,b) => a.level.compareTo(b.level));
+        final movesTm = p.moves.where((m) => m.learnMethod == 'machine').toList()..sort((a,b) => a.name.compareTo(b.name));
+        final movesEgg = p.moves.where((m) => m.learnMethod == 'egg').toList();
+        final movesTutor = p.moves.where((m) => m.learnMethod == 'tutor').toList();
 
-              final movesLvl = p.moves.where((m) => m.learnMethod == 'level-up').toList()..sort((a,b) => a.level.compareTo(b.level));
-              final movesTm = p.moves.where((m) => m.learnMethod == 'machine').toList()..sort((a,b) => a.name.compareTo(b.name));
-              final movesEgg = p.moves.where((m) => m.learnMethod == 'egg').toList();
-              final movesTutor = p.moves.where((m) => m.learnMethod == 'tutor').toList();
+        final formsMega = p.forms.where((f) => f.isMega || f.isGmax).toList();
+        final formsAlt = p.forms.where((f) => !f.isMega && !f.isGmax).toList();
 
-              final formsMega = p.forms.where((f) => f.isMega || f.isGmax).toList();
-              final formsAlt = p.forms.where((f) => !f.isMega && !f.isGmax).toList();
-
-              return AnimatedDetailScreen(
-                child: GestureDetector(
-                  onHorizontalDragEnd: _onSwipe,
-                  child: Scaffold(
-                    body: Column(
-                      children: [
-                        // HEADER
-                        Container(
-                          decoration: BoxDecoration(gradient: gradient),
-                          child: SafeArea(bottom: false, child: Column(children: [
-                            StaggeredAnimationItem(index: 0, animationType: AnimationType.slideDown, child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                IconButton(icon: const Icon(Icons.arrow_back, color: Colors.white), onPressed: () => Navigator.pop(context)),
-                                Row(children: [
-                                  IconButton(icon: const Icon(Icons.share, color: Colors.white), onPressed: () => _sharePokemon(p)),
-                                  IconButton(
-                                      icon: const Icon(Icons.volume_up, color: Colors.white),
-                                      onPressed: _playCry
-                                  ),
-                                  IconButton(
-                                    icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, color: Colors.white),
-                                    onPressed: () => FavoritesStore().toggleFavorite(widget.id),
-                                  ),
-                                ]),
-                              ]),
-                            )),
-                            StaggeredAnimationItem(index: 1, animationType: AnimationType.slideLeft, child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 24),
-                              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                  Text(p.name[0].toUpperCase()+p.name.substring(1), style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white)),
-                                  Wrap(spacing: 8, children: p.types.map((t) => TypeBadge(type: t, backgroundColor: color)).toList())
-                                ]),
-                                Text('#${p.id.toString().padLeft(3,'0')}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white70))
-                              ]),
-                            )),
-                            AnimatedPokemonImage(child: SizedBox(height: 240, child: Image.network(_img(p.id), fit: BoxFit.contain))),
-                          ])),
-                        ),
-                        // TABS
-                        Expanded(
-                          child: StaggeredAnimationItem(index: 2, animationType: AnimationType.slideUp, child: Container(
-                            decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
-                            child: Column(children: [
-                              TabBar(controller: _tabController, labelColor: color, unselectedLabelColor: Colors.grey, indicatorColor: color, isScrollable: true, tabs: const [
-                                Tab(text: 'About'), Tab(text: 'Stats'), Tab(text: 'Evolution'),
-                                Tab(text: 'Moves'), Tab(text: 'Megas'), Tab(text: 'Formas'),
-                              ]),
-                              Expanded(child: TabBarView(controller: _tabController, children: [
-                                _buildAbout(p),
-                                _buildStats(p.stats, p.types), // Pasamos tipos para Matchups
-                                _buildEvolutionTab(p.evolutionChain, context),
-                                _buildMovesTab(movesLvl, movesTm, movesTutor, movesEgg),
-                                _buildForms(formsMega, color, context),
-                                _buildForms(formsAlt, color, context),
-                              ])),
-                            ]),
-                          )),
-                        ),
-                      ],
-                    ),
+        return AnimatedDetailScreen(
+          child: GestureDetector(
+            onHorizontalDragEnd: _onSwipe,
+            child: Scaffold(
+              body: Column(
+                children: [
+                  // HEADER
+                  Container(
+                    decoration: BoxDecoration(gradient: gradient),
+                    child: SafeArea(bottom: false, child: Column(children: [
+                      StaggeredAnimationItem(index: 0, animationType: AnimationType.slideDown, child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                          IconButton(icon: const Icon(Icons.arrow_back, color: Colors.white), onPressed: () => Navigator.pop(context)),
+                          Row(children: [
+                            IconButton(icon: const Icon(Icons.share, color: Colors.white), onPressed: () => _sharePokemon(p)),
+                            IconButton(
+                                icon: const Icon(Icons.volume_up, color: Colors.white),
+                                onPressed: _playCry
+                            ),
+                            IconButton(
+                              icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, color: Colors.white),
+                              onPressed: () => ref.read(favoritesProvider.notifier).toggle(widget.id),
+                            ),
+                          ]),
+                        ]),
+                      )),
+                      StaggeredAnimationItem(index: 1, animationType: AnimationType.slideLeft, child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                            Text(p.name[0].toUpperCase()+p.name.substring(1), style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white)),
+                            Wrap(spacing: 8, children: p.types.map((t) => TypeBadge(type: t, backgroundColor: color)).toList())
+                          ]),
+                          Text('#${p.id.toString().padLeft(3,'0')}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white70))
+                        ]),
+                      )),
+                      AnimatedPokemonImage(child: SizedBox(height: 240, child: Image.network(_img(p.id), fit: BoxFit.contain))),
+                    ])),
                   ),
-                ),
-              );
-            },
-          );
-        }
+                  // TABS
+                  Expanded(
+                    child: StaggeredAnimationItem(index: 2, animationType: AnimationType.slideUp, child: Container(
+                      decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+                      child: Column(children: [
+                        TabBar(controller: _tabController, labelColor: color, unselectedLabelColor: Colors.grey, indicatorColor: color, isScrollable: true, tabs: const [
+                          Tab(text: 'About'), Tab(text: 'Stats'), Tab(text: 'Evolution'),
+                          Tab(text: 'Moves'), Tab(text: 'Megas'), Tab(text: 'Formas'),
+                        ]),
+                        Expanded(child: TabBarView(controller: _tabController, children: [
+                          _buildAbout(p),
+                          _buildStats(p.stats, p.types),
+                          _buildEvolutionTab(p.evolutionChain, context),
+                          _buildMovesTab(movesLvl, movesTm, movesTutor, movesEgg),
+                          _buildForms(formsMega, color, context),
+                          _buildForms(formsAlt, color, context),
+                        ])),
+                      ]),
+                    )),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
-  // ... (Método _onSwipe sin cambios) ...
   void _onSwipe(DragEndDetails d) {
     final v = d.primaryVelocity ?? 0;
     if (v == 0) return;
@@ -219,8 +209,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> with SingleTi
     }
   }
 
-  // ... (Otros Widgets _buildAbout, etc. sin cambios drásticos excepto Stats) ...
-  Widget _buildAbout(PokemonDetailDto p) {
+  Widget _buildAbout(PokemonDetail p) {
     return ListView(padding: const EdgeInsets.all(24), children: [
       _row('Description', p.flavorText),
       _row('Height', '${p.height/10} m'),
@@ -244,13 +233,11 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> with SingleTi
     Expanded(child: Text(v, style: const TextStyle(fontWeight: FontWeight.w500))),
   ]));
 
-  // --- STATS + MATCHUPS ---
   Widget _buildStats(List<StatDto> stats, List<String> types) {
     final int total = stats.fold(0, (sum, item) => sum + item.value);
-    return ListView( // Cambiado a ListView para permitir scroll con los matchups
+    return ListView(
       padding: const EdgeInsets.all(24),
       children: [
-        // Barras de Stats
         ...stats.asMap().entries.map((e) => StaggeredAnimationItem(
             index: e.key, animationType: AnimationType.slideLeft,
             child: Padding(padding: const EdgeInsets.only(bottom: 16), child: StatBar(label: e.value.name, value: e.value.value))
@@ -262,16 +249,13 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> with SingleTi
           Text('$total', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         ]),
         const SizedBox(height: 24),
-
-        // Sección de Matchups (Type Effectiveness)
         const Text('Type Matchups (Defensive)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         const SizedBox(height: 12),
-        MatchupGrid(types: types), // Grid calculado automáticamente
+        MatchupGrid(types: types),
       ],
     );
   }
 
-  // ... (Resto de métodos de evolución y movimientos idénticos al anterior) ...
   Widget _buildEvolutionTab(List<EvolutionEdgeDto> edges, BuildContext context) {
     if (edges.isEmpty) return const Center(child: Text('Does not evolve'));
     return ListView.builder(

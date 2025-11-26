@@ -1,4 +1,6 @@
-/// DTO para el listado de Pokémon.
+import 'package:pokedex/domain/entities/pokemon.dart';
+
+/// DTO para el listado de Pokémon. Transfiere datos desde la API.
 class PokemonListDto {
   final int id;
   final String name;
@@ -30,11 +32,14 @@ class PokemonListDto {
     );
   }
 
-  String get displayName {
-    String n = name;
-    if (n.startsWith('zygarde-') && n.contains('-50')) {
-      return 'Zygarde';
-    }
-    return n.isEmpty ? '' : '${n[0].toUpperCase()}${n.substring(1)}';
+  /// Convierte el DTO a una Entidad de Dominio.
+  Pokemon toEntity() {
+    return Pokemon(
+      id: id,
+      name: name,
+      types: types,
+      imageUrl: imageUrl,
+      generationId: generationId,
+    );
   }
 }

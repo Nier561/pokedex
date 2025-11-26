@@ -1,5 +1,5 @@
 # language_id: 9 = English
-query PokemonDetailV3($id: Int!, $langId: Int! = 9) {
+query PokemonDetail($id: Int!, $langId: Int! = 9) {
     pokemon_v2_pokemon_by_pk(id: $id) {
         id
         name

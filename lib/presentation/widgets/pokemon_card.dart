@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:pokedex/widgets/type_badge.dart';
-import 'package:pokedex/widgets/type_gradients.dart';
+import 'package:pokedex/presentation/widgets/type_badge.dart';
+import 'package:pokedex/presentation/widgets/type_gradients.dart';
 
 /// Tarjeta base que muestra nombre, tipos e imagen de un Pokémon.
 class PokemonCard extends StatelessWidget {

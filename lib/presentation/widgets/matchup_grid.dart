@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pokedex/utils/type_chart.dart';
-import 'package:pokedex/widgets/type_badge.dart';
+import 'package:pokedex/core/utils/type_chart.dart';
+import 'package:pokedex/presentation/widgets/type_badge.dart';
 
 class MatchupGrid extends StatelessWidget {
   final List<String> types;
