@@ -15,8 +15,8 @@ class PokemonRepositoryImpl implements IPokemonRepository {
   }
 
   @override
-  Future<PokemonDetail> getPokemonDetail({required int id, int? targetGen}) async {
-    final dto = await _remoteDataSource.fetchPokemonDetail(id: id, targetGen: targetGen);
+  Future<PokemonDetail> getPokemonDetail({required int id, int? targetGen, required int langId}) async {
+    final dto = await _remoteDataSource.fetchPokemonDetail(id: id, targetGen: targetGen, langId: langId);
     return dto.toEntity();
   }
 }

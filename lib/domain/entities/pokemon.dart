@@ -1,10 +1,11 @@
-/// Entidad de Dominio: Representa un Pokémon en la lista (Datos ligeros).
+/// Entidad de Dominio: Representa un Pokémon en la lista.
 class Pokemon {
   final int id;
   final String name;
   final List<String> types;
   final String imageUrl;
   final int generationId;
+  final int baseStatTotal; // Nuevo campo para ordenación por Poder
 
   Pokemon({
     required this.id,
@@ -12,14 +13,12 @@ class Pokemon {
     required this.types,
     required this.imageUrl,
     required this.generationId,
+    required this.baseStatTotal,
   });
 
-  // Lógica de presentación simple que es intrínseca a la entidad
   String get displayName {
     String n = name;
-    if (n.startsWith('zygarde-') && n.contains('-50')) {
-      return 'Zygarde';
-    }
+    if (n.startsWith('zygarde-') && n.contains('-50')) return 'Zygarde';
     return n.isEmpty ? '' : '${n[0].toUpperCase()}${n.substring(1)}';
   }
 }

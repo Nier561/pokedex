@@ -3,11 +3,11 @@ import 'package:gql/ast.dart';
 class Variables$Query$PokemonDetail {
   factory Variables$Query$PokemonDetail({
     required int id,
-    int? langId,
+    required int langId,
   }) =>
       Variables$Query$PokemonDetail._({
         r'id': id,
-        if (langId != null) r'langId': langId,
+        r'langId': langId,
       });
 
   Variables$Query$PokemonDetail._(this._$data);
@@ -16,10 +16,8 @@ class Variables$Query$PokemonDetail {
     final result$data = <String, dynamic>{};
     final l$id = data['id'];
     result$data['id'] = (l$id as int);
-    if (data.containsKey('langId')) {
-      final l$langId = data['langId'];
-      result$data['langId'] = (l$langId as int);
-    }
+    final l$langId = data['langId'];
+    result$data['langId'] = (l$langId as int);
     return Variables$Query$PokemonDetail._(result$data);
   }
 
@@ -27,16 +25,14 @@ class Variables$Query$PokemonDetail {
 
   int get id => (_$data['id'] as int);
 
-  int? get langId => (_$data['langId'] as int?);
+  int get langId => (_$data['langId'] as int);
 
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
     final l$id = id;
     result$data['id'] = l$id;
-    if (_$data.containsKey('langId')) {
-      final l$langId = langId;
-      result$data['langId'] = (l$langId as int);
-    }
+    final l$langId = langId;
+    result$data['langId'] = l$langId;
     return result$data;
   }
 
@@ -62,9 +58,6 @@ class Variables$Query$PokemonDetail {
     }
     final l$langId = langId;
     final lOther$langId = other.langId;
-    if (_$data.containsKey('langId') != other._$data.containsKey('langId')) {
-      return false;
-    }
     if (l$langId != lOther$langId) {
       return false;
     }
@@ -77,7 +70,7 @@ class Variables$Query$PokemonDetail {
     final l$langId = langId;
     return Object.hashAll([
       l$id,
-      _$data.containsKey('langId') ? l$langId : const {},
+      l$langId,
     ]);
   }
 }
@@ -299,7 +292,7 @@ const documentNodeQueryPokemonDetail = DocumentNode(definitions: [
           name: NameNode(value: 'Int'),
           isNonNull: true,
         ),
-        defaultValue: DefaultValueNode(value: IntValueNode(value: '9')),
+        defaultValue: DefaultValueNode(value: null),
         directives: [],
       ),
     ],

@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:pokedex/presentation/screens/region_selection_screen.dart';
-import 'package:pokedex/presentation/screens/list_screen.dart'; // Import para navegación directa si es necesaria
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pokedex/presentation/providers/language_provider.dart'; // Import para traducciones
+import 'package:pokedex/presentation/screens/region_selection_screen.dart'; // O generation_selection_screen.dart
+import 'package:pokedex/presentation/screens/list_screen.dart';
+import 'package:pokedex/presentation/screens/settings_screen.dart'; // Import Settings
 import 'package:pokedex/presentation/widgets/page_transitions.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends ConsumerWidget {
   const MainScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Escuchamos el idioma
+    final locale = ref.watch(languageProvider);
+    String tr(String key) => S(locale).get(key);
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -22,9 +29,9 @@ class MainScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                'Pokédex',
-                style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 2),
+              Text(
+                tr('app_title'), // "Pokédex"
+                style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 2),
               ),
               const SizedBox(height: 8),
               const Text(
@@ -32,8 +39,9 @@ class MainScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 16, color: Colors.white70, fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 60),
+
               _MenuButton(
-                label: 'Pokédex',
+                label: tr('app_title'), // "Pokédex"
                 icon: Icons.catching_pokemon,
                 color: Colors.white,
                 textColor: const Color(0xFF6E95FC),
@@ -42,30 +50,38 @@ class MainScreen extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 20),
+
               _MenuButton(
-                label: 'Regions',
+                label: tr('generation'), // "Generations"
                 icon: Icons.map,
                 color: Colors.white.withOpacity(0.2),
                 textColor: Colors.white,
                 onTap: () {
-                  Navigator.push(context, SlideRightPageRoute(child: const RegionSelectionScreen()));
+                  Navigator.push(context, SlideRightPageRoute(child: const GenerationSelectionScreen()));
                 },
               ),
               const SizedBox(height: 20),
+
               _MenuButton(
-                label: 'Trivia (Coming Soon)',
+                label: 'Trivia (Soon)', // Puedes agregar 'trivia' al diccionario en language_provider.dart
                 icon: Icons.question_mark_rounded,
                 color: Colors.white.withOpacity(0.2),
                 textColor: Colors.white,
-                onTap: () {},
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Coming Soon!')));
+                },
               ),
               const SizedBox(height: 20),
+
               _MenuButton(
-                label: 'Settings',
+                label: tr('settings'), // "Settings" / "Ajustes"
                 icon: Icons.settings,
                 color: Colors.white.withOpacity(0.2),
                 textColor: Colors.white,
-                onTap: () {},
+                onTap: () {
+                  // Navegación a SettingsScreen
+                  Navigator.push(context, SlideRightPageRoute(child: const SettingsScreen()));
+                },
               ),
             ],
           ),

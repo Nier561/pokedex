@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/domain/entities/pokemon.dart';
 import 'package:pokedex/domain/entities/pokemon_detail.dart';
-import 'package:pokedex/main.dart'; // Repository Providers
+import 'package:pokedex/main.dart';
+import 'package:pokedex/presentation/providers/language_provider.dart';
 
 /// Estado para la lista paginada
 class PokemonListState {
@@ -73,5 +74,22 @@ class PokemonDetailParams {
 /// Provider familia para el detalle usando la clase de parámetros segura.
 final pokemonDetailProvider = FutureProvider.family<PokemonDetail, PokemonDetailParams>((ref, args) async {
   final repo = ref.read(pokemonRepositoryProvider);
-  return await repo.getPokemonDetail(id: args.id, targetGen: args.gen);
+
+  // 1. Escuchamos el idioma actual. Si cambia, este provider se re-ejecuta.
+  final currentLocale = ref.watch(languageProvider);
+
+  // 2. Mapeamos 'en' -> 9, 'es' -> 7
+  int langId = 9; // Default Inglés
+  if (currentLocale.languageCode == 'es') {
+    langId = 7;
+  } else if (currentLocale.languageCode == 'fr') {
+    langId = 5;
+  }
+
+  // 3. Llamamos al repo con el idioma correcto
+  return await repo.getPokemonDetail(
+      id: args.id,
+      targetGen: args.gen,
+      langId: langId
+  );
 });

@@ -1,12 +1,13 @@
 import 'package:pokedex/domain/entities/pokemon.dart';
 
-/// DTO para el listado de Pokémon. Transfiere datos desde la API.
+/// DTO para el listado de Pokémon.
 class PokemonListDto {
   final int id;
   final String name;
   final List<String> types;
   final String imageUrl;
   final int generationId;
+  final int baseStatTotal;
 
   PokemonListDto({
     required this.id,
@@ -14,6 +15,7 @@ class PokemonListDto {
     required this.types,
     required this.imageUrl,
     required this.generationId,
+    required this.baseStatTotal,
   });
 
   factory PokemonListDto.fromMap(Map<String, dynamic> map) {
@@ -23,16 +25,23 @@ class PokemonListDto {
 
     final genId = map['pokemon_v2_pokemonspecy']?['generation_id'] as int? ?? 1;
 
+    // Calculamos el poder total sumando las stats base (si vienen en el query)
+    final stats = (map['pokemon_v2_pokemonstats'] as List?) ?? [];
+    int total = 0;
+    for (var s in stats) {
+      total += (s['base_stat'] as int? ?? 0);
+    }
+
     return PokemonListDto(
       id: map['id'] as int,
       name: map['name'] as String,
       types: types,
       imageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${map['id']}.png',
       generationId: genId,
+      baseStatTotal: total,
     );
   }
 
-  /// Convierte el DTO a una Entidad de Dominio.
   Pokemon toEntity() {
     return Pokemon(
       id: id,
@@ -40,6 +49,7 @@ class PokemonListDto {
       types: types,
       imageUrl: imageUrl,
       generationId: generationId,
+      baseStatTotal: baseStatTotal,
     );
   }
 }

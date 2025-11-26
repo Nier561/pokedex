@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/presentation/screens/list_screen.dart';
 import 'package:pokedex/presentation/widgets/page_transitions.dart';
 
-class RegionSelectionScreen extends StatelessWidget {
-  const RegionSelectionScreen({super.key});
+class GenerationSelectionScreen extends StatelessWidget {
+  const GenerationSelectionScreen({super.key});
 
-  static const List<Map<String, dynamic>> _regions = [
+  static const List<Map<String, dynamic>> _generations = [
     {'gen': 1, 'name': 'Kanto', 'image': 'assets/images/gen1dex.png', 'color': Color(0xFF78C850)},
     {'gen': 2, 'name': 'Johto', 'image': 'assets/images/gen2dex.png', 'color': Color(0xFFA7DB8D)},
     {'gen': 3, 'name': 'Hoenn', 'image': 'assets/images/gen3dex.png', 'color': Color(0xFF98D8D8)},
@@ -20,18 +20,37 @@ class RegionSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Select Region'), backgroundColor: Colors.white, elevation: 0, foregroundColor: Colors.black),
+      appBar: AppBar(
+        title: const Text(
+          'Select Generation Dex',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        foregroundColor: Colors.black,
+        centerTitle: true,
+      ),
       backgroundColor: Colors.white,
       body: GridView.builder(
         padding: const EdgeInsets.all(16),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 16, mainAxisSpacing: 16, childAspectRatio: 0.9),
-        itemCount: _regions.length,
+        // Ajustamos el aspect ratio para que quepa bien la imagen y el texto
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 0.85
+        ),
+        itemCount: _generations.length,
         itemBuilder: (context, index) {
-          final r = _regions[index];
-          return _RegionCard(
-            name: r['name'], generation: r['gen'], imageAsset: r['image'], color: r['color'],
+          final g = _generations[index];
+          return _GenerationCard(
+            regionName: g['name'],
+            generation: g['gen'],
+            imageAsset: g['image'],
+            color: g['color'],
             onTap: () {
-              Navigator.push(context, SlideRightPageRoute(child: PokemonListScreen(initialGeneration: r['gen'])));
+              // Navegamos pasando el número de generación
+              Navigator.push(context, SlideRightPageRoute(child: PokemonListScreen(initialGeneration: g['gen'])));
             },
           );
         },
@@ -40,14 +59,20 @@ class RegionSelectionScreen extends StatelessWidget {
   }
 }
 
-class _RegionCard extends StatelessWidget {
-  final String name;
+class _GenerationCard extends StatelessWidget {
+  final String regionName;
   final int generation;
   final String imageAsset;
   final Color color;
   final VoidCallback onTap;
 
-  const _RegionCard({required this.name, required this.generation, required this.imageAsset, required this.color, required this.onTap});
+  const _GenerationCard({
+    required this.regionName,
+    required this.generation,
+    required this.imageAsset,
+    required this.color,
+    required this.onTap
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +80,47 @@ class _RegionCard extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
       child: Container(
-        decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(20), border: Border.all(color: color.withOpacity(0.5), width: 2)),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.10), // Fondo sutil
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: color.withOpacity(0.6), width: 2),
+        ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(child: Icon(Icons.map, size: 50, color: color)), // Placeholder simplificado
-            Text(name, style: TextStyle(fontWeight: FontWeight.bold, color: color)),
+            // IMAGEN
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Image.asset(
+                  imageAsset,
+                  fit: BoxFit.contain,
+                  // Fallback por si la imagen no carga o no existe aún en assets
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(Icons.broken_image, size: 50, color: color.withOpacity(0.5));
+                  },
+                ),
+              ),
+            ),
+
+            // TEXTO: Gen X (Region)
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.2),
+                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(18)),
+              ),
+              child: Text(
+                'Gen $generation ($regionName)',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                  fontSize: 16,
+                ),
+              ),
+            ),
           ],
         ),
       ),

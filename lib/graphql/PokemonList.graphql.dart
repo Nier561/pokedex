@@ -457,6 +457,28 @@ const documentNodeQueryPokemonList = DocumentNode(definitions: [
             ]),
           ),
           FieldNode(
+            name: NameNode(value: 'pokemon_v2_pokemonstats'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FieldNode(
+                name: NameNode(value: 'base_stat'),
+                alias: null,
+                arguments: [],
+                directives: [],
+                selectionSet: null,
+              ),
+              FieldNode(
+                name: NameNode(value: '__typename'),
+                alias: null,
+                arguments: [],
+                directives: [],
+                selectionSet: null,
+              ),
+            ]),
+          ),
+          FieldNode(
             name: NameNode(value: '__typename'),
             alias: null,
             arguments: [],
@@ -482,6 +504,7 @@ class Query$PokemonList$pokemon_v2_pokemon {
     required this.name,
     this.pokemon_v2_pokemonspecy,
     required this.pokemon_v2_pokemontypes,
+    required this.pokemon_v2_pokemonstats,
     this.$__typename = 'pokemon_v2_pokemon',
   });
 
@@ -491,6 +514,7 @@ class Query$PokemonList$pokemon_v2_pokemon {
     final l$name = json['name'];
     final l$pokemon_v2_pokemonspecy = json['pokemon_v2_pokemonspecy'];
     final l$pokemon_v2_pokemontypes = json['pokemon_v2_pokemontypes'];
+    final l$pokemon_v2_pokemonstats = json['pokemon_v2_pokemonstats'];
     final l$$__typename = json['__typename'];
     return Query$PokemonList$pokemon_v2_pokemon(
       id: (l$id as int),
@@ -502,6 +526,11 @@ class Query$PokemonList$pokemon_v2_pokemon {
       pokemon_v2_pokemontypes: (l$pokemon_v2_pokemontypes as List<dynamic>)
           .map((e) =>
               Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes
+                  .fromJson((e as Map<String, dynamic>)))
+          .toList(),
+      pokemon_v2_pokemonstats: (l$pokemon_v2_pokemonstats as List<dynamic>)
+          .map((e) =>
+              Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats
                   .fromJson((e as Map<String, dynamic>)))
           .toList(),
       $__typename: (l$$__typename as String),
@@ -518,6 +547,9 @@ class Query$PokemonList$pokemon_v2_pokemon {
   final List<Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes>
       pokemon_v2_pokemontypes;
 
+  final List<Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats>
+      pokemon_v2_pokemonstats;
+
   final String $__typename;
 
   Map<String, dynamic> toJson() {
@@ -532,6 +564,9 @@ class Query$PokemonList$pokemon_v2_pokemon {
     final l$pokemon_v2_pokemontypes = pokemon_v2_pokemontypes;
     _resultData['pokemon_v2_pokemontypes'] =
         l$pokemon_v2_pokemontypes.map((e) => e.toJson()).toList();
+    final l$pokemon_v2_pokemonstats = pokemon_v2_pokemonstats;
+    _resultData['pokemon_v2_pokemonstats'] =
+        l$pokemon_v2_pokemonstats.map((e) => e.toJson()).toList();
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -543,12 +578,14 @@ class Query$PokemonList$pokemon_v2_pokemon {
     final l$name = name;
     final l$pokemon_v2_pokemonspecy = pokemon_v2_pokemonspecy;
     final l$pokemon_v2_pokemontypes = pokemon_v2_pokemontypes;
+    final l$pokemon_v2_pokemonstats = pokemon_v2_pokemonstats;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
       l$name,
       l$pokemon_v2_pokemonspecy,
       Object.hashAll(l$pokemon_v2_pokemontypes.map((v) => v)),
+      Object.hashAll(l$pokemon_v2_pokemonstats.map((v) => v)),
       l$$__typename,
     ]);
   }
@@ -592,6 +629,21 @@ class Query$PokemonList$pokemon_v2_pokemon {
         return false;
       }
     }
+    final l$pokemon_v2_pokemonstats = pokemon_v2_pokemonstats;
+    final lOther$pokemon_v2_pokemonstats = other.pokemon_v2_pokemonstats;
+    if (l$pokemon_v2_pokemonstats.length !=
+        lOther$pokemon_v2_pokemonstats.length) {
+      return false;
+    }
+    for (int i = 0; i < l$pokemon_v2_pokemonstats.length; i++) {
+      final l$pokemon_v2_pokemonstats$entry = l$pokemon_v2_pokemonstats[i];
+      final lOther$pokemon_v2_pokemonstats$entry =
+          lOther$pokemon_v2_pokemonstats[i];
+      if (l$pokemon_v2_pokemonstats$entry !=
+          lOther$pokemon_v2_pokemonstats$entry) {
+        return false;
+      }
+    }
     final l$$__typename = $__typename;
     final lOther$$__typename = other.$__typename;
     if (l$$__typename != lOther$$__typename) {
@@ -627,6 +679,8 @@ abstract class CopyWith$Query$PokemonList$pokemon_v2_pokemon<TRes> {
         pokemon_v2_pokemonspecy,
     List<Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes>?
         pokemon_v2_pokemontypes,
+    List<Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats>?
+        pokemon_v2_pokemonstats,
     String? $__typename,
   });
   CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy<TRes>
@@ -636,6 +690,12 @@ abstract class CopyWith$Query$PokemonList$pokemon_v2_pokemon<TRes> {
               Iterable<
                   CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes<
                       Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes>>)
+          _fn);
+  TRes pokemon_v2_pokemonstats(
+      Iterable<Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats> Function(
+              Iterable<
+                  CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats<
+                      Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats>>)
           _fn);
 }
 
@@ -657,6 +717,7 @@ class _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon<TRes>
     Object? name = _undefined,
     Object? pokemon_v2_pokemonspecy = _undefined,
     Object? pokemon_v2_pokemontypes = _undefined,
+    Object? pokemon_v2_pokemonstats = _undefined,
     Object? $__typename = _undefined,
   }) =>
       _then(Query$PokemonList$pokemon_v2_pokemon(
@@ -673,6 +734,11 @@ class _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon<TRes>
             ? _instance.pokemon_v2_pokemontypes
             : (pokemon_v2_pokemontypes as List<
                 Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes>),
+        pokemon_v2_pokemonstats: pokemon_v2_pokemonstats == _undefined ||
+                pokemon_v2_pokemonstats == null
+            ? _instance.pokemon_v2_pokemonstats
+            : (pokemon_v2_pokemonstats as List<
+                Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats>),
         $__typename: $__typename == _undefined || $__typename == null
             ? _instance.$__typename
             : ($__typename as String),
@@ -701,6 +767,19 @@ class _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon<TRes>
                 e,
                 (i) => i,
               ))).toList());
+
+  TRes pokemon_v2_pokemonstats(
+          Iterable<Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats> Function(
+                  Iterable<
+                      CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats<
+                          Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats>>)
+              _fn) =>
+      call(
+          pokemon_v2_pokemonstats: _fn(_instance.pokemon_v2_pokemonstats.map((e) =>
+              CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats(
+                e,
+                (i) => i,
+              ))).toList());
 }
 
 class _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon<TRes>
@@ -716,6 +795,8 @@ class _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon<TRes>
         pokemon_v2_pokemonspecy,
     List<Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemontypes>?
         pokemon_v2_pokemontypes,
+    List<Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats>?
+        pokemon_v2_pokemonstats,
     String? $__typename,
   }) =>
       _res;
@@ -726,6 +807,8 @@ class _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon<TRes>
               .stub(_res);
 
   pokemon_v2_pokemontypes(_fn) => _res;
+
+  pokemon_v2_pokemonstats(_fn) => _res;
 }
 
 class Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonspecy {
@@ -1173,6 +1256,146 @@ class _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemont
 
   call({
     String? name,
+    String? $__typename,
+  }) =>
+      _res;
+}
+
+class Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats {
+  Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats({
+    required this.base_stat,
+    this.$__typename = 'pokemon_v2_pokemonstat',
+  });
+
+  factory Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats.fromJson(
+      Map<String, dynamic> json) {
+    final l$base_stat = json['base_stat'];
+    final l$$__typename = json['__typename'];
+    return Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats(
+      base_stat: (l$base_stat as int),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final int base_stat;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$base_stat = base_stat;
+    _resultData['base_stat'] = l$base_stat;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$base_stat = base_stat;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$base_stat,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$base_stat = base_stat;
+    final lOther$base_stat = other.base_stat;
+    if (l$base_stat != lOther$base_stat) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+extension UtilityExtension$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats
+    on Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats {
+  CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats<
+          Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats>
+      get copyWith =>
+          CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats(
+            this,
+            (i) => i,
+          );
+}
+
+abstract class CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats<
+    TRes> {
+  factory CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats(
+    Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats instance,
+    TRes Function(Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats)
+        then,
+  ) = _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats;
+
+  factory CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats.stub(
+          TRes res) =
+      _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats;
+
+  TRes call({
+    int? base_stat,
+    String? $__typename,
+  });
+}
+
+class _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats<
+        TRes>
+    implements
+        CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats<
+            TRes> {
+  _CopyWithImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats(
+    this._instance,
+    this._then,
+  );
+
+  final Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats _instance;
+
+  final TRes Function(
+      Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? base_stat = _undefined,
+    Object? $__typename = _undefined,
+  }) =>
+      _then(Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats(
+        base_stat: base_stat == _undefined || base_stat == null
+            ? _instance.base_stat
+            : (base_stat as int),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
+}
+
+class _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats<
+        TRes>
+    implements
+        CopyWith$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats<
+            TRes> {
+  _CopyWithStubImpl$Query$PokemonList$pokemon_v2_pokemon$pokemon_v2_pokemonstats(
+      this._res);
+
+  TRes _res;
+
+  call({
+    int? base_stat,
     String? $__typename,
   }) =>
       _res;

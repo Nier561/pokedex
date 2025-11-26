@@ -8,5 +8,5 @@ abstract class IPokemonRepository {
   Future<List<Pokemon>> getPokemonList({required int limit, required int offset, String search = '%%'});
 
   /// Obtiene el detalle de un Pokémon por ID.
-  Future<PokemonDetail> getPokemonDetail({required int id, int? targetGen});
+  Future<PokemonDetail> getPokemonDetail({required int id, int? targetGen, required int langId});
 }

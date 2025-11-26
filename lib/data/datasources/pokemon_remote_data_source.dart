@@ -23,10 +23,10 @@ class PokemonRemoteDataSource {
     return rawList.map((e) => PokemonListDto.fromMap(e)).toList();
   }
 
-  Future<PokemonDetailDto> fetchPokemonDetail({required int id, int? targetGen}) async {
+  Future<PokemonDetailDto> fetchPokemonDetail({required int id, int? targetGen, required int langId}) async {
     final res = await _client.query(QueryOptions(
       document: documentNodeQueryPokemonDetail,
-      variables: {'id': id, 'langId': 9}, // Inglés por defecto
+      variables: {'id': id, 'langId': langId},
       fetchPolicy: FetchPolicy.cacheFirst,
     ));
 
