@@ -83,7 +83,9 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
       // 2. Filtro Nombres / Variantes
       final name = p.name.toLowerCase();
       if (name.startsWith('zygarde-')) {
+        // Excluir Power Construct explícitamente
         if (name.contains('power-construct')) return false;
+        // Excluir todo lo que no sea la forma 50%
         if (!name.contains('-50')) return false;
       } else if (name.contains('-') && !_hyphenBaseWhitelist.contains(name)) {
         return false;
@@ -119,6 +121,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 1. Obtener idioma actual
     final locale = ref.watch(languageProvider);
     String tr(String key) => S(locale).get(key);
 
@@ -138,11 +141,9 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
         widget.initialGeneration != null ||
         filters.sortMode != SortMode.id ||
         !filters.isAscending ||
-        _showOnlyFavorites; // <-- Si solo favoritos, usamos la lista completa (cacheada)
+        _showOnlyFavorites;
 
     if (isFiltering) {
-      // Si estamos filtrando, intentamos usar la lista completa "AllPokemon"
-      // Si aún no ha cargado, usamos lo que tengamos en la lista paginada
       sourceList = allPokesAsync.value ?? listState.pokemons;
     } else {
       sourceList = listState.pokemons;
@@ -167,7 +168,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
               ),
             ),
             actions: [
-              // --- BOTÓN DE FAVORITOS (RESTAURADO) ---
+              // --- BOTÓN DE FAVORITOS ---
               Semantics(
                 label: 'Show only favorites',
                 button: true,
@@ -183,6 +184,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                   },
                 ),
               ),
+              // --- BOTÓN DE FILTROS ---
               Semantics(
                 label: 'Filter Pokemon',
                 button: true,
@@ -200,6 +202,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async {
+                  // Invalidamos providers para forzar recarga fresca
                   ref.invalidate(pokemonListProvider);
                   ref.invalidate(allPokemonProvider);
 
@@ -258,10 +261,6 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
     );
   }
 
-  // ... (El resto del código: _buildSearchBar y _openFilterSheet siguen IGUAL) ...
-  // Para ahorrar espacio, asume que _buildSearchBar y _openFilterSheet están aquí abajo
-  // tal cual te los pasé en el mensaje anterior. Asegúrate de incluirlos.
-
   Widget _buildSearchBar(String currentQuery, Function(String) tr) {
     if (_searchController.text != currentQuery) {
       _searchController.text = currentQuery;
@@ -317,7 +316,9 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Text(tr('filters'), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 24),
-                      Text(tr('settings'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey)),
+
+                      // --- SORT SECTION (Traducido) ---
+                      Text(tr('sort_by'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey)),
                       const SizedBox(height: 12),
                       Row(
                         children: [
@@ -325,10 +326,10 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                             child: DropdownButtonFormField<SortMode>(
                               value: tempSort,
                               decoration: InputDecoration(contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),
-                              items: const [
-                                DropdownMenuItem(value: SortMode.id, child: Text('Number (ID)')),
-                                DropdownMenuItem(value: SortMode.name, child: Text('Name (A-Z)')),
-                                DropdownMenuItem(value: SortMode.power, child: Text('Total Power')),
+                              items: [
+                                DropdownMenuItem(value: SortMode.id, child: Text(tr('sort_id'))),     // "Number (ID)"
+                                DropdownMenuItem(value: SortMode.name, child: Text(tr('sort_name'))), // "Name (A-Z)"
+                                DropdownMenuItem(value: SortMode.power, child: Text(tr('sort_power'))), // "Total Power"
                               ],
                               onChanged: (v) => setModal(() => tempSort = v!),
                             ),
@@ -346,12 +347,14 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                         ],
                       ),
                       const SizedBox(height: 24),
+
+                      // --- TYPES SECTION (Traducido) ---
                       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                         Text(tr('types'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey)),
                         if (tempTypes.isNotEmpty)
                           GestureDetector(
                             onTap: () => setModal(() => tempTypes.clear()),
-                            child: const Text('Clear', style: TextStyle(color: Colors.red)),
+                            child: Text(tr('clear'), style: const TextStyle(color: Colors.red)), // "Clear"
                           ),
                       ]),
                       const SizedBox(height: 12),
@@ -375,6 +378,8 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                         );
                       }).toList()),
                       const SizedBox(height: 24),
+
+                      // --- GENERATION SECTION (Si aplica) ---
                       if (widget.initialGeneration == null) ...[
                         Text(tr('generation'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey)),
                         const SizedBox(height: 12),

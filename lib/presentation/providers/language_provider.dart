@@ -2,21 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/data/datasources/preferences_local_data_source.dart';
 
-// 1. Notifier para manejar el estado del Locale (en/es)
 class LanguageNotifier extends StateNotifier<Locale> {
   final PreferencesLocalDataSource _prefs;
-
-  LanguageNotifier(this._prefs) : super(const Locale('en')) {
-    _loadLang();
-  }
-
+  LanguageNotifier(this._prefs) : super(const Locale('en')) { _loadLang(); }
   Future<void> _loadLang() async {
     final code = await _prefs.getLanguage();
-    if (code != null) {
-      state = Locale(code);
-    }
+    if (code != null) state = Locale(code);
   }
-
   Future<void> changeLanguage(Locale locale) async {
     state = locale;
     await _prefs.saveLanguage(locale.languageCode);
@@ -27,21 +19,11 @@ final languageProvider = StateNotifierProvider<LanguageNotifier, Locale>((ref) {
   return LanguageNotifier(PreferencesLocalDataSource());
 });
 
-
-// 2. Clase de Traducciones (Diccionario Simple)
 class S {
   final Locale locale;
-
   S(this.locale);
 
-  // Método helper para obtener la instancia actual en la UI
-  static S of(BuildContext context) {
-    // Esto es un truco simple. En apps grandes usaríamos LocalizationsDelegate.
-    // Aquí asumimos que el provider ya actualizó la UI.
-    // Para simplificar el uso en Riverpod, inyectaremos el Locale manualmente o
-    // usaremos un mapa estático accedido por el languageCode.
-    return S(const Locale('en')); // Placeholder, ver abajo el uso real con mapas
-  }
+  static S of(BuildContext context) => S(const Locale('en'));
 
   static final Map<String, Map<String, String>> _localizedValues = {
     'en': {
@@ -59,6 +41,18 @@ class S {
       'moves': 'Moves',
       'evolutions': 'Evolutions',
       'select_language': 'Select Language',
+      'select_generation_dex': 'Select Generation Dex',
+      'sort_by': 'Sort By',
+      'sort_id': 'Number (ID)',
+      'sort_name': 'Name (A-Z)',
+      'sort_power': 'Total Power',
+      'clear': 'Clear',
+      'forms': 'Forms',
+      'megas': 'Megas',
+      'locations': 'Locations',
+      'view_map': 'View Map',
+      'no_locations': 'Wild location unknown',
+      'abilities': 'Abilities',
     },
     'es': {
       'app_title': 'Pokédex',
@@ -75,6 +69,18 @@ class S {
       'moves': 'Movimientos',
       'evolutions': 'Evoluciones',
       'select_language': 'Seleccionar Idioma',
+      'select_generation_dex': 'Seleccionar Dex Generacional',
+      'sort_by': 'Ordenar Por',
+      'sort_id': 'Número (ID)',
+      'sort_name': 'Nombre (A-Z)',
+      'sort_power': 'Poder Total',
+      'clear': 'Limpiar',
+      'forms': 'Formas',
+      'megas': 'Megas',
+      'locations': 'Ubicación',
+      'view_map': 'Ver Mapa',
+      'no_locations': 'Ubicación salvaje desconocida',
+      'abilities': 'Habilidades',
     },
   };
 

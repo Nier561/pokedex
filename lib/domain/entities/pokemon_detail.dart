@@ -1,4 +1,4 @@
-import 'package:pokedex/data/models/pokemon_detail_dto.dart'; // Importamos DTOs auxiliares (Stat, Ability, etc) si se reutilizan, o mejor definir entidades puras. Por simplicidad, reusaremos los sub-objetos si no tienen lógica compleja, pero lo correcto es definirlos aquí.
+import 'package:pokedex/data/models/pokemon_detail_dto.dart'; // Importamos para los sub-DTOs (Stat, Ability, etc)
 
 /// Entidad de Dominio: Representa el detalle completo de un Pokémon.
 class PokemonDetail {
@@ -7,7 +7,7 @@ class PokemonDetail {
   final int height;
   final int weight;
   final List<String> types;
-  final List<StatDto> stats;      // Usamos los mismos objetos de valor por ahora
+  final List<StatDto> stats;
   final List<AbilityDto> abilities;
   final String flavorText;
   final String genderText;
@@ -16,6 +16,7 @@ class PokemonDetail {
   final List<MoveDto> moves;
   final List<EvolutionEdgeDto> evolutionChain;
   final List<FormDto> forms;
+  final List<LocationGroupDto> locations; // <--- NUEVO CAMPO
 
   PokemonDetail({
     required this.id,
@@ -32,5 +33,6 @@ class PokemonDetail {
     required this.moves,
     required this.evolutionChain,
     required this.forms,
+    required this.locations, // <--- Requerido
   });
 }

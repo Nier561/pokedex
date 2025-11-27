@@ -8,9 +8,11 @@ import 'package:share_plus/share_plus.dart';
 import 'package:screenshot/screenshot.dart';
 
 import 'package:pokedex/domain/entities/pokemon_detail.dart';
-import 'package:pokedex/data/models/pokemon_detail_dto.dart'; // Import para DTOs auxiliares
+import 'package:pokedex/data/models/pokemon_detail_dto.dart';
 import 'package:pokedex/presentation/providers/favorites_provider.dart';
 import 'package:pokedex/presentation/providers/pokemon_provider.dart';
+import 'package:pokedex/presentation/providers/language_provider.dart';
+import 'package:pokedex/presentation/screens/region_map_screen.dart'; // Importar mapa
 import 'package:pokedex/presentation/widgets/page_transitions.dart';
 import 'package:pokedex/presentation/widgets/type_badge.dart';
 import 'package:pokedex/presentation/widgets/type_gradients.dart';
@@ -24,7 +26,13 @@ class PokemonDetailScreen extends ConsumerStatefulWidget {
   final int? initialIndex;
   final int? genContext;
 
-  const PokemonDetailScreen({super.key, required this.id, this.listIds, this.initialIndex, this.genContext});
+  const PokemonDetailScreen({
+    super.key,
+    required this.id,
+    this.listIds,
+    this.initialIndex,
+    this.genContext
+  });
 
   @override
   ConsumerState<PokemonDetailScreen> createState() => _PokemonDetailScreenState();
@@ -42,7 +50,8 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 6, vsync: this);
+    // AHORA SON 7 TABS
+    _tabController = TabController(length: 7, vsync: this);
     _ids = widget.listIds ?? [];
     _idx = widget.initialIndex ?? -1;
   }
@@ -95,10 +104,11 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
 
   @override
   Widget build(BuildContext context) {
-    // Escuchamos favoritos desde Riverpod
+    final locale = ref.watch(languageProvider);
+    String tr(String key) => S(locale).get(key);
+
     final isFav = ref.watch(favoritesProvider.select((s) => s.contains(widget.id)));
 
-    // --- CORRECCIÓN AQUÍ: Usamos la clase PokemonDetailParams ---
     final detailAsync = ref.watch(pokemonDetailProvider(
         PokemonDetailParams(id: widget.id, gen: widget.genContext)
     ));
@@ -127,7 +137,6 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
             child: Scaffold(
               body: Column(
                 children: [
-                  // HEADER
                   Container(
                     decoration: BoxDecoration(gradient: gradient),
                     child: SafeArea(bottom: false, child: Column(children: [
@@ -161,20 +170,33 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
                       AnimatedPokemonImage(child: SizedBox(height: 240, child: Image.network(_img(p.id), fit: BoxFit.contain))),
                     ])),
                   ),
-                  // TABS
+
                   Expanded(
                     child: StaggeredAnimationItem(index: 2, animationType: AnimationType.slideUp, child: Container(
                       decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
                       child: Column(children: [
-                        TabBar(controller: _tabController, labelColor: color, unselectedLabelColor: Colors.grey, indicatorColor: color, isScrollable: true, tabs: const [
-                          Tab(text: 'About'), Tab(text: 'Stats'), Tab(text: 'Evolution'),
-                          Tab(text: 'Moves'), Tab(text: 'Megas'), Tab(text: 'Formas'),
-                        ]),
+                        TabBar(
+                            controller: _tabController,
+                            labelColor: color,
+                            unselectedLabelColor: Colors.grey,
+                            indicatorColor: color,
+                            isScrollable: true,
+                            tabs: [
+                              Tab(text: tr('about')),
+                              Tab(text: tr('stats')),
+                              Tab(text: tr('evolutions')),
+                              Tab(text: tr('moves')),
+                              Tab(text: tr('locations')), // NUEVO TAB
+                              Tab(text: tr('megas')),
+                              Tab(text: tr('forms')),
+                            ]
+                        ),
                         Expanded(child: TabBarView(controller: _tabController, children: [
-                          _buildAbout(p),
-                          _buildStats(p.stats, p.types),
+                          _buildAbout(p, tr),
+                          _buildStats(p.stats, p.types, tr),
                           _buildEvolutionTab(p.evolutionChain, context),
-                          _buildMovesTab(movesLvl, movesTm, movesTutor, movesEgg),
+                          _buildMovesTab(movesLvl, movesTm, movesTutor, movesEgg, tr),
+                          _buildLocationsTab(p.locations, color, context, tr), // NUEVA VISTA
                           _buildForms(formsMega, color, context),
                           _buildForms(formsAlt, color, context),
                         ])),
@@ -209,7 +231,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
     }
   }
 
-  Widget _buildAbout(PokemonDetail p) {
+  Widget _buildAbout(PokemonDetail p, Function(String) tr) {
     return ListView(padding: const EdgeInsets.all(24), children: [
       _row('Description', p.flavorText),
       _row('Height', '${p.height/10} m'),
@@ -218,10 +240,10 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
       _row('Egg Groups', p.eggGroups.join(', ')),
       _row('Region', p.regionName.isNotEmpty ? p.regionName : 'Unknown'),
       const SizedBox(height: 16),
-      const Text('Abilities', style: TextStyle(fontWeight: FontWeight.bold)),
+      Text(tr('abilities') == 'abilities' ? 'Abilities' : tr('abilities'), style: const TextStyle(fontWeight: FontWeight.bold)),
       ...p.abilities.map((a) => ListTile(
         contentPadding: EdgeInsets.zero,
-        title: Text(a.name[0].toUpperCase() + a.name.substring(1), style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(_pretty(a.name), style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text(a.description),
         trailing: a.isHidden ? const Chip(label: Text('Hidden'), visualDensity: VisualDensity.compact) : null,
       ))
@@ -233,14 +255,14 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
     Expanded(child: Text(v, style: const TextStyle(fontWeight: FontWeight.w500))),
   ]));
 
-  Widget _buildStats(List<StatDto> stats, List<String> types) {
+  Widget _buildStats(List<StatDto> stats, List<String> types, Function(String) tr) {
     final int total = stats.fold(0, (sum, item) => sum + item.value);
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
         ...stats.asMap().entries.map((e) => StaggeredAnimationItem(
             index: e.key, animationType: AnimationType.slideLeft,
-            child: Padding(padding: const EdgeInsets.only(bottom: 16), child: StatBar(label: e.value.name, value: e.value.value))
+            child: Padding(padding: const EdgeInsets.only(bottom: 16), child: StatBar(label: _pretty(e.value.name), value: e.value.value))
         )),
         const Divider(height: 24),
         Row(children: [
@@ -318,7 +340,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
     Text(_pretty(name), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
   ]);
 
-  Widget _buildMovesTab(List<MoveDto> lvl, List<MoveDto> tm, List<MoveDto> tutor, List<MoveDto> egg) {
+  Widget _buildMovesTab(List<MoveDto> lvl, List<MoveDto> tm, List<MoveDto> tutor, List<MoveDto> egg, Function(String) tr) {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -383,6 +405,96 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
     Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold)),
     Text(val, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
   ]);
+
+  // --- WIDGET DEL TAB DE UBICACIONES ---
+  Widget _buildLocationsTab(List<LocationGroupDto> locations, Color color, BuildContext context, Function(String) tr) {
+    if (locations.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.map_outlined, size: 60, color: Colors.grey[300]),
+            const SizedBox(height: 16),
+            Text(tr('no_locations'), style: const TextStyle(color: Colors.grey, fontSize: 16)),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: locations.length,
+      itemBuilder: (ctx, i) {
+        final locGroup = locations[i];
+
+        return Card(
+          margin: const EdgeInsets.only(bottom: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          elevation: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Cabecera: Nombre Región + Botón Mapa
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      locGroup.regionName,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(context, SlideRightPageRoute(
+                            child: RegionMapScreen(
+                              regionName: locGroup.regionName,
+                              regionId: locGroup.regionId, // ej: kanto, johto
+                            )
+                        ));
+                      },
+                      icon: const Icon(Icons.map, size: 18),
+                      label: Text(tr('view_map')),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: color,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: color)),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const Divider(height: 1),
+              // Lista de rutas
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: locGroup.locations.map((l) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(Icons.place, size: 16, color: color),
+                        const SizedBox(width: 8),
+                        Expanded(child: Text(l, style: const TextStyle(fontSize: 14))),
+                      ],
+                    ),
+                  )).toList(),
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   Widget _buildForms(List<FormDto> list, Color color, BuildContext context) {
     if (list.isEmpty) return const Center(child: Text('No Data'));

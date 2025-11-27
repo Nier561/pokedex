@@ -4,120 +4,143 @@ query PokemonDetail($id: Int!, $langId: Int!) {
         name
         height
         weight
-
-        # --- Tipos y Eficacia ---
         pokemon_v2_pokemontypes {
             pokemon_v2_type {
                 name
-                pokemon_v2_typeefficacies {
-                    damage_factor
-                    target_type_id
-                }
             }
         }
-
-        # --- Stats ---
         pokemon_v2_pokemonstats {
             base_stat
-            pokemon_v2_stat { name }
+            pokemon_v2_stat {
+                name
+            }
         }
-
-        # --- Habilidades ---
         pokemon_v2_pokemonabilities {
             is_hidden
             pokemon_v2_ability {
                 name
-                pokemon_v2_abilityeffecttexts(where: {language_id: {_eq: $langId}}, limit: 1) {
+                pokemon_v2_abilitynames(where: {language_id: {_eq: $langId}}) {
+                    name
+                }
+                pokemon_v2_abilityflavortexts(where: {language_id: {_eq: $langId}}, limit: 1, order_by: {version_group_id: desc}) {
+                    flavor_text
+                }
+                pokemon_v2_abilityeffecttexts(where: {language_id: {_eq: $langId}}) {
                     short_effect
                 }
             }
         }
-
-        # --- Especie ---
         pokemon_v2_pokemonspecy {
+            id
+            name
             gender_rate
+            is_legendary
+            is_mythical
             generation_id
-
-            pokemon_v2_pokemonegggroups {
-                pokemon_v2_egggroup { name }
-            }
-
             pokemon_v2_generation {
-                pokemon_v2_region { name }
+                pokemon_v2_region {
+                    name
+                }
             }
-
-            pokemon_v2_pokemonspeciesflavortexts(
-                where: {language_id: {_eq: $langId}}
-                order_by: {version_id: desc}
-                limit: 1
-            ) {
+            pokemon_v2_pokemonegggroups {
+                pokemon_v2_egggroup {
+                    name
+                }
+            }
+            pokemon_v2_pokemonspeciesflavortexts(where: {language_id: {_eq: $langId}}, limit: 1) {
                 flavor_text
             }
-
-            # Cadena de Evolución
             pokemon_v2_evolutionchain {
-                pokemon_v2_pokemonspecies(order_by: {order: asc}) {
+                pokemon_v2_pokemonspecies {
                     id
                     name
-                    order
                     evolves_from_species_id
-                    pokemon_v2_pokemons(limit: 1) { id }
                     pokemon_v2_pokemonevolutions {
                         min_level
-                        time_of_day
                         min_happiness
                         min_beauty
                         min_affection
                         needs_overworld_rain
                         turn_upside_down
+                        time_of_day
                         gender_id
                         relative_physical_stats
-                        trade_species_id
                         pokemon_v2_evolutiontrigger { name }
                         pokemon_v2_item { name }
                         pokemon_v2_move { name }
-                        pokemon_v2_type { name }
                         pokemon_v2_location { name }
-                        # pokemon_v2_held_item omitido temporalmente por incompatibilidad de esquema
+                        pokemon_v2_type { name }
+                    }
+                    pokemon_v2_pokemons(limit: 1, where: {is_default: {_eq: true}}) {
+                        id
+                        name
+                        pokemon_v2_pokemonforms(limit: 1) {
+                            form_name
+                            is_mega
+                            pokemon_v2_pokemonformtypes {
+                                pokemon_v2_type { name }
+                            }
+                        }
                     }
                 }
             }
-
-            # Formas
             pokemon_v2_pokemons {
                 id
                 name
                 pokemon_v2_pokemonforms {
-                    is_mega
-                    is_battle_only
                     form_name
-                    name
+                    is_mega
                     pokemon_v2_pokemonformtypes {
                         pokemon_v2_type { name }
                     }
                 }
             }
         }
-
-        # --- Movimientos ---
-        pokemon_v2_pokemonmoves(order_by: [{version_group_id: desc}, {level: asc}]) {
+        pokemon_v2_pokemonmoves {
             level
+            move_id
+            pokemon_v2_movelearnmethod {
+                name
+            }
             version_group_id
-            pokemon_v2_movelearnmethod { name }
             pokemon_v2_move {
                 name
+                pokemon_v2_movenames(where: {language_id: {_eq: $langId}}) {
+                    name
+                }
                 power
-                pp
                 accuracy
-                generation_id
-                pokemon_v2_type { name }
-                pokemon_v2_movedamageclass { name }
-                pokemon_v2_moveflavortexts(
-                    where: {language_id: {_eq: $langId}}
-                    order_by: {version_group_id: desc}
-                    limit: 1
-                ) {
+                pp
+                pokemon_v2_type {
+                    name
+                }
+                pokemon_v2_movedamageclass {
+                    name
+                }
+                pokemon_v2_moveflavortexts(where: {language_id: {_eq: $langId}}, limit: 1) {
                     flavor_text
+                }
+            }
+        }
+        pokemon_v2_encounters(distinct_on: location_area_id) {
+            pokemon_v2_locationarea {
+                pokemon_v2_location {
+                    name
+                    pokemon_v2_locationnames(where: {language_id: {_eq: $langId}}) {
+                        name
+                    }
+                    pokemon_v2_region {
+                        name
+                        pokemon_v2_regionnames(where: {language_id: {_eq: $langId}}) {
+                            name
+                        }
+                    }
+                }
+            }
+            pokemon_v2_version {
+                name
+                pokemon_v2_versionnames(where: {language_id: {_eq: $langId}}) {
+                    name
                 }
             }
         }
