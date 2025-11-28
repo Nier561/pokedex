@@ -53,6 +53,7 @@ class S {
       'view_map': 'View Map',
       'no_locations': 'Wild location unknown',
       'abilities': 'Abilities',
+      'main_subtitle': 'What Pokémon are you looking for?',
     },
     'es': {
       'app_title': 'Pokédex',
@@ -81,6 +82,7 @@ class S {
       'view_map': 'Ver Mapa',
       'no_locations': 'Ubicación salvaje desconocida',
       'abilities': 'Habilidades',
+      'main_subtitle': '¿Qué Pokémon estás buscando?',
     },
   };
 
