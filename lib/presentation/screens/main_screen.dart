@@ -6,6 +6,7 @@ import 'package:pokedex/presentation/screens/region_selection_screen.dart';
 import 'package:pokedex/presentation/screens/list_screen.dart';
 import 'package:pokedex/presentation/screens/settings_screen.dart';
 import 'package:pokedex/presentation/widgets/page_transitions.dart';
+import 'package:pokedex/presentation/screens/trivia_menu_screen.dart';
 
 /// Pantalla principal del menú de la Pokédex
 /// Utiliza ConsumerStatefulWidget para manejar estado y animaciones
@@ -182,7 +183,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with SingleTickerProvid
                             colorEnd: const Color(0xFFFFD86F),
                             icon: Icons.lightbulb,
                             onTap: () {
-                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Trivia Coming Soon!')));
+                              Navigator.push(context, SlideRightPageRoute(child: const TriviaMenuScreen()));
                             },
                           ),
                         ),
