@@ -144,7 +144,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
         _showOnlyFavorites;
 
     if (isFiltering) {
-      sourceList = allPokesAsync.value ?? listState.pokemons;
+      sourceList = allPokesAsync.valueOrNull ?? listState.pokemons;
     } else {
       sourceList = listState.pokemons;
     }
@@ -304,125 +304,255 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
       backgroundColor: Colors.transparent,
       builder: (ctx) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.8,
-          decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+          height: MediaQuery.of(context).size.height * 0.85,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
           child: StatefulBuilder(builder: (ctx, setModal) {
             return Column(
               children: [
-                Center(child: Container(margin: const EdgeInsets.symmetric(vertical: 12), width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)))),
+                Center(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(vertical: 12),
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      tr('filters'),
+                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(tr('filters'), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 24),
 
-                      // --- SORT SECTION (Traducido) ---
-                      Text(tr('sort_by'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey)),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: DropdownButtonFormField<SortMode>(
-                              value: tempSort,
-                              decoration: InputDecoration(contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),
-                              items: [
-                                DropdownMenuItem(value: SortMode.id, child: Text(tr('sort_id'))),     // "Number (ID)"
-                                DropdownMenuItem(value: SortMode.name, child: Text(tr('sort_name'))), // "Name (A-Z)"
-                                DropdownMenuItem(value: SortMode.power, child: Text(tr('sort_power'))), // "Total Power"
-                              ],
-                              onChanged: (v) => setModal(() => tempSort = v!),
+                        // --- SORT SECTION ---
+                        Text(
+                          tr('sort_by'),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey.shade400),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton<SortMode>(
+                                    value: tempSort,
+                                    icon: const Icon(Icons.arrow_drop_down),
+                                    isExpanded: true,
+                                    items: [
+                                      DropdownMenuItem(value: SortMode.id, child: Text(tr('sort_id'))),
+                                      DropdownMenuItem(value: SortMode.name, child: Text(tr('sort_name'))),
+                                      DropdownMenuItem(value: SortMode.power, child: Text(tr('sort_power'))),
+                                    ],
+                                    onChanged: (v) => setModal(() => tempSort = v!),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            InkWell(
+                              onTap: () => setModal(() => tempAsc = !tempAsc),
+                              borderRadius: BorderRadius.circular(12),
+                              child: Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey.shade400),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Icon(
+                                  tempAsc ? Icons.arrow_upward : Icons.arrow_downward,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+
+                        // --- TYPES SECTION ---
+                        Text(
+                          tr('types'),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: allTypes.map((t) {
+                            final isSel = tempTypes.contains(t);
+                            final typeColor = typeGradients[t]?.colors.first ?? Colors.grey;
+                            return FilterChip(
+                              label: Text(
+                                t[0].toUpperCase() + t.substring(1),
+                                style: TextStyle(
+                                  color: isSel ? Colors.white : Colors.black87,
+                                  fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
+                                ),
+                              ),
+                              selected: isSel,
+                              onSelected: (selected) {
+                                setModal(() {
+                                  if (selected) {
+                                    if (tempTypes.length < 2) tempTypes.add(t);
+                                  } else {
+                                    tempTypes.remove(t);
+                                  }
+                                });
+                              },
+                              backgroundColor: Colors.white,
+                              selectedColor: typeColor,
+                              checkmarkColor: Colors.white,
+                              showCheckmark: false,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24),
+                                side: BorderSide(
+                                  color: isSel ? Colors.transparent : Colors.grey.shade300,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // --- GENERATION SECTION ---
+                        if (widget.initialGeneration == null) ...[
+                          Text(
+                            tr('generation'),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
                             ),
                           ),
-                          const SizedBox(width: 12),
-                          InkWell(
-                            onTap: () => setModal(() => tempAsc = !tempAsc),
-                            borderRadius: BorderRadius.circular(12),
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(12)),
-                              child: Icon(tempAsc ? Icons.arrow_upward : Icons.arrow_downward),
+                          const SizedBox(height: 12),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: List.generate(9, (i) {
+                                final g = i + 1;
+                                final isSel = tempGen == g;
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 8),
+                                  child: FilterChip(
+                                    label: Text(
+                                      'Gen $g',
+                                      style: TextStyle(
+                                        color: isSel ? Colors.white : Colors.black87,
+                                        fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
+                                      ),
+                                    ),
+                                    selected: isSel,
+                                    onSelected: (s) => setModal(() => tempGen = s ? g : null),
+                                    backgroundColor: Colors.white,
+                                    selectedColor: const Color(0xFF6C5CE7),
+                                    checkmarkColor: Colors.white,
+                                    showCheckmark: false,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(24),
+                                      side: BorderSide(
+                                        color: isSel ? Colors.transparent : Colors.grey.shade300,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
                             ),
                           ),
                         ],
-                      ),
-                      const SizedBox(height: 24),
-
-                      // --- TYPES SECTION (Traducido) ---
-                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                        Text(tr('types'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey)),
-                        if (tempTypes.isNotEmpty)
-                          GestureDetector(
-                            onTap: () => setModal(() => tempTypes.clear()),
-                            child: Text(tr('clear'), style: const TextStyle(color: Colors.red)), // "Clear"
-                          ),
-                      ]),
-                      const SizedBox(height: 12),
-                      Wrap(spacing: 8, runSpacing: 8, children: allTypes.map((t) {
-                        final isSel = tempTypes.contains(t);
-                        final typeColor = typeGradients[t]?.colors.first ?? Colors.grey;
-                        return FilterChip(
-                          label: Text(t[0].toUpperCase() + t.substring(1)),
-                          selected: isSel,
-                          onSelected: (selected) {
-                            setModal(() {
-                              if (selected) { if (tempTypes.length < 2) tempTypes.add(t); }
-                              else { tempTypes.remove(t); }
-                            });
-                          },
-                          backgroundColor: Colors.white,
-                          selectedColor: typeColor,
-                          checkmarkColor: Colors.white,
-                          labelStyle: TextStyle(color: isSel ? Colors.white : Colors.black87, fontWeight: isSel ? FontWeight.bold : FontWeight.normal),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: isSel ? Colors.transparent : Colors.grey[300]!)),
-                        );
-                      }).toList()),
-                      const SizedBox(height: 24),
-
-                      // --- GENERATION SECTION (Si aplica) ---
-                      if (widget.initialGeneration == null) ...[
-                        Text(tr('generation'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey)),
-                        const SizedBox(height: 12),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(children: List.generate(9, (i) {
-                            final g = i + 1;
-                            final isSel = tempGen == g;
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: FilterChip(
-                                label: Text('Gen $g'),
-                                selected: isSel,
-                                onSelected: (s) => setModal(() => tempGen = s ? g : null),
-                                selectedColor: const Color(0xFF8B7ED8),
-                                labelStyle: TextStyle(color: isSel ? Colors.white : Colors.black87),
-                              ),
-                            );
-                          })),
-                        ),
+                        const SizedBox(height: 40),
                       ],
-                    ]),
+                    ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(24),
-                  child: Row(children: [
-                    Expanded(child: OutlinedButton(
-                      onPressed: () { ref.read(filterProvider.notifier).resetFilters(); Navigator.pop(ctx); },
-                      style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                      child: Text(tr('reset')),
-                    )),
-                    const SizedBox(width: 16),
-                    Expanded(child: ElevatedButton(
-                      onPressed: () {
-                        ref.read(filterProvider.notifier).updateFilters(sortMode: tempSort, isAscending: tempAsc, selectedTypes: tempTypes, selectedGen: tempGen, clearGen: tempGen == null);
-                        Navigator.pop(ctx);
-                      },
-                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF8B7ED8), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                      child: Text(tr('apply')),
-                    )),
-                  ]),
-                )
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () {
+                            ref.read(filterProvider.notifier).resetFilters();
+                            Navigator.pop(ctx);
+                          },
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            side: BorderSide(color: Colors.grey.shade400),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(
+                            tr('reset'),
+                            style: const TextStyle(
+                              color: Color(0xFF6C5CE7),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            ref.read(filterProvider.notifier).updateFilters(
+                              sortMode: tempSort,
+                              isAscending: tempAsc,
+                              selectedTypes: tempTypes,
+                              selectedGen: tempGen,
+                              clearGen: tempGen == null,
+                            );
+                            Navigator.pop(ctx);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF6C5CE7),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(
+                            tr('apply'),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             );
           }),

@@ -6,7 +6,6 @@ import 'package:pokedex/presentation/providers/language_provider.dart';
 /// Permite al usuario:
 /// - Cambiar el idioma de la aplicación (Inglés/Español).
 /// - Ver información sobre la versión de la app.
-/// Mantiene la estética visual consistente con el resto de la aplicación.
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 

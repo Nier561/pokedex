@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
-import 'package:pokedex/presentation/providers/language_provider.dart'; // Import Language
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pokedex/presentation/providers/language_provider.dart';
 import 'package:pokedex/presentation/screens/list_screen.dart';
 import 'package:pokedex/presentation/widgets/page_transitions.dart';
 
-// Cambiado a ConsumerWidget
+/// Pantalla de selección de Generación (Dex Generacional).
+/// Muestra una cuadrícula con las diferentes generaciones de Pokémon (Kanto, Johto, etc.).
+/// Permite al usuario navegar a la lista de Pokémon filtrada por la generación seleccionada.
 class GenerationSelectionScreen extends ConsumerWidget {
   const GenerationSelectionScreen({super.key});
 
@@ -22,56 +24,100 @@ class GenerationSelectionScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Acceso a traducciones
     final locale = ref.watch(languageProvider);
     String tr(String key) => S(locale).get(key);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          tr('select_generation_dex'), // Traducido
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        foregroundColor: Colors.black,
-        centerTitle: true,
-      ),
       backgroundColor: Colors.white,
-      body: GridView.builder(
-        padding: const EdgeInsets.all(16),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 0.85
-        ),
-        itemCount: _generations.length,
-        itemBuilder: (context, index) {
-          final g = _generations[index];
-          return _GenerationCard(
-            regionName: g['name'],
-            generation: g['gen'],
-            imageAsset: g['image'],
-            color: g['color'],
-            onTap: () {
-              Navigator.push(context, SlideRightPageRoute(child: PokemonListScreen(initialGeneration: g['gen'])));
-            },
-            tr: tr, // Pasamos la función de traducción
-          );
-        },
+      body: Stack(
+        children: [
+          // Fondo decorativo
+          Positioned(
+            top: -60,
+            right: -60,
+            child: Icon(
+              Icons.catching_pokemon,
+              size: 300,
+              color: Colors.grey.withOpacity(0.05),
+            ),
+          ),
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                // Header personalizado
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back, color: Colors.black87),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          tr('select_generation_dex'),
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                
+                // Grid de Generaciones
+                Expanded(
+                  child: GridView.builder(
+                    padding: const EdgeInsets.all(24),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 0.85,
+                    ),
+                    itemCount: _generations.length,
+                    itemBuilder: (context, index) {
+                      final g = _generations[index];
+                      return _GenerationCard(
+                        regionName: g['name'],
+                        generation: g['gen'],
+                        imageAsset: g['image'],
+                        color: g['color'],
+                        onTap: () {
+                          Navigator.push(context, SlideRightPageRoute(child: PokemonListScreen(initialGeneration: g['gen'])));
+                        },
+                        tr: tr,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
+/// Tarjeta que representa una generación específica.
+/// Muestra el nombre de la región, el número de generación y una imagen representativa.
+/// Utiliza un diseño visual atractivo con sombras y colores temáticos.
 class _GenerationCard extends StatelessWidget {
   final String regionName;
   final int generation;
   final String imageAsset;
   final Color color;
   final VoidCallback onTap;
-  final Function(String) tr; // Recibimos el traductor
+  final Function(String) tr;
 
   const _GenerationCard({
     required this.regionName,
@@ -84,44 +130,76 @@ class _GenerationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.10),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(20),
+        child: InkWell(
+          onTap: onTap,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: color.withOpacity(0.6), width: 2),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Image.asset(
-                  imageAsset,
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Icon(Icons.broken_image, size: 50, color: color.withOpacity(0.5));
-                  },
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // Decoración de fondo en la tarjeta
+              Positioned(
+                bottom: -15,
+                right: -15,
+                child: Icon(
+                  Icons.catching_pokemon,
+                  size: 80,
+                  color: color.withOpacity(0.1),
                 ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.2),
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(18)),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${tr('generation')} $generation',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: color,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      regionName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                        fontSize: 20,
+                      ),
+                    ),
+                    const Spacer(),
+                    Center(
+                      child: Image.asset(
+                        imageAsset,
+                        height: 80,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          debugPrint('Error loading image $imageAsset: $error');
+                          return Icon(Icons.broken_image, size: 50, color: color.withOpacity(0.5));
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                ),
               ),
-              child: Text(
-                '${tr('generation')} $generation ($regionName)', // "Generación 3 (Hoenn)"
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87, fontSize: 16),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
