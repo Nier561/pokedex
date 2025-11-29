@@ -12,7 +12,7 @@ import 'package:pokedex/data/models/pokemon_detail_dto.dart';
 import 'package:pokedex/presentation/providers/favorites_provider.dart';
 import 'package:pokedex/presentation/providers/pokemon_provider.dart';
 import 'package:pokedex/presentation/providers/language_provider.dart';
-import 'package:pokedex/presentation/screens/region_map_screen.dart'; // Importar mapa
+import 'package:pokedex/presentation/screens/region_map_screen.dart';
 import 'package:pokedex/presentation/widgets/page_transitions.dart';
 import 'package:pokedex/presentation/widgets/type_badge.dart';
 import 'package:pokedex/presentation/widgets/type_gradients.dart';
@@ -50,7 +50,6 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
   @override
   void initState() {
     super.initState();
-    // AHORA SON 7 TABS
     _tabController = TabController(length: 7, vsync: this);
     _ids = widget.listIds ?? [];
     _idx = widget.initialIndex ?? -1;
@@ -102,6 +101,11 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
 
   String _img(int id) => 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png';
 
+  String _displayName(String name) {
+    if (name.startsWith('zygarde-') && name.contains('-50')) return 'Zygarde';
+    return _pretty(name);
+  }
+
   @override
   Widget build(BuildContext context) {
     final locale = ref.watch(languageProvider);
@@ -135,73 +139,177 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
           child: GestureDetector(
             onHorizontalDragEnd: _onSwipe,
             child: Scaffold(
-              body: Column(
+              backgroundColor: color,
+              body: Stack(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(gradient: gradient),
-                    child: SafeArea(bottom: false, child: Column(children: [
-                      StaggeredAnimationItem(index: 0, animationType: AnimationType.slideDown, child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                          IconButton(icon: const Icon(Icons.arrow_back, color: Colors.white), onPressed: () => Navigator.pop(context)),
-                          Row(children: [
-                            IconButton(icon: const Icon(Icons.share, color: Colors.white), onPressed: () => _sharePokemon(p)),
-                            IconButton(
-                                icon: const Icon(Icons.volume_up, color: Colors.white),
-                                onPressed: _playCry
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(gradient: gradient),
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: -20,
+                            right: -60,
+                            child: Icon(
+                              Icons.catching_pokemon,
+                              size: 280,
+                              color: Colors.white.withOpacity(0.15),
                             ),
-                            IconButton(
-                              icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, color: Colors.white),
-                              onPressed: () => ref.read(favoritesProvider.notifier).toggle(widget.id),
-                            ),
-                          ]),
-                        ]),
-                      )),
-                      StaggeredAnimationItem(index: 1, animationType: AnimationType.slideLeft, child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                            Text(p.name[0].toUpperCase()+p.name.substring(1), style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white)),
-                            Wrap(spacing: 8, children: p.types.map((t) => TypeBadge(type: t, backgroundColor: color)).toList())
-                          ]),
-                          Text('#${p.id.toString().padLeft(3,'0')}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white70))
-                        ]),
-                      )),
-                      AnimatedPokemonImage(child: SizedBox(height: 240, child: Image.network(_img(p.id), fit: BoxFit.contain))),
-                    ])),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-
-                  Expanded(
-                    child: StaggeredAnimationItem(index: 2, animationType: AnimationType.slideUp, child: Container(
-                      decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
-                      child: Column(children: [
-                        TabBar(
-                            controller: _tabController,
-                            labelColor: color,
-                            unselectedLabelColor: Colors.grey,
-                            indicatorColor: color,
-                            isScrollable: true,
-                            tabs: [
-                              Tab(text: tr('about')),
-                              Tab(text: tr('stats')),
-                              Tab(text: tr('evolutions')),
-                              Tab(text: tr('moves')),
-                              Tab(text: tr('locations')), // NUEVO TAB
-                              Tab(text: tr('megas')),
-                              Tab(text: tr('forms')),
-                            ]
+                  Column(
+                    children: [
+                      SafeArea(
+                        bottom: false,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                                    onPressed: () => Navigator.pop(context),
+                                  ),
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.share, color: Colors.white),
+                                        onPressed: () => _sharePokemon(p),
+                                      ),
+                                      IconButton(
+                                          icon: const Icon(Icons.volume_up, color: Colors.white),
+                                          onPressed: _playCry
+                                      ),
+                                      IconButton(
+                                        icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, color: Colors.white),
+                                        onPressed: () => ref.read(favoritesProvider.notifier).toggle(widget.id),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 24),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          _displayName(p.name),
+                                          style: const TextStyle(
+                                            fontSize: 36,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            height: 1.2,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Wrap(
+                                          spacing: 8,
+                                          children: p.types.map((t) => TypeBadge(
+                                            type: t,
+                                            backgroundColor: Colors.white.withOpacity(0.25),
+                                          )).toList(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      '#${p.id.toString().padLeft(3,'0')}',
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white70,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                          ],
                         ),
-                        Expanded(child: TabBarView(controller: _tabController, children: [
-                          _buildAbout(p, tr),
-                          _buildStats(p.stats, p.types, tr),
-                          _buildEvolutionTab(p.evolutionChain, context),
-                          _buildMovesTab(movesLvl, movesTm, movesTutor, movesEgg, tr),
-                          _buildLocationsTab(p.locations, color, context, tr), // NUEVA VISTA
-                          _buildForms(formsMega, color, context),
-                          _buildForms(formsAlt, color, context),
-                        ])),
-                      ]),
-                    )),
+                      ),
+                      SizedBox(
+                        height: 220,
+                        child: Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            Positioned(
+                              bottom: 0,
+                              child: Hero(
+                                tag: 'pokemon-img-${_displayName(p.name)}',
+                                child: Image.network(
+                                  _img(p.id),
+                                  height: 200,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                          ),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 16),
+                              TabBar(
+                                controller: _tabController,
+                                labelColor: Colors.black87,
+                                unselectedLabelColor: Colors.grey,
+                                indicatorColor: color,
+                                indicatorSize: TabBarIndicatorSize.label,
+                                indicatorWeight: 3,
+                                labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                isScrollable: true,
+                                tabs: [
+                                  Tab(text: tr('about')),
+                                  Tab(text: tr('stats')),
+                                  Tab(text: tr('evolutions')),
+                                  Tab(text: tr('moves')),
+                                  Tab(text: tr('locations')),
+                                  Tab(text: tr('megas')),
+                                  Tab(text: tr('forms')),
+                                ],
+                              ),
+                              const Divider(height: 1),
+                              Expanded(
+                                child: TabBarView(
+                                  controller: _tabController,
+                                  children: [
+                                    _buildAbout(p, tr, color),
+                                    _buildStats(p.stats, p.types, tr, color),
+                                    _buildEvolutionTab(p.evolutionChain, context),
+                                    _buildMovesTab(movesLvl, movesTm, movesTutor, movesEgg, tr),
+                                    _buildLocationsTab(p.locations, color, context, tr),
+                                    _buildForms(formsMega, color, context),
+                                    _buildForms(formsAlt, color, context),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -231,51 +339,203 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
     }
   }
 
-  Widget _buildAbout(PokemonDetail p, Function(String) tr) {
-    return ListView(padding: const EdgeInsets.all(24), children: [
-      _row('Description', p.flavorText),
-      _row('Height', '${p.height/10} m'),
-      _row('Weight', '${p.weight/10} kg'),
-      _row('Gender', p.genderText),
-      _row('Egg Groups', p.eggGroups.join(', ')),
-      _row('Region', p.regionName.isNotEmpty ? p.regionName : 'Unknown'),
-      const SizedBox(height: 16),
-      Text(tr('abilities') == 'abilities' ? 'Abilities' : tr('abilities'), style: const TextStyle(fontWeight: FontWeight.bold)),
-      ...p.abilities.map((a) => ListTile(
-        contentPadding: EdgeInsets.zero,
-        title: Text(_pretty(a.name), style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(a.description),
-        trailing: a.isHidden ? const Chip(label: Text('Hidden'), visualDensity: VisualDensity.compact) : null,
-      ))
-    ]);
+  Widget _buildAbout(PokemonDetail p, Function(String) tr, Color color) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Text(
+              p.flavorText.replaceAll('\n', ' '),
+              style: const TextStyle(fontSize: 16, height: 1.4, color: Colors.black87),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(height: 24),
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _attributeCard('Height', Icons.height, color, value: '${p.height / 10} m'),
+                const SizedBox(width: 12),
+                _attributeCard('Weight', Icons.scale, color, value: '${p.weight / 10} kg'),
+                const SizedBox(width: 12),
+                _attributeCard('Gender', Icons.transgender, color, content: _genderLayout(p.genderText)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+          const Text('Breeding', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 12),
+          _infoRow('Egg Groups', p.eggGroups.join(', '), Icons.egg_outlined),
+          _infoRow('Region', p.regionName.isNotEmpty ? p.regionName : 'Unknown', Icons.map_outlined),
+          const SizedBox(height: 24),
+          Text(tr('abilities') == 'abilities' ? 'Abilities' : tr('abilities'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 12),
+          ...p.abilities.map((a) => Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade200),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(_pretty(a.name), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    if (a.isHidden) ...[
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(4)),
+                        child: const Text('Hidden', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                      )
+                    ]
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(a.description, style: TextStyle(color: Colors.grey[700], fontSize: 13)),
+              ],
+            ),
+          )),
+        ],
+      ),
+    );
   }
 
-  Widget _row(String k, String v) => Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: Row(children: [
-    SizedBox(width: 100, child: Text(k, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold))),
-    Expanded(child: Text(v, style: const TextStyle(fontWeight: FontWeight.w500))),
-  ]));
+  Widget _attributeCard(String label, IconData icon, Color color, {String? value, Widget? content}) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))
+          ],
+          border: Border.all(color: Colors.grey.shade100),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color, size: 24),
+            const SizedBox(height: 8),
+            Text(label, style: const TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            content ?? Text(value ?? '', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14), textAlign: TextAlign.center),
+          ],
+        ),
+      ),
+    );
+  }
 
-  Widget _buildStats(List<StatDto> stats, List<String> types, Function(String) tr) {
+  Widget _genderLayout(String text) {
+    if (text.toLowerCase().contains('genderless')) {
+      return const Text('Genderless', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14));
+    }
+    final matches = RegExp(r'(\d+\.?\d*)%').allMatches(text).toList();
+    if (matches.length >= 2) {
+       final male = matches[0].group(1);
+       final female = matches[1].group(1);
+       return Column(
+         children: [
+           Row(
+             mainAxisAlignment: MainAxisAlignment.center,
+             children: [
+               const Icon(Icons.male, size: 16, color: Colors.blue),
+               const SizedBox(width: 4),
+               Text('$male%', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+             ],
+           ),
+           const SizedBox(height: 4),
+           Row(
+             mainAxisAlignment: MainAxisAlignment.center,
+             children: [
+               const Icon(Icons.female, size: 16, color: Colors.pink),
+               const SizedBox(width: 4),
+               Text('$female%', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+             ],
+           ),
+         ],
+       );
+    }
+    return Text(text, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12), textAlign: TextAlign.center);
+  }
+
+  Widget _infoRow(String label, String value, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: Colors.grey),
+          const SizedBox(width: 12),
+          Text(label, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+          const Spacer(),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStats(List<StatDto> stats, List<String> types, Function(String) tr, Color color) {
     final int total = stats.fold(0, (sum, item) => sum + item.value);
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
-        ...stats.asMap().entries.map((e) => StaggeredAnimationItem(
-            index: e.key, animationType: AnimationType.slideLeft,
-            child: Padding(padding: const EdgeInsets.only(bottom: 16), child: StatBar(label: _pretty(e.value.name), value: e.value.value))
+        Text(tr('stats'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 16),
+        ...stats.asMap().entries.map((e) => Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Row(
+            children: [
+              SizedBox(width: 60, child: Text(_statName(e.value.name), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey))),
+              SizedBox(width: 40, child: Text('${e.value.value}', style: const TextStyle(fontWeight: FontWeight.bold))),
+              Expanded(
+                child: Stack(
+                  children: [
+                    Container(height: 8, decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(4))),
+                    FractionallySizedBox(
+                      widthFactor: (e.value.value / 255).clamp(0.0, 1.0),
+                      child: Container(height: 8, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4))),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         )),
-        const Divider(height: 24),
+        const Divider(height: 32),
         Row(children: [
-          const SizedBox(width: 40, child: Text('Total', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14))),
-          const SizedBox(width: 35),
-          Text('$total', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const Text('Total', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const Spacer(),
+          Text('$total', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         ]),
-        const SizedBox(height: 24),
-        const Text('Type Matchups (Defensive)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-        const SizedBox(height: 12),
+        const SizedBox(height: 32),
+        const Text('Type Matchups', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+        const SizedBox(height: 16),
         MatchupGrid(types: types),
       ],
     );
+  }
+
+  String _statName(String name) {
+    switch (name) {
+      case 'hp': return 'HP';
+      case 'attack': return 'ATK';
+      case 'defense': return 'DEF';
+      case 'special-attack': return 'SATK';
+      case 'special-defense': return 'SDEF';
+      case 'speed': return 'SPD';
+      default: return name.toUpperCase();
+    }
   }
 
   Widget _buildEvolutionTab(List<EvolutionEdgeDto> edges, BuildContext context) {
@@ -406,7 +666,6 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
     Text(val, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
   ]);
 
-  // --- WIDGET DEL TAB DE UBICACIONES ---
   Widget _buildLocationsTab(List<LocationGroupDto> locations, Color color, BuildContext context, Function(String) tr) {
     if (locations.isEmpty) {
       return Center(
@@ -434,7 +693,6 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Cabecera: Nombre Región + Botón Mapa
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
@@ -453,7 +711,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
                         Navigator.push(context, SlideRightPageRoute(
                             child: RegionMapScreen(
                               regionName: locGroup.regionName,
-                              regionId: locGroup.regionId, // ej: kanto, johto
+                              regionId: locGroup.regionId,
                             )
                         ));
                       },
@@ -471,7 +729,6 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
                 ),
               ),
               const Divider(height: 1),
-              // Lista de rutas
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
