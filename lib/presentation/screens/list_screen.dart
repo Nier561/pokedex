@@ -211,7 +211,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                 child: processedList.isEmpty
                     ? (listState.isLoading && filters.searchQuery.isEmpty
                     ? const Center(child: CircularProgressIndicator())
-                    : ListView(children: [const SizedBox(height: 80), Center(child: Text('No Pokémon found', style: const TextStyle(color: Colors.grey, fontSize: 16)))]))
+                    : ListView(children: [const SizedBox(height: 80), Center(child: Text(tr('no_pokemon_found'), style: const TextStyle(color: Colors.grey, fontSize: 16)))]))
                     : GridView.builder(
                   controller: _scroll,
                   padding: const EdgeInsets.all(12),

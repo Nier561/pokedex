@@ -362,19 +362,19 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _attributeCard('Height', Icons.height, color, value: '${p.height / 10} m'),
+                _attributeCard(tr('height'), Icons.height, color, value: '${p.height / 10} m'),
                 const SizedBox(width: 12),
-                _attributeCard('Weight', Icons.scale, color, value: '${p.weight / 10} kg'),
+                _attributeCard(tr('weight'), Icons.scale, color, value: '${p.weight / 10} kg'),
                 const SizedBox(width: 12),
-                _attributeCard('Gender', Icons.transgender, color, content: _genderLayout(p.genderText)),
+                _attributeCard(tr('gender'), Icons.transgender, color, content: _genderLayout(p.genderText)),
               ],
             ),
           ),
           const SizedBox(height: 24),
-          const Text('Breeding', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(tr('breeding'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
-          _infoRow('Egg Groups', p.eggGroups.join(', '), Icons.egg_outlined),
-          _infoRow('Region', p.regionName.isNotEmpty ? p.regionName : 'Unknown', Icons.map_outlined),
+          _infoRow(tr('egg_groups'), p.eggGroups.join(', '), Icons.egg_outlined),
+          _infoRow(tr('region'), p.regionName.isNotEmpty ? p.regionName : tr('unknown'), Icons.map_outlined),
           const SizedBox(height: 24),
           Text(tr('abilities') == 'abilities' ? 'Abilities' : tr('abilities'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
@@ -396,7 +396,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(4)),
-                        child: const Text('Hidden', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+child: Text(tr('hidden'), style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
                       )
                     ]
                   ],
@@ -406,6 +406,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
               ],
             ),
           )),
+
         ],
       ),
     );
@@ -437,7 +438,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
     );
   }
 
-  Widget _genderLayout(String text) {
+   Widget _genderLayout(String text) {
     if (text.toLowerCase().contains('genderless')) {
       return const Text('Genderless', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14));
     }
@@ -496,7 +497,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
           padding: const EdgeInsets.only(bottom: 16),
           child: Row(
             children: [
-              SizedBox(width: 60, child: Text(_statName(e.value.name), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey))),
+              SizedBox(width: 60, child: Text(_statName(e.value.name, tr), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey))),
               SizedBox(width: 40, child: Text('${e.value.value}', style: const TextStyle(fontWeight: FontWeight.bold))),
               Expanded(
                 child: Stack(
@@ -514,21 +515,21 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
         )),
         const Divider(height: 32),
         Row(children: [
-          const Text('Total', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        Text(tr('total'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           const Spacer(),
           Text('$total', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         ]),
         const SizedBox(height: 32),
-        const Text('Type Matchups', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+        Text(tr('type_matchups'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         const SizedBox(height: 16),
         MatchupGrid(types: types),
       ],
     );
   }
 
-  String _statName(String name) {
+  String _statName(String name, Function(String) tr) {
     switch (name) {
-      case 'hp': return 'HP';
+      case 'hp': return tr('hp');
       case 'attack': return 'ATK';
       case 'defense': return 'DEF';
       case 'special-attack': return 'SATK';
@@ -604,21 +605,21 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        if (lvl.isNotEmpty) _moveHeader('Level Up'),
-        ...lvl.map((m) => _moveTile(m, showLvl: true)),
-        if (tm.isNotEmpty) _moveHeader('TM / HM'),
-        ...tm.map((m) => _moveTile(m)),
-        if (tutor.isNotEmpty) _moveHeader('Tutor'),
-        ...tutor.map((m) => _moveTile(m)),
-        if (egg.isNotEmpty) _moveHeader('Egg Moves'),
-        ...egg.map((m) => _moveTile(m)),
+      if (lvl.isNotEmpty) _moveHeader(tr('level_up')),
+        ...lvl.map((m) => _moveTile(m, tr, showLvl: true)),
+      if (tm.isNotEmpty) _moveHeader(tr('tm_hm')),
+        ...tm.map((m) => _moveTile(m, tr)),
+      if (tutor.isNotEmpty) _moveHeader(tr('tutor')),
+        ...tutor.map((m) => _moveTile(m, tr)),
+      if (egg.isNotEmpty) _moveHeader(tr('egg_moves')),
+        ...egg.map((m) => _moveTile(m, tr)),
       ],
     );
   }
 
   Widget _moveHeader(String title) => Padding(padding: const EdgeInsets.fromLTRB(8, 24, 8, 8), child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)));
 
-  Widget _moveTile(MoveDto m, {bool showLvl = false}) {
+  Widget _moveTile(MoveDto m, Function(String) tr, {bool showLvl = false}) {
     final typeColor = typeGradients[m.type]?.colors.first ?? Colors.grey;
     String assetPath = 'assets/images/Status.png';
     if (m.damageClass.toLowerCase() == 'physical') assetPath = 'assets/images/Physical.png';
@@ -649,9 +650,9 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
           children: [
             const Divider(),
             Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-              _moveStat('Power', m.power?.toString() ?? '-'),
-              _moveStat('Acc', m.accuracy != null ? '${m.accuracy}%' : '-'),
-              _moveStat('PP', m.pp?.toString() ?? '-'),
+             _moveStat(tr('power'), m.power?.toString() ?? '-'),
+             _moveStat(tr('acc'), m.accuracy != null ? '${m.accuracy}%' : '-'),
+             _moveStat(tr('pp'), m.pp?.toString() ?? '-'),
             ]),
             const SizedBox(height: 12),
             Text(m.description.isNotEmpty ? m.description : 'No description available.', style: const TextStyle(color: Colors.black54, fontStyle: FontStyle.italic)),
