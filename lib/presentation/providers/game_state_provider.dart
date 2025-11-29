@@ -104,17 +104,17 @@ class GameStateNotifier extends StateNotifier<GameState> {
         final correctPokemon = allPokemon[random.nextInt(allPokemon.length)];
         
         // Seleccionar 3 opciones incorrectas
-        final Set<String> optionsSet = {correctPokemon.name};
+        final Set<String> optionsSet = {_formatName(correctPokemon.name)};
         while (optionsSet.length < 4) {
           final randomPokemon = allPokemon[random.nextInt(allPokemon.length)];
-          optionsSet.add(randomPokemon.name);
+          optionsSet.add(_formatName(randomPokemon.name));
         }
         
         final options = optionsSet.toList()..shuffle();
 
         questions.add(TriviaQuestion(
           pokemonId: correctPokemon.id,
-          pokemonName: correctPokemon.name,
+          pokemonName: _formatName(correctPokemon.name),
           imageUrl: correctPokemon.imageUrl,
           options: options,
         ));
@@ -264,6 +264,18 @@ class GameStateNotifier extends StateNotifier<GameState> {
     
     // Novato (siempre se desbloquea al terminar una partida)
     await repository.unlockAchievement('novice');
+  }
+
+  /// Formatea el nombre del Pokémon para mostrarlo limpio en la UI.
+  /// Convierte "kebab-case" a "Title Case".
+  /// Ejemplo: "flutter-mane" -> "Flutter Mane"
+  String _formatName(String name) {
+    if (name.isEmpty) return name;
+    
+    return name.split('-').map((word) {
+      if (word.isEmpty) return '';
+      return '${word[0].toUpperCase()}${word.substring(1).toLowerCase()}';
+    }).join(' ');
   }
 
   @override
