@@ -153,110 +153,123 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
     final processedIds = processedList.map((e) => e.id).toList();
 
     return Scaffold(
-      body: NestedScrollView(
-        floatHeaderSlivers: true,
-        headerSliverBuilder: (context, _) => [
-          SliverAppBar(
-            title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-            floating: true, snap: true, centerTitle: true,
-            leading: Semantics(
-              label: 'Go back',
-              button: true,
-              child: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
-              ),
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
+          // Fondo decorativo
+          Positioned(
+            top: -60,
+            right: -60,
+            child: Icon(
+              Icons.catching_pokemon,
+              size: 300,
+              color: Colors.grey.withOpacity(0.05),
             ),
-            actions: [
-              // --- BOTÓN DE FAVORITOS ---
-              Semantics(
-                label: 'Show only favorites',
-                button: true,
-                toggled: _showOnlyFavorites,
-                child: IconButton(
-                  icon: Icon(_showOnlyFavorites ? Icons.favorite : Icons.favorite_border),
-                  color: _showOnlyFavorites ? Colors.red : null,
-                  tooltip: 'Favorites',
-                  onPressed: () {
-                    setState(() {
-                      _showOnlyFavorites = !_showOnlyFavorites;
-                    });
-                  },
-                ),
-              ),
-              // --- BOTÓN DE FILTROS ---
-              Semantics(
-                label: 'Filter Pokemon',
-                button: true,
-                child: IconButton(
-                  icon: const Icon(Icons.tune),
-                  onPressed: () => _openFilterSheet(context, tr),
-                ),
-              ),
-            ],
           ),
-        ],
-        body: Column(
-          children: [
-            _buildSearchBar(filters.searchQuery, tr),
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  // Invalidamos providers para forzar recarga fresca
-                  ref.invalidate(pokemonListProvider);
-                  ref.invalidate(allPokemonProvider);
-
-                  await ref.read(pokemonListProvider.notifier).loadMore();
-                },
-                child: processedList.isEmpty
-                    ? (listState.isLoading && filters.searchQuery.isEmpty
-                    ? const Center(child: CircularProgressIndicator())
-                    : ListView(children: [const SizedBox(height: 80), Center(child: Text(tr('no_pokemon_found'), style: const TextStyle(color: Colors.grey, fontSize: 16)))]))
-                    : GridView.builder(
-                  controller: _scroll,
-                  padding: const EdgeInsets.all(12),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 1.30, mainAxisSpacing: 10, crossAxisSpacing: 12),
-                  itemCount: processedList.length,
-                  itemBuilder: (context, index) {
-                    final p = processedList[index];
-                    final primaryType = p.types.isNotEmpty ? p.types.first : 'normal';
-                    final isFav = favorites.contains(p.id);
-
-                    return Semantics(
-                      label: 'Pokemon ${p.name}, type ${primaryType}',
-                      button: true,
-                      child: InteractivePokemonCard(
-                        onTap: () {
-                          Navigator.of(context).pushWithScaleFadeTransition(
-                            PokemonDetailScreen(
-                              id: p.id,
-                              listIds: processedIds,
-                              initialIndex: index,
-                              genContext: widget.initialGeneration ?? filters.selectedGen,
-                            ),
-                          );
-                        },
-                        child: Stack(
-                          children: [
-                            AnimatedPokemonCard(
-                              index: index, name: p.displayName, types: p.types,
-                              imageUrl: p.imageUrl, background: typeGradients[primaryType] ?? typeGradients['normal']!,
-                            ),
-                            if (isFav)
-                              const Positioned(
-                                top: 8, right: 8,
-                                child: Icon(Icons.favorite, color: Colors.white, size: 18),
-                              ),
-                          ],
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header personalizado
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back, color: Colors.black87),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                            letterSpacing: 0.5,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                    );
-                  },
+                      IconButton(
+                        icon: Icon(_showOnlyFavorites ? Icons.favorite : Icons.favorite_border),
+                        color: _showOnlyFavorites ? Colors.red : Colors.black87,
+                        onPressed: () {
+                          setState(() {
+                            _showOnlyFavorites = !_showOnlyFavorites;
+                          });
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.tune, color: Colors.black87),
+                        onPressed: () => _openFilterSheet(context, tr),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                _buildSearchBar(filters.searchQuery, tr),
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      // Invalidamos providers para forzar recarga fresca
+                      ref.invalidate(pokemonListProvider);
+                      ref.invalidate(allPokemonProvider);
+
+                      await ref.read(pokemonListProvider.notifier).loadMore();
+                    },
+                    child: processedList.isEmpty
+                        ? (listState.isLoading && filters.searchQuery.isEmpty
+                        ? const Center(child: CircularProgressIndicator())
+                        : ListView(children: [const SizedBox(height: 80), Center(child: Text(tr('no_pokemon_found'), style: const TextStyle(color: Colors.grey, fontSize: 16)))]))
+                        : GridView.builder(
+                      controller: _scroll,
+                      padding: const EdgeInsets.all(12),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 1.30, mainAxisSpacing: 10, crossAxisSpacing: 12),
+                      itemCount: processedList.length,
+                      itemBuilder: (context, index) {
+                        final p = processedList[index];
+                        final primaryType = p.types.isNotEmpty ? p.types.first : 'normal';
+                        final isFav = favorites.contains(p.id);
+
+                        return Semantics(
+                          label: 'Pokemon ${p.name}, type ${primaryType}',
+                          button: true,
+                          child: InteractivePokemonCard(
+                            onTap: () {
+                              Navigator.of(context).pushWithScaleFadeTransition(
+                                PokemonDetailScreen(
+                                  id: p.id,
+                                  listIds: processedIds,
+                                  initialIndex: index,
+                                  genContext: widget.initialGeneration ?? filters.selectedGen,
+                                ),
+                              );
+                            },
+                            child: Stack(
+                              children: [
+                                AnimatedPokemonCard(
+                                  index: index, name: p.displayName, types: p.types,
+                                  imageUrl: p.imageUrl, background: typeGradients[primaryType] ?? typeGradients['normal']!,
+                                ),
+                                if (isFav)
+                                  const Positioned(
+                                    top: 8, right: 8,
+                                    child: Icon(Icons.favorite, color: Colors.white, size: 18),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
