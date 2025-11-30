@@ -8,6 +8,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import 'package:pokedex/domain/entities/pokemon.dart';
 import 'package:pokedex/domain/entities/pokemon_detail.dart';
 import 'package:pokedex/data/models/pokemon_detail_dto.dart';
 import 'package:pokedex/presentation/providers/favorites_provider.dart';
@@ -26,13 +27,15 @@ class PokemonDetailScreen extends ConsumerStatefulWidget {
   final List<int>? listIds;
   final int? initialIndex;
   final int? genContext;
+  final Pokemon? cachedPokemon;
 
   const PokemonDetailScreen({
     super.key,
     required this.id,
     this.listIds,
     this.initialIndex,
-    this.genContext
+    this.genContext,
+    this.cachedPokemon,
   });
 
   @override
@@ -102,14 +105,14 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
   }
 
   String _img(int id) {
-  return _isShiny
-      ? 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/$id.png'
-      : 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png';
-}
+    return _isShiny
+        ? 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/$id.png'
+        : 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png';
+  }
 
   String _displayName(String name) {
     if (name.startsWith('zygarde-') && name.contains('-50')) return 'Zygarde';
-    return _pretty(name);
+    return name.isEmpty ? '' : '${name[0].toUpperCase()}${name.substring(1)}';
   }
 
   @override
@@ -124,248 +127,282 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
     ));
 
     return detailAsync.when(
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () {
+        if (widget.cachedPokemon != null) {
+          return _buildContent(
+            context, 
+            id: widget.cachedPokemon!.id,
+            name: widget.cachedPokemon!.name,
+            types: widget.cachedPokemon!.types,
+            detail: null,
+            tr: tr,
+            isFav: isFav
+          );
+        }
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      },
       error: (err, stack) => const Scaffold(body: Center(child: Text('Not found'))),
       data: (p) {
         if (!_playedOnOpen) { _playedOnOpen = true; _playCry(); }
+        return _buildContent(
+          context,
+          id: p.id,
+          name: p.name,
+          types: p.types,
+          detail: p,
+          tr: tr,
+          isFav: isFav
+        );
+      },
+    );
+  }
 
-        final type = p.types.isNotEmpty ? p.types.first : 'normal';
-        final gradient = typeGradients[type] ?? typeGradients['normal']!;
-        final color = gradient.colors.first;
+  Widget _buildContent(BuildContext context, {
+    required int id,
+    required String name,
+    required List<String> types,
+    required PokemonDetail? detail,
+    required Function(String) tr,
+    required bool isFav,
+  }) {
+    final type = types.isNotEmpty ? types.first : 'normal';
+    final gradient = typeGradients[type] ?? typeGradients['normal']!;
+    final color = gradient.colors.first;
 
-        final movesLvl = p.moves.where((m) => m.learnMethod == 'level-up').toList()..sort((a,b) => a.level.compareTo(b.level));
-        final movesTm = p.moves.where((m) => m.learnMethod == 'machine').toList()..sort((a,b) => a.name.compareTo(b.name));
-        final movesEgg = p.moves.where((m) => m.learnMethod == 'egg').toList();
-        final movesTutor = p.moves.where((m) => m.learnMethod == 'tutor').toList();
-
-        final formsMega = p.forms.where((f) => f.isMega || f.isGmax).toList();
-        final formsAlt = p.forms.where((f) => !f.isMega && !f.isGmax).toList();
-
-        return AnimatedDetailScreen(
-          child: GestureDetector(
-            onHorizontalDragEnd: _onSwipe,
-            child: Scaffold(
-              backgroundColor: color,
-              body: Stack(
+    return AnimatedDetailScreen(
+      child: GestureDetector(
+        onHorizontalDragEnd: _onSwipe,
+        child: Scaffold(
+          backgroundColor: color,
+          body: Stack(
+            children: [
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(gradient: gradient),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        top: -20,
+                        right: -60,
+                        child: Icon(
+                          Icons.catching_pokemon,
+                          size: 280,
+                          color: Colors.white.withOpacity(0.15),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Column(
                 children: [
-                  Positioned.fill(
+                  SafeArea(
+                    bottom: false,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                              Row(
+                                children: [
+                                  if (detail != null) ...[
+                                    IconButton(
+                                      icon: const Icon(Icons.share, color: Colors.white),
+                                      onPressed: () => _sharePokemon(detail),
+                                    ),
+                                    IconButton(
+                                        icon: const Icon(Icons.volume_up, color: Colors.white),
+                                        onPressed: _playCry
+                                    ),
+                                  ],
+                                  IconButton(
+                                    icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, color: Colors.white),
+                                    onPressed: () => ref.read(favoritesProvider.notifier).toggle(id),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _displayName(name),
+                                      style: const TextStyle(
+                                        fontSize: 36,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        height: 1.2,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Wrap(
+                                      spacing: 8,
+                                      children: types.map((t) => TypeBadge(
+                                        type: t,
+                                        backgroundColor: Colors.white.withOpacity(0.25),
+                                      )).toList(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      '#${id.toString().padLeft(3,'0')}',
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white70,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  if (detail != null)
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(Icons.auto_awesome, 
+                                            color: _isShiny ? Colors.yellowAccent : Colors.white70, 
+                                            size: 16
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Switch(
+                                            value: _isShiny,
+                                            onChanged: (val) => setState(() => _isShiny = val),
+                                            activeColor: Colors.yellowAccent,
+                                            activeTrackColor: Colors.yellowAccent.withOpacity(0.5),
+                                            inactiveThumbColor: Colors.white,
+                                            inactiveTrackColor: Colors.white24,
+                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 220,
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        Positioned(
+                          bottom: 0,
+                          child: Hero(
+                            tag: 'pokemon-img-${_displayName(name)}',
+                            child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 500),
+                              child: CachedNetworkImage(
+                                key: ValueKey(_isShiny),
+                                imageUrl: _img(id),
+                                height: 200,
+                                fit: BoxFit.contain,
+                                placeholder: (context, url) => const SizedBox(
+                                  height: 200,
+                                  width: 200,
+                                  child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                ),
+                                errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.red),
+                                fadeInDuration: const Duration(milliseconds: 300),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
                     child: Container(
-                      decoration: BoxDecoration(gradient: gradient),
-                      child: Stack(
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                      ),
+                      child: detail == null 
+                        ? const Center(child: CircularProgressIndicator())
+                        : Column(
                         children: [
-                          Positioned(
-                            top: -20,
-                            right: -60,
-                            child: Icon(
-                              Icons.catching_pokemon,
-                              size: 280,
-                              color: Colors.white.withOpacity(0.15),
+                          const SizedBox(height: 16),
+                          TabBar(
+                            controller: _tabController,
+                            labelColor: Colors.black87,
+                            unselectedLabelColor: Colors.grey,
+                            indicatorColor: color,
+                            indicatorSize: TabBarIndicatorSize.label,
+                            indicatorWeight: 3,
+                            labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            isScrollable: true,
+                            tabs: [
+                              Tab(text: tr('about')),
+                              Tab(text: tr('stats')),
+                              Tab(text: tr('evolutions')),
+                              Tab(text: tr('moves')),
+                              Tab(text: tr('locations')),
+                              Tab(text: tr('megas')),
+                              Tab(text: tr('forms')),
+                            ],
+                          ),
+                          const Divider(height: 1),
+                          Expanded(
+                            child: TabBarView(
+                              controller: _tabController,
+                              children: [
+                                _buildAbout(detail, tr, color),
+                                _buildStats(detail.stats, detail.types, tr, color),
+                                _buildEvolutionTab(detail.evolutionChain, context),
+                                _buildMovesTab(
+                                  detail.moves.where((m) => m.learnMethod == 'level-up').toList()..sort((a,b) => a.level.compareTo(b.level)),
+                                  detail.moves.where((m) => m.learnMethod == 'machine').toList()..sort((a,b) => a.name.compareTo(b.name)),
+                                  detail.moves.where((m) => m.learnMethod == 'tutor').toList(),
+                                  detail.moves.where((m) => m.learnMethod == 'egg').toList(),
+                                  tr
+                                ),
+                                _buildLocationsTab(detail.locations, color, context, tr),
+                                _buildForms(detail.forms.where((f) => f.isMega || f.isGmax).toList(), color, context),
+                                _buildForms(detail.forms.where((f) => !f.isMega && !f.isGmax).toList(), color, context),
+                              ],
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                  Column(
-                    children: [
-                      SafeArea(
-                        bottom: false,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.arrow_back, color: Colors.white),
-                                    onPressed: () => Navigator.pop(context),
-                                  ),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.share, color: Colors.white),
-                                        onPressed: () => _sharePokemon(p),
-                                      ),
-                                      IconButton(
-                                          icon: const Icon(Icons.volume_up, color: Colors.white),
-                                          onPressed: _playCry
-                                      ),
-                                      IconButton(
-                                        icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, color: Colors.white),
-                                        onPressed: () => ref.read(favoritesProvider.notifier).toggle(widget.id),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 24),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          _displayName(p.name),
-                                          style: const TextStyle(
-                                            fontSize: 36,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                            height: 1.2,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Wrap(
-                                          spacing: 8,
-                                          children: p.types.map((t) => TypeBadge(
-                                            type: t,
-                                            backgroundColor: Colors.white.withOpacity(0.25),
-                                          )).toList(),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 8.0),
-                                        child: Text(
-                                          '#${p.id.toString().padLeft(3,'0')}',
-                                          style: const TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white70,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 5),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.2),
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(Icons.auto_awesome, 
-                                              color: _isShiny ? Colors.yellowAccent : Colors.white70, 
-                                              size: 16
-                                            ),
-                                            const SizedBox(width: 4),
-                                            Switch(
-                                              value: _isShiny,
-                                              onChanged: (val) => setState(() => _isShiny = val),
-                                              activeColor: Colors.yellowAccent,
-                                              activeTrackColor: Colors.yellowAccent.withOpacity(0.5),
-                                              inactiveThumbColor: Colors.white,
-                                              inactiveTrackColor: Colors.white24,
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 220,
-                        child: Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: [
-                            Positioned(
-                              bottom: 0,
-                              child: Hero(
-                                tag: 'pokemon-img-${_displayName(p.name)}',
-                                child: AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 500),
-                                  child: CachedNetworkImage(
-                                    key: ValueKey(_isShiny),
-                                    imageUrl: _img(p.id),
-                                    height: 200,
-                                    fit: BoxFit.contain,
-                                    placeholder: (context, url) => const SizedBox(
-                                      height: 200,
-                                      width: 200,
-                                      child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                                    ),
-                                    errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.red),
-                                    fadeInDuration: const Duration(milliseconds: 300),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          width: double.infinity,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-                          ),
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 16),
-                              TabBar(
-                                controller: _tabController,
-                                labelColor: Colors.black87,
-                                unselectedLabelColor: Colors.grey,
-                                indicatorColor: color,
-                                indicatorSize: TabBarIndicatorSize.label,
-                                indicatorWeight: 3,
-                                labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                                isScrollable: true,
-                                tabs: [
-                                  Tab(text: tr('about')),
-                                  Tab(text: tr('stats')),
-                                  Tab(text: tr('evolutions')),
-                                  Tab(text: tr('moves')),
-                                  Tab(text: tr('locations')),
-                                  Tab(text: tr('megas')),
-                                  Tab(text: tr('forms')),
-                                ],
-                              ),
-                              const Divider(height: 1),
-                              Expanded(
-                                child: TabBarView(
-                                  controller: _tabController,
-                                  children: [
-                                    _buildAbout(p, tr, color),
-                                    _buildStats(p.stats, p.types, tr, color),
-                                    _buildEvolutionTab(p.evolutionChain, context),
-                                    _buildMovesTab(movesLvl, movesTm, movesTutor, movesEgg, tr),
-                                    _buildLocationsTab(p.locations, color, context, tr),
-                                    _buildForms(formsMega, color, context),
-                                    _buildForms(formsAlt, color, context),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
-            ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -382,8 +419,30 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
       if (nextId < 1) nextId = null;
     }
     if (nextId != null) {
+      // Try to find cached pokemon for next ID
+      Pokemon? nextCached;
+      final listState = ref.read(pokemonListProvider);
+      // Check in main list
+      try {
+        nextCached = listState.pokemons.firstWhere((p) => p.id == nextId);
+      } catch (_) {
+        // Check in allPokemonProvider if available
+        final allPokes = ref.read(allPokemonProvider).valueOrNull;
+        if (allPokes != null) {
+          try {
+            nextCached = allPokes.firstWhere((p) => p.id == nextId);
+          } catch (_) {}
+        }
+      }
+
       Navigator.of(context).pushReplacement(ScaleFadePageRoute(
-          child: PokemonDetailScreen(id: nextId, listIds: _ids, initialIndex: nextIdx, genContext: widget.genContext)
+          child: PokemonDetailScreen(
+            id: nextId, 
+            listIds: _ids, 
+            initialIndex: nextIdx, 
+            genContext: widget.genContext,
+            cachedPokemon: nextCached,
+          )
       ));
     }
   }

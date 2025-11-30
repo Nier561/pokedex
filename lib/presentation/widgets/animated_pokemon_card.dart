@@ -1,7 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:pokedex/presentation/widgets/type_badge.dart'; // Asegúrate de importar TypeBadge
+import 'package:pokedex/presentation/widgets/type_badge.dart';
 
-/// Widget animado que envuelve una tarjeta de Pokémon con efectos de entrada.
 class AnimatedPokemonCard extends StatefulWidget {
   final String name;
   final List<String> types;
@@ -190,7 +190,6 @@ class _PokemonCardContent extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // CORRECCIÓN: Columna de Tipos (Izquierda)
-                      // Usamos Column en lugar de Wrap/Row para alineación vertical perfecta
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: types.map((type) => Padding(
@@ -198,39 +197,40 @@ class _PokemonCardContent extends StatelessWidget {
                           child: TypeBadge(
                             type: type,
                             backgroundColor: Colors.white.withOpacity(0.25),
-                            small: true, // Badges compactos
+                            small: true,
                           ),
                         )).toList(),
                       ),
 
-                      // Espaciador para empujar la imagen a la derecha
+                      // Espaciador
                       const Spacer(),
 
-                      // Imagen (Derecha - Alineada abajo)
+                      // Imagen
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Hero(
-                          tag: 'pokemon-img-$name', // Tag único (usar ID sería mejor si estuviera disponible aquí)
-                          child: Image.network(
-                            imageUrl,
+                          tag: 'pokemon-img-$name',
+                          child: CachedNetworkImage(
+                            imageUrl: imageUrl,
                             width: 90,
                             height: 90,
                             fit: BoxFit.contain,
-                            errorBuilder: (context, error, stackTrace) {
-                              if (fallbackImageUrl != null) {
-                                return Image.network(
-                                  fallbackImageUrl!,
-                                  width: 75,
-                                  height: 75,
-                                  fit: BoxFit.contain,
-                                );
-                              }
-                              return Icon(
-                                Icons.image_not_supported,
-                                color: Colors.white.withOpacity(0.5),
-                                size: 40,
-                              );
-                            },
+                            memCacheWidth: 200,
+                            placeholder: (context, url) => Center(
+                              child: SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white.withOpacity(0.5),
+                                ),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Icon(
+                              Icons.image_not_supported,
+                              color: Colors.white.withOpacity(0.5),
+                              size: 40,
+                            ),
                           ),
                         ),
                       ),
@@ -246,7 +246,6 @@ class _PokemonCardContent extends StatelessWidget {
   }
 }
 
-/// Widget que añade efectos de hover/tap a las tarjetas (Wrapper externo)
 class InteractivePokemonCard extends StatefulWidget {
   final Widget child;
   final VoidCallback? onTap;

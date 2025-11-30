@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/domain/entities/pokemon.dart';
 import 'package:pokedex/presentation/providers/pokemon_provider.dart';
-import 'package:pokedex/presentation/providers/favorites_provider.dart';
 import 'package:pokedex/presentation/providers/filter_provider.dart';
+import 'package:pokedex/presentation/providers/favorites_provider.dart';
 import 'package:pokedex/presentation/providers/language_provider.dart';
 import 'package:pokedex/presentation/screens/detail_screen.dart';
 import 'package:pokedex/presentation/widgets/type_gradients.dart';
@@ -74,38 +74,25 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
     final int? effectiveGen = widget.initialGeneration ?? filters.selectedGen;
 
     final filtered = pokes.where((p) {
-      // 1. Filtro Generación
       if (effectiveGen != null) {
         final range = _genRanges[effectiveGen];
         if (range != null && (p.id < range[0] || p.id > range[1])) return false;
       }
-
-      // 2. Filtro Nombres / Variantes
       final name = p.name.toLowerCase();
       if (name.startsWith('zygarde-')) {
-        // Excluir Power Construct explícitamente
         if (name.contains('power-construct')) return false;
-        // Excluir todo lo que no sea la forma 50%
         if (!name.contains('-50')) return false;
       } else if (name.contains('-') && !_hyphenBaseWhitelist.contains(name)) {
         return false;
       }
-
-      // 3. Filtro Texto
       if (q.isNotEmpty && !name.contains(q) && p.id.toString() != q) return false;
-
-      // 4. Filtro Favoritos (Aquí usamos la variable local)
       if (_showOnlyFavorites && !favorites.contains(p.id)) return false;
-
-      // 5. Filtro Tipos
       if (filters.selectedTypes.isNotEmpty) {
         if (!filters.selectedTypes.every((t) => p.types.contains(t))) return false;
       }
-
       return true;
     }).toList();
 
-    // Ordenamiento
     filtered.sort((a, b) {
       int cmp = 0;
       switch (filters.sortMode) {
@@ -121,7 +108,6 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // 1. Obtener idioma actual
     final locale = ref.watch(languageProvider);
     String tr(String key) => S(locale).get(key);
 
@@ -129,12 +115,9 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
     if (widget.initialGeneration != null) title = '${tr('generation')} ${widget.initialGeneration}';
 
     final listState = ref.watch(pokemonListProvider);
-    final allPokesAsync = ref.watch(allPokemonProvider);
     final filters = ref.watch(filterProvider);
     final favorites = ref.watch(favoritesProvider);
 
-    // Decidir fuente de datos
-    List<Pokemon> sourceList;
     final isFiltering = filters.searchQuery.isNotEmpty ||
         filters.selectedTypes.isNotEmpty ||
         filters.selectedGen != null ||
@@ -143,7 +126,9 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
         !filters.isAscending ||
         _showOnlyFavorites;
 
+    List<Pokemon> sourceList;
     if (isFiltering) {
+      final allPokesAsync = ref.watch(allPokemonProvider);
       sourceList = allPokesAsync.valueOrNull ?? listState.pokemons;
     } else {
       sourceList = listState.pokemons;
@@ -156,7 +141,6 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Fondo decorativo
           Positioned(
             top: -60,
             right: -60,
@@ -170,7 +154,6 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header personalizado
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Row(
@@ -244,6 +227,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                                   listIds: processedIds,
                                   initialIndex: index,
                                   genContext: widget.initialGeneration ?? filters.selectedGen,
+                                  cachedPokemon: p,
                                 ),
                               );
                             },
@@ -470,100 +454,49 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                             ),
                           ),
                           const SizedBox(height: 12),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: List.generate(9, (i) {
-                                final g = i + 1;
-                                final isSel = tempGen == g;
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 8),
-                                  child: FilterChip(
-                                    label: Text(
-                                      'Gen $g',
-                                      style: TextStyle(
-                                        color: isSel ? Colors.white : Colors.black87,
-                                        fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
-                                      ),
-                                    ),
-                                    selected: isSel,
-                                    onSelected: (s) => setModal(() => tempGen = s ? g : null),
-                                    backgroundColor: Colors.white,
-                                    selectedColor: const Color(0xFF6C5CE7),
-                                    checkmarkColor: Colors.white,
-                                    showCheckmark: false,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(24),
-                                      side: BorderSide(
-                                        color: isSel ? Colors.transparent : Colors.grey.shade300,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
+                          DropdownButtonFormField<int>(
+                            value: tempGen,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                             ),
+                            items: [
+                              DropdownMenuItem(value: null, child: Text(tr('all_gens'))),
+                              ...List.generate(9, (i) => i + 1).map((g) => DropdownMenuItem(
+                                value: g,
+                                child: Text('${tr('generation')} $g'),
+                              )),
+                            ],
+                            onChanged: (v) => setModal(() => tempGen = v),
                           ),
                         ],
                         const SizedBox(height: 40),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.black87,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                            onPressed: () {
+                              ref.read(filterProvider.notifier).updateFilters(
+                                sortMode: tempSort,
+                                isAscending: tempAsc,
+                                selectedTypes: tempTypes,
+                                selectedGen: tempGen,
+                              );
+                              Navigator.pop(ctx);
+                            },
+                            child: Text(
+                              tr('apply_filters'),
+                              style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
                       ],
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () {
-                            ref.read(filterProvider.notifier).resetFilters();
-                            Navigator.pop(ctx);
-                          },
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            side: BorderSide(color: Colors.grey.shade400),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: Text(
-                            tr('reset'),
-                            style: const TextStyle(
-                              color: Color(0xFF6C5CE7),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            ref.read(filterProvider.notifier).updateFilters(
-                              sortMode: tempSort,
-                              isAscending: tempAsc,
-                              selectedTypes: tempTypes,
-                              selectedGen: tempGen,
-                              clearGen: tempGen == null,
-                            );
-                            Navigator.pop(ctx);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF6C5CE7),
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: Text(
-                            tr('apply'),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ],
                   ),
                 ),
               ],
