@@ -17,7 +17,8 @@ class MainScreen extends ConsumerStatefulWidget {
   ConsumerState<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends ConsumerState<MainScreen> with SingleTickerProviderStateMixin {
+class _MainScreenState extends ConsumerState<MainScreen>
+    with SingleTickerProviderStateMixin {
   // Controlador para las animaciones de entrada
   late AnimationController _controller;
 
@@ -44,27 +45,32 @@ class _MainScreenState extends ConsumerState<MainScreen> with SingleTickerProvid
   Widget _buildAnimatedCard(int index, Widget child) {
     return SlideTransition(
       // Animación de deslizamiento desde abajo
-      position: Tween<Offset>(
-        begin: const Offset(0, 0.5), // Comienza 50% abajo
-        end: Offset.zero, // Termina en posición original
-      ).animate(CurvedAnimation(
-        parent: _controller,
-        curve: Interval(
-          index * 0.1, // Retraso basado en el índice
-          0.6 + index * 0.1, // Duración escalonada
-          curve: Curves.easeOutBack, // Curva con rebote suave
-        ),
-      )),
+      position:
+          Tween<Offset>(
+            begin: const Offset(0, 0.5), // Comienza 50% abajo
+            end: Offset.zero, // Termina en posición original
+          ).animate(
+            CurvedAnimation(
+              parent: _controller,
+              curve: Interval(
+                index * 0.1, // Retraso basado en el índice
+                0.6 + index * 0.1, // Duración escalonada
+                curve: Curves.easeOutBack, // Curva con rebote suave
+              ),
+            ),
+          ),
       child: FadeTransition(
         // Animación de opacidad (fade in)
-        opacity: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
-          parent: _controller,
-          curve: Interval(
-            index * 0.1,
-            0.6 + index * 0.1,
-            curve: Curves.easeOut,
+        opacity: Tween<double>(begin: 0, end: 1).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: Interval(
+              index * 0.1,
+              0.6 + index * 0.1,
+              curve: Curves.easeOut,
+            ),
           ),
-        )),
+        ),
         child: child,
       ),
     );
@@ -100,18 +106,31 @@ class _MainScreenState extends ConsumerState<MainScreen> with SingleTickerProvid
                   const SizedBox(height: 40),
                   // Encabezado animado con deslizamiento desde arriba
                   SlideTransition(
-                    position: Tween<Offset>(
-                      begin: const Offset(0, -0.5), // Comienza arriba
-                      end: Offset.zero,
-                    ).animate(CurvedAnimation(
-                      parent: _controller,
-                      curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
-                    )),
+                    position:
+                        Tween<Offset>(
+                          begin: const Offset(0, -0.5), // Comienza arriba
+                          end: Offset.zero,
+                        ).animate(
+                          CurvedAnimation(
+                            parent: _controller,
+                            curve: const Interval(
+                              0.0,
+                              0.6,
+                              curve: Curves.easeOut,
+                            ),
+                          ),
+                        ),
                     child: FadeTransition(
-                      opacity: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
-                        parent: _controller,
-                        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
-                      )),
+                      opacity: Tween<double>(begin: 0, end: 1).animate(
+                        CurvedAnimation(
+                          parent: _controller,
+                          curve: const Interval(
+                            0.0,
+                            0.6,
+                            curve: Curves.easeOut,
+                          ),
+                        ),
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -146,7 +165,8 @@ class _MainScreenState extends ConsumerState<MainScreen> with SingleTickerProvid
                       crossAxisCount: 1, // Una columna
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
-                      childAspectRatio: 3.5, // Relación ancho/alto para tarjetas horizontales
+                      childAspectRatio:
+                          3.5, // Relación ancho/alto para tarjetas horizontales
                       children: [
                         // Opción 1: Pokédex (verde/azulado)
                         _buildAnimatedCard(
@@ -157,46 +177,86 @@ class _MainScreenState extends ConsumerState<MainScreen> with SingleTickerProvid
                             colorEnd: const Color(0xFF65D4BD),
                             icon: Icons.catching_pokemon,
                             onTap: () {
-                              Navigator.push(context, SlideRightPageRoute(child: const PokemonListScreen()));
+                              Navigator.push(
+                                context,
+                                SlideRightPageRoute(
+                                  child: const PokemonListScreen(),
+                                ),
+                              );
                             },
                           ),
                         ),
-                        // Opción 2: Generaciones (rojo/rosado)
+                        // Opción 2: Favoritos (Rojo/Corazón)
                         _buildAnimatedCard(
                           1,
+                          _MenuCard(
+                            label: tr('favorites'),
+                            colorStart: const Color(0xFFEC8C6F),
+                            colorEnd: const Color(0xFFED6C53),
+                            icon: Icons.favorite,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                SlideRightPageRoute(
+                                  child: const PokemonListScreen(
+                                    showFavorites: true,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        // Opción 3: Generaciones (rojo/rosado)
+                        _buildAnimatedCard(
+                          2,
                           _MenuCard(
                             label: tr('generation'),
                             colorStart: const Color(0xFFFA6555),
                             colorEnd: const Color(0xFFFA8B7F),
                             icon: Icons.map,
                             onTap: () {
-                              Navigator.push(context, SlideRightPageRoute(child: const GenerationSelectionScreen()));
+                              Navigator.push(
+                                context,
+                                SlideRightPageRoute(
+                                  child: const GenerationSelectionScreen(),
+                                ),
+                              );
                             },
                           ),
                         ),
-                        // Opción 3: Trivia (amarillo/naranja)
+                        // Opción 4: Trivia (amarillo/naranja)
                         _buildAnimatedCard(
-                          2,
+                          3,
                           _MenuCard(
                             label: 'Trivia',
                             colorStart: const Color(0xFFFFCE4B),
                             colorEnd: const Color(0xFFFFD86F),
                             icon: Icons.lightbulb,
                             onTap: () {
-                              Navigator.push(context, SlideRightPageRoute(child: const TriviaMenuScreen()));
+                              Navigator.push(
+                                context,
+                                SlideRightPageRoute(
+                                  child: const TriviaMenuScreen(),
+                                ),
+                              );
                             },
                           ),
                         ),
-                        // Opción 4: Configuración (púrpura/lila)
+                        // Opción 5: Configuración (púrpura/lila)
                         _buildAnimatedCard(
-                          3,
+                          4,
                           _MenuCard(
                             label: tr('settings'),
                             colorStart: const Color(0xFF7C538C),
                             colorEnd: const Color(0xFF9F6EBD),
                             icon: Icons.settings,
                             onTap: () {
-                              Navigator.push(context, SlideRightPageRoute(child: const SettingsScreen()));
+                              Navigator.push(
+                                context,
+                                SlideRightPageRoute(
+                                  child: const SettingsScreen(),
+                                ),
+                              );
                             },
                           ),
                         ),
@@ -265,7 +325,8 @@ class _MenuCardState extends State<_MenuCard> {
         ),
         child: Material(
           color: Colors.transparent,
-          clipBehavior: Clip.antiAlias, // Recorta el contenido en los bordes redondeados
+          clipBehavior:
+              Clip.antiAlias, // Recorta el contenido en los bordes redondeados
           borderRadius: BorderRadius.circular(20),
           child: InkWell(
             onTap: widget.onTap,
@@ -284,7 +345,9 @@ class _MenuCardState extends State<_MenuCard> {
                   child: Icon(
                     widget.icon,
                     size: 100,
-                    color: Colors.white.withOpacity(0.25), // Opacidad baja para efecto watermark
+                    color: Colors.white.withOpacity(
+                      0.25,
+                    ), // Opacidad baja para efecto watermark
                   ),
                 ),
                 // Círculo decorativo en la esquina superior izquierda (efecto neumórfico)
@@ -319,7 +382,7 @@ class _MenuCardState extends State<_MenuCard> {
                               color: Colors.black12,
                               offset: Offset(0, 2),
                               blurRadius: 2,
-                            )
+                            ),
                           ],
                         ),
                       ),

@@ -12,7 +12,13 @@ import 'package:pokedex/presentation/widgets/animated_pokemon_card.dart';
 
 class PokemonListScreen extends ConsumerStatefulWidget {
   final int? initialGeneration;
-  const PokemonListScreen({super.key, this.initialGeneration});
+  final bool showFavorites;
+
+  const PokemonListScreen({
+    super.key,
+    this.initialGeneration,
+    this.showFavorites = false,
+  });
 
   @override
   ConsumerState<PokemonListScreen> createState() => _PokemonListScreenState();
@@ -23,7 +29,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   // Estado local para el filtro rápido de favoritos
-  bool _showOnlyFavorites = false;
+  late bool _showOnlyFavorites;
 
   static const Map<int, List<int>> _genRanges = {
     1: [1, 151],
@@ -58,6 +64,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
   @override
   void initState() {
     super.initState();
+    _showOnlyFavorites = widget.showFavorites;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // Carga inicial
       ref.read(pokemonListProvider.notifier).loadMore();
@@ -145,8 +152,11 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
     String tr(String key) => S(locale).get(key);
 
     String title = tr('app_title');
-    if (widget.initialGeneration != null)
+    if (_showOnlyFavorites) {
+      title = tr('favorites');
+    } else if (widget.initialGeneration != null) {
       title = '${tr('generation')} ${widget.initialGeneration}';
+    }
 
     final listState = ref.watch(pokemonListProvider);
     final filters = ref.watch(filterProvider);
