@@ -554,7 +554,13 @@ child: Text(tr('hidden'), style: const TextStyle(fontSize: 10, fontWeight: FontW
                     Container(height: 8, decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(4))),
                     FractionallySizedBox(
                       widthFactor: (e.value.value / 255).clamp(0.0, 1.0),
-                      child: Container(height: 8, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4))),
+                      child: Container(
+                        height: 8, 
+                        decoration: BoxDecoration(
+                          color: _getStatColor(e.value.value), 
+                          borderRadius: BorderRadius.circular(4)
+                        )
+                      ),
                     ),
                   ],
                 ),
@@ -578,7 +584,7 @@ child: Text(tr('hidden'), style: const TextStyle(fontSize: 10, fontWeight: FontW
 
   String _statName(String name, Function(String) tr) {
     switch (name) {
-      case 'hp': return tr('hp');
+      case 'hp': return tr('HP');
       case 'attack': return 'ATK';
       case 'defense': return 'DEF';
       case 'special-attack': return 'SATK';
@@ -586,6 +592,13 @@ child: Text(tr('hidden'), style: const TextStyle(fontSize: 10, fontWeight: FontW
       case 'speed': return 'SPD';
       default: return name.toUpperCase();
     }
+  }
+
+  Color _getStatColor(int value) {
+    if (value < 50) return Colors.red;
+    if (value < 100) return Colors.yellow;
+    if (value <= 150) return Colors.green;
+    return Colors.cyan;
   }
 
   Widget _buildEvolutionTab(List<EvolutionEdgeDto> edges, BuildContext context) {
