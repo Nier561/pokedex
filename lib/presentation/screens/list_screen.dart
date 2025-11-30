@@ -663,14 +663,18 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                               height: 50,
                               child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: 10, // All + 9 gens
+                                itemCount: 9,
                                 separatorBuilder: (_, __) =>
                                     const SizedBox(width: 12),
                                 itemBuilder: (context, index) {
-                                  final gen = index == 0 ? null : index;
+                                  final gen = index + 1;
                                   final isSel = tempGen == gen;
                                   return GestureDetector(
-                                    onTap: () => setModal(() => tempGen = gen),
+                                    onTap: () => setModal(
+                                      () => tempGen = (tempGen == gen
+                                          ? null
+                                          : gen),
+                                    ),
                                     child: AnimatedContainer(
                                       duration: const Duration(
                                         milliseconds: 200,
@@ -686,9 +690,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                                         borderRadius: BorderRadius.circular(25),
                                       ),
                                       child: Text(
-                                        gen == null
-                                            ? tr('all_gens')
-                                            : '${tr('generation')} $gen',
+                                        '${tr('generation')} $gen',
                                         style: TextStyle(
                                           color: isSel
                                               ? Colors.white
