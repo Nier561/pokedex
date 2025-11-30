@@ -6,6 +6,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:pokedex/domain/entities/pokemon_detail.dart';
 import 'package:pokedex/data/models/pokemon_detail_dto.dart';
@@ -46,6 +47,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
   bool _playedOnOpen = false;
   late List<int> _ids;
   late int _idx;
+  bool _isShiny = false;
 
   @override
   void initState() {
@@ -99,7 +101,11 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
     }
   }
 
-  String _img(int id) => 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png';
+  String _img(int id) {
+  return _isShiny
+      ? 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/$id.png'
+      : 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png';
+}
 
   String _displayName(String name) {
     if (name.startsWith('zygarde-') && name.contains('-50')) return 'Zygarde';
@@ -224,21 +230,53 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
                                       ],
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: Text(
-                                      '#${p.id.toString().padLeft(3,'0')}',
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white70,
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 8.0),
+                                        child: Text(
+                                          '#${p.id.toString().padLeft(3,'0')}',
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white70,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      const SizedBox(height: 5),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withOpacity(0.2),
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(Icons.auto_awesome, 
+                                              color: _isShiny ? Colors.yellowAccent : Colors.white70, 
+                                              size: 16
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Switch(
+                                              value: _isShiny,
+                                              onChanged: (val) => setState(() => _isShiny = val),
+                                              activeColor: Colors.yellowAccent,
+                                              activeTrackColor: Colors.yellowAccent.withOpacity(0.5),
+                                              inactiveThumbColor: Colors.white,
+                                              inactiveTrackColor: Colors.white24,
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
                             ),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 15),
                           ],
                         ),
                       ),
@@ -251,10 +289,21 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
                               bottom: 0,
                               child: Hero(
                                 tag: 'pokemon-img-${_displayName(p.name)}',
-                                child: Image.network(
-                                  _img(p.id),
-                                  height: 200,
-                                  fit: BoxFit.contain,
+                                child: AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 500),
+                                  child: CachedNetworkImage(
+                                    key: ValueKey(_isShiny),
+                                    imageUrl: _img(p.id),
+                                    height: 200,
+                                    fit: BoxFit.contain,
+                                    placeholder: (context, url) => const SizedBox(
+                                      height: 200,
+                                      width: 200,
+                                      child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                    ),
+                                    errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.red),
+                                    fadeInDuration: const Duration(milliseconds: 300),
+                                  ),
                                 ),
                               ),
                             ),
