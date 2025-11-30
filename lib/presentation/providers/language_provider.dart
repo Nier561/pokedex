@@ -4,11 +4,14 @@ import 'package:pokedex/data/datasources/preferences_local_data_source.dart';
 
 class LanguageNotifier extends StateNotifier<Locale> {
   final PreferencesLocalDataSource _prefs;
-  LanguageNotifier(this._prefs) : super(const Locale('en')) { _loadLang(); }
+  LanguageNotifier(this._prefs) : super(const Locale('en')) {
+    _loadLang();
+  }
   Future<void> _loadLang() async {
     final code = await _prefs.getLanguage();
     if (code != null) state = Locale(code);
   }
+
   Future<void> changeLanguage(Locale locale) async {
     state = locale;
     await _prefs.saveLanguage(locale.languageCode);
@@ -36,6 +39,8 @@ class S {
       'types': 'Types',
       'reset': 'Reset',
       'apply': 'Apply',
+      'apply_filters': 'Apply Filters',
+      'all_gens': 'All Generations',
       'about': 'About',
       'stats': 'Stats',
       'moves': 'Moves',
@@ -106,6 +111,8 @@ class S {
       'types': 'Tipos',
       'reset': 'Reiniciar',
       'apply': 'Aplicar',
+      'apply_filters': 'Aplicar Filtros',
+      'all_gens': 'Todas las Generaciones',
       'about': 'Info',
       'stats': 'Estadísticas',
       'moves': 'Movimientos',
