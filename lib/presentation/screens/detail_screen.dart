@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:math'; // Necesario para la selección aleatoria
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -52,10 +50,18 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
   bool _isShiny = false;
   bool _isGeneratingCard = false;
 
+  // Variables de paginación
+  static const int _initialVisibleMoves = 5;
+  static const int _movesPageSize = 20;
+
+  int _limitLvl = _initialVisibleMoves;
+  int _limitTm = _initialVisibleMoves;
+  int _limitTutor = _initialVisibleMoves;
+  int _limitEgg = _initialVisibleMoves;
+
   @override
   void initState() {
     super.initState();
-    // 7 pestañas: Info, Stats, Evo, Moves, Locations, Megas, Forms
     _tabController = TabController(length: 7, vsync: this);
     _ids = widget.listIds ?? [];
     _idx = widget.initialIndex ?? -1;
@@ -74,31 +80,23 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
     } catch (_) {}
   }
 
-  // --- LÓGICA DE GENERACIÓN DE CARTAS TCG ---
-
-  /// Prepara los datos, renderiza la carta en memoria y navega a la previsualización.
   Future<void> _previewCard(PokemonDetail p, Function(String) tr) async {
     if (_isGeneratingCard) return;
     setState(() => _isGeneratingCard = true);
 
     try {
-      // 1. Datos para la carta
       final moves = _getRandomMovesForCard(p);
       final hp = p.stats.firstWhere((s) => s.name.toLowerCase() == 'hp', orElse: () => StatDto('hp', 50)).value;
 
-      // 2. Construcción del Widget visual (Invisible)
-      // Ajustamos el pixelRatio para asegurar nitidez en textos pequeños
       final cardWidget = _buildCardForCapture(p, moves, hp, tr);
 
-      // 3. Captura
       final Uint8List? image = await _screenshotController.captureFromWidget(
         cardWidget,
-        delay: const Duration(milliseconds: 300), // Tiempo para cargar imágenes de red
+        delay: const Duration(milliseconds: 300),
         pixelRatio: 3.0,
       );
 
       if (image != null && mounted) {
-        // 4. Navegación
         Navigator.push(context, MaterialPageRoute(builder: (_) =>
             CardPreviewScreen(imageBytes: image, pokemonName: p.name)
         ));
@@ -113,20 +111,16 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
     }
   }
 
-  /// Selecciona 2 movimientos aleatorios para la carta.
   List<MoveDto> _getRandomMovesForCard(PokemonDetail p) {
     var typeMoves = p.moves.where((m) => p.types.contains(m.type) && (m.power != null)).toList();
-
     if (typeMoves.length < 2) {
       typeMoves = p.moves.where((m) => m.power != null).toList();
     }
     if (typeMoves.isEmpty) typeMoves = p.moves;
-
     typeMoves.shuffle();
     return typeMoves.take(2).toList();
   }
 
-  /// Construye el diseño visual de la carta TCG.
   Widget _buildCardForCapture(PokemonDetail p, List<MoveDto> moves, int hp, Function(String) tr) {
     final type = p.types.isNotEmpty ? p.types.first : 'normal';
     final gradient = typeGradients[type] ?? typeGradients['normal']!;
@@ -146,22 +140,16 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
         ),
         child: Column(
           children: [
-            // --- HEADER: TIPO, NOMBRE, HP ---
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TypeBadge(type: type, small: true, showText: false), // Icono de energía
+                TypeBadge(type: type, small: true, showText: false),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
                       _displayName(p.name).toUpperCase(),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: Colors.white,
-                          shadows: [Shadow(color: Colors.black45, offset: Offset(1,1), blurRadius: 2)]
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white, shadows: [Shadow(color: Colors.black45, offset: Offset(1,1), blurRadius: 2)]),
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -169,18 +157,11 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
                 ),
                 Text(
                   'HP $hp',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 22,
-                      color: Colors.white,
-                      shadows: [Shadow(color: Colors.black45, offset: Offset(1,1), blurRadius: 2)]
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 22, color: Colors.white, shadows: [Shadow(color: Colors.black45, offset: Offset(1,1), blurRadius: 2)]),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-
-            // --- IMAGEN PRINCIPAL ---
             Container(
               height: 200,
               width: double.infinity,
@@ -193,27 +174,17 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  Opacity(
-                    opacity: 0.05,
-                    child: Icon(Icons.catching_pokemon, size: 100, color: Colors.black),
-                  ),
-                  Image.network(
-                    _img(p.id),
-                    fit: BoxFit.contain,
-                    scale: 0.8,
-                  ),
+                  Opacity(opacity: 0.05, child: Icon(Icons.catching_pokemon, size: 100, color: Colors.black)),
+                  Image.network(_img(p.id), fit: BoxFit.contain, scale: 0.8),
                 ],
               ),
             ),
             const SizedBox(height: 12),
-
-            // --- LISTA DE MOVIMIENTOS ---
             Expanded(
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  // Fondo casi opaco para garantizar lectura
                   color: Colors.white.withOpacity(0.95),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.white.withOpacity(0.5), width: 1),
@@ -222,66 +193,39 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: moves.map((m) {
                     return Row(
-                      crossAxisAlignment: CrossAxisAlignment.start, // Alinear arriba si la descripción es larga
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Costo de energía
                         Padding(
                           padding: const EdgeInsets.only(top: 2.0),
                           child: TypeBadge(type: m.type, small: true, showText: false),
                         ),
                         const SizedBox(width: 10),
-
-                        // Nombre y Descripción
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                  m.name,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 16,
-                                      color: Colors.black // Negro puro para contraste
-                                  )
-                              ),
+                              Text(m.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: Colors.black)),
                               const SizedBox(height: 2),
                               Text(
-                                m.description, // Descripción completa sin recortes
-                                style: const TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.black87, // Gris muy oscuro
-                                    height: 1.1,
-                                    fontStyle: FontStyle.italic
-                                ),
+                                m.description,
+                                style: const TextStyle(fontSize: 11, color: Colors.black87, height: 1.1, fontStyle: FontStyle.italic),
                               )
                             ],
                           ),
                         ),
                         const SizedBox(width: 8),
-
-                        // Daño
-                        Text(
-                          m.power != null ? '${m.power}' : '',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: Colors.black
-                          ),
-                        ),
+                        Text(m.power != null ? '${m.power}' : '', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black)),
                       ],
                     );
                   }).toList(),
                 ),
               ),
             ),
-            // Footer eliminado como solicitaste
           ],
         ),
       ),
     );
   }
-
-  // ------------------------------------------
 
   String _img(int id) {
     return _isShiny
@@ -338,11 +282,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
                           Positioned(
                             top: -20,
                             right: -60,
-                            child: Icon(
-                              Icons.catching_pokemon,
-                              size: 280,
-                              color: Colors.white.withOpacity(0.15),
-                            ),
+                            child: Icon(Icons.catching_pokemon, size: 280, color: Colors.white.withOpacity(0.15)),
                           ),
                         ],
                       ),
@@ -359,10 +299,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.arrow_back, color: Colors.white),
-                                    onPressed: () => Navigator.pop(context),
-                                  ),
+                                  IconButton(icon: const Icon(Icons.arrow_back, color: Colors.white), onPressed: () => Navigator.pop(context)),
                                   Row(
                                     children: [
                                       IconButton(
@@ -372,10 +309,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
                                         tooltip: 'Create Card',
                                         onPressed: () => _previewCard(p, tr),
                                       ),
-                                      IconButton(
-                                          icon: const Icon(Icons.volume_up, color: Colors.white),
-                                          onPressed: _playCry
-                                      ),
+                                      IconButton(icon: const Icon(Icons.volume_up, color: Colors.white), onPressed: _playCry),
                                       IconButton(
                                         icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, color: Colors.white),
                                         onPressed: () => ref.read(favoritesProvider.notifier).toggle(widget.id),
@@ -397,20 +331,12 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
                                       children: [
                                         Text(
                                           _displayName(p.name),
-                                          style: const TextStyle(
-                                            fontSize: 36,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                            height: 1.2,
-                                          ),
+                                          style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white, height: 1.2),
                                         ),
                                         const SizedBox(height: 8),
                                         Wrap(
                                           spacing: 8,
-                                          children: p.types.map((t) => TypeBadge(
-                                            type: t,
-                                            backgroundColor: Colors.white.withOpacity(0.25),
-                                          )).toList(),
+                                          children: p.types.map((t) => TypeBadge(type: t, backgroundColor: Colors.white.withOpacity(0.25))).toList(),
                                         ),
                                       ],
                                     ),
@@ -420,29 +346,16 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.only(top: 8.0),
-                                        child: Text(
-                                          '#${p.id.toString().padLeft(3,'0')}',
-                                          style: const TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white70,
-                                          ),
-                                        ),
+                                        child: Text('#${p.id.toString().padLeft(3,'0')}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70)),
                                       ),
                                       const SizedBox(height: 5),
                                       Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.2),
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
+                                        decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(20)),
                                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Icon(Icons.auto_awesome,
-                                                color: _isShiny ? Colors.yellowAccent : Colors.white70,
-                                                size: 16
-                                            ),
+                                            Icon(Icons.auto_awesome, color: _isShiny ? Colors.yellowAccent : Colors.white70, size: 16),
                                             const SizedBox(width: 4),
                                             Switch(
                                               value: _isShiny,
@@ -481,10 +394,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
                                     imageUrl: _img(p.id),
                                     height: 200,
                                     fit: BoxFit.contain,
-                                    placeholder: (context, url) => const SizedBox(
-                                      height: 200, width: 200,
-                                      child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                                    ),
+                                    placeholder: (context, url) => const SizedBox(height: 200, width: 200, child: Center(child: CircularProgressIndicator(strokeWidth: 2))),
                                     errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.red),
                                     fadeInDuration: const Duration(milliseconds: 300),
                                   ),
@@ -580,15 +490,8 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
         children: [
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Text(
-              p.flavorText.replaceAll('\n', ' '),
-              style: const TextStyle(fontSize: 16, height: 1.4, color: Colors.black87),
-              textAlign: TextAlign.center,
-            ),
+            decoration: BoxDecoration(color: color.withOpacity(0.05), borderRadius: BorderRadius.circular(16)),
+            child: Text(p.flavorText.replaceAll('\n', ' '), style: const TextStyle(fontSize: 16, height: 1.4, color: Colors.black87), textAlign: TextAlign.center),
           ),
           const SizedBox(height: 24),
           IntrinsicHeight(
@@ -612,10 +515,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
           ...p.abilities.map((a) => Container(
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade200),
-              borderRadius: BorderRadius.circular(12),
-            ),
+            decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade200), borderRadius: BorderRadius.circular(12)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -646,14 +546,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))
-          ],
-          border: Border.all(color: Colors.grey.shade100),
-        ),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))], border: Border.all(color: Colors.grey.shade100)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -678,23 +571,9 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
       final female = matches[1].group(1);
       return Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.male, size: 16, color: Colors.blue),
-              const SizedBox(width: 4),
-              Text('$male%', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-            ],
-          ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [const Icon(Icons.male, size: 16, color: Colors.blue), const SizedBox(width: 4), Text('$male%', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12))]),
           const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.female, size: 16, color: Colors.pink),
-              const SizedBox(width: 4),
-              Text('$female%', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-            ],
-          ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [const Icon(Icons.female, size: 16, color: Colors.pink), const SizedBox(width: 4), Text('$female%', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12))]),
         ],
       );
     }
@@ -704,15 +583,13 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
   Widget _infoRow(String label, String value, IconData icon) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          Icon(icon, size: 20, color: Colors.grey),
-          const SizedBox(width: 12),
-          Text(label, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
-          const Spacer(),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
-        ],
-      ),
+      child: Row(children: [
+        Icon(icon, size: 20, color: Colors.grey),
+        const SizedBox(width: 12),
+        Text(label, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+        const Spacer(),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+      ]),
     );
   }
 
@@ -733,16 +610,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
                 child: Stack(
                   children: [
                     Container(height: 8, decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(4))),
-                    FractionallySizedBox(
-                      widthFactor: (e.value.value / 255).clamp(0.0, 1.0),
-                      child: Container(
-                          height: 8,
-                          decoration: BoxDecoration(
-                              color: _getStatColor(e.value.value),
-                              borderRadius: BorderRadius.circular(4)
-                          )
-                      ),
-                    ),
+                    FractionallySizedBox(widthFactor: (e.value.value / 255).clamp(0.0, 1.0), child: Container(height: 8, decoration: BoxDecoration(color: _getStatColor(e.value.value), borderRadius: BorderRadius.circular(4)))),
                   ],
                 ),
               ),
@@ -844,20 +712,58 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
     Text(_pretty(name), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
   ]);
 
+  // Tab de Movimientos con Paginación
   Widget _buildMovesTab(List<MoveDto> lvl, List<MoveDto> tm, List<MoveDto> tutor, List<MoveDto> egg, Function(String) tr) {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        if (lvl.isNotEmpty) _moveHeader(tr('level_up') == 'level_up' ? 'Level Up' : tr('level_up')),
-        ...lvl.map((m) => _moveTile(m, tr, showLvl: true)),
-        if (tm.isNotEmpty) _moveHeader('TM / HM'),
-        ...tm.map((m) => _moveTile(m, tr)),
-        if (tutor.isNotEmpty) _moveHeader('Tutor'),
-        ...tutor.map((m) => _moveTile(m, tr)),
-        if (egg.isNotEmpty) _moveHeader('Egg Moves'),
-        ...egg.map((m) => _moveTile(m, tr)),
+        if (lvl.isNotEmpty) ..._buildMoveCategory(title: tr('level_up') == 'level_up' ? 'Level Up' : tr('level_up'), moves: lvl, limit: _limitLvl, onShowMore: () => setState(() => _limitLvl += _movesPageSize), showLvl: true, tr: tr),
+        if (tm.isNotEmpty) ..._buildMoveCategory(title: 'TM / HM', moves: tm, limit: _limitTm, onShowMore: () => setState(() => _limitTm += _movesPageSize), tr: tr),
+        if (tutor.isNotEmpty) ..._buildMoveCategory(title: 'Tutor', moves: tutor, limit: _limitTutor, onShowMore: () => setState(() => _limitTutor += _movesPageSize), tr: tr),
+        if (egg.isNotEmpty) ..._buildMoveCategory(title: 'Egg Moves', moves: egg, limit: _limitEgg, onShowMore: () => setState(() => _limitEgg += _movesPageSize), tr: tr),
       ],
     );
+  }
+
+  // Generador de lista de movimientos por categoría
+  List<Widget> _buildMoveCategory({
+    required String title,
+    required List<MoveDto> moves,
+    required int limit,
+    required Function() onShowMore,
+    bool showLvl = false,
+    required Function(String) tr
+  }) {
+    // Si el límite supera la cantidad, mostramos todos
+    final displayedMoves = moves.take(limit).toList();
+
+    // Verificamos si quedan movimientos por mostrar
+    final hasMore = moves.length > limit;
+
+    return [
+      _moveHeader(title),
+
+      // Renderizamos los movimientos visibles
+      ...displayedMoves.map((m) => _moveTile(m, tr, showLvl: showLvl)),
+
+      // Lógica de Paginación
+      if (hasMore)
+      // Si el límite es el inicial (5), mostramos botón "Show More"
+        if (limit == _initialVisibleMoves)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Center(
+              child: OutlinedButton(
+                onPressed: onShowMore,
+                style: OutlinedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                child: Text('Show More (${moves.length - limit} left)'),
+              ),
+            ),
+          )
+        else
+        // Si ya expandimos una vez, mostramos el Trigger de scroll infinito
+          _PaginationTrigger(onLoadMore: onShowMore),
+    ];
   }
 
   Widget _moveHeader(String title) => Padding(padding: const EdgeInsets.fromLTRB(8, 24, 8, 8), child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)));
@@ -937,7 +843,6 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
       itemCount: locations.length,
       itemBuilder: (ctx, i) {
         final locGroup = locations[i];
-
         return Card(
           margin: const EdgeInsets.only(bottom: 16),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -947,35 +852,20 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                ),
+                decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: const BorderRadius.vertical(top: Radius.circular(16))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      locGroup.regionName,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
+                    Text(locGroup.regionName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                     ElevatedButton.icon(
                       onPressed: () {
                         Navigator.push(context, SlideRightPageRoute(
-                            child: RegionMapScreen(
-                              regionName: locGroup.regionName,
-                              regionId: locGroup.regionId,
-                            )
+                            child: RegionMapScreen(regionName: locGroup.regionName, regionId: locGroup.regionId)
                         ));
                       },
                       icon: const Icon(Icons.map, size: 18),
                       label: Text(tr('view_map')),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: color,
-                        elevation: 0,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: color)),
-                      ),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.white, foregroundColor: color, elevation: 0, padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: color))),
                     )
                   ],
                 ),
@@ -987,14 +877,11 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: locGroup.locations.map((l) => Padding(
                     padding: const EdgeInsets.only(bottom: 8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(Icons.place, size: 16, color: color),
-                        const SizedBox(width: 8),
-                        Expanded(child: Text(l, style: const TextStyle(fontSize: 14))),
-                      ],
-                    ),
+                    child: Row(children: [
+                      Icon(Icons.place, size: 16, color: color),
+                      const SizedBox(width: 8),
+                      Expanded(child: Text(l, style: const TextStyle(fontSize: 14))),
+                    ]),
                   )).toList(),
                 ),
               )
@@ -1033,4 +920,36 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen> with 
   }
 
   String _pretty(String s) => s.isEmpty ? '' : s[0].toUpperCase() + s.substring(1);
+}
+
+// Widget auxiliar para detectar cuando se visualiza el final de la lista
+// y disparar la carga de más elementos.
+class _PaginationTrigger extends StatefulWidget {
+  final Function() onLoadMore;
+  const _PaginationTrigger({required this.onLoadMore});
+
+  @override
+  State<_PaginationTrigger> createState() => _PaginationTriggerState();
+}
+
+class _PaginationTriggerState extends State<_PaginationTrigger> {
+  @override
+  void initState() {
+    super.initState();
+    // Disparamos la carga tan pronto como este widget se construye (es decir, se hace visible)
+    WidgetsBinding.instance.addPostFrameCallback((_) => widget.onLoadMore());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Center(
+        child: SizedBox(
+          width: 24, height: 24,
+          child: CircularProgressIndicator(strokeWidth: 2),
+        ),
+      ),
+    );
+  }
 }
