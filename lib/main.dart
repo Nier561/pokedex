@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 // Core
@@ -34,6 +35,8 @@ final favoritesRepositoryProvider = Provider<IFavoritesRepository>((ref) {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   
   // Inicializar Hive
   await Hive.initFlutter();

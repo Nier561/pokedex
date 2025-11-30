@@ -100,7 +100,6 @@ final Map<String, LinearGradient> typeGradients = {
 Color solidBadgeColorForType(String type) {
   final base = (typeGradients[type] ?? typeGradients['normal']!).colors.first;
   final hsl = HSLColor.fromColor(base);
-  // Menos “lavado”: aclaramos mucho menos para mejorar contraste del texto.
   final adjusted = hsl.withLightness((hsl.lightness + 0.10).clamp(0.0, 1.0));
   return adjusted.toColor();
 }
