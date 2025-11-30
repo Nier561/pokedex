@@ -1,5 +1,6 @@
 import 'package:pokedex/domain/entities/pokemon_detail.dart';
 
+/// DTO para transformar la respuesta de la API en la entidad de detalle del Pokémon.
 class PokemonDetailDto {
   final int id;
   final String name;
@@ -8,7 +9,7 @@ class PokemonDetailDto {
   final List<String> types;
   final List<StatDto> stats;
   final List<AbilityDto> abilities;
-  final String flavorText;
+  final String flavorText; // El nombre correcto del campo es flavorText
   final String genderText;
   final List<String> eggGroups;
   final String regionName;
@@ -17,14 +18,23 @@ class PokemonDetailDto {
   final List<FormDto> forms;
   final List<LocationGroupDto> locations;
 
+  // Mapa de Generación -> IDs de VersionGroup en PokeAPI.
   static const Map<int, List<int>> _genToVersionGroups = {
-    1: [1, 2], 2: [3, 4], 3: [5, 6, 7], 4: [8, 9, 10],
-    5: [11, 12, 13, 14], 6: [15, 16], 7: [17, 18], 8: [19, 20, 21], 9: [22, 23, 24, 25],
+    1: [1, 2],             // Red/Blue, Yellow
+    2: [3, 4],             // Gold/Silver, Crystal
+    3: [5, 6, 7],          // Ruby/Sapphire, Emerald, FireRed/LeafGreen
+    4: [8, 9, 10],         // Diamond/Pearl, Platinum, HeartGold/SoulSilver
+    5: [11, 12, 13, 14],   // Black/White, Black2/White2
+    6: [15, 16],           // X/Y, OmegaRuby/AlphaSapphire
+    7: [17, 18, 19],       // Sun/Moon, UltraSun/UltraMoon, Let's Go
+    8: [20, 21, 22, 23, 24], // Sword/Shield, DLCs, BDSP, Legends Arceus
+    9: [25, 26],           // Scarlet/Violet, DLCs
   };
 
   PokemonDetailDto({
     required this.id, required this.name, required this.height, required this.weight,
-    required this.types, required this.stats, required this.abilities, required this.flavorText,
+    required this.types, required this.stats, required this.abilities,
+    required this.flavorText, // Asegúrate que el constructor diga flavorText
     required this.genderText, required this.eggGroups, required this.regionName,
     required this.moves, required this.evolutionChain, required this.forms,
     required this.locations,
@@ -33,9 +43,9 @@ class PokemonDetailDto {
   factory PokemonDetailDto.fromMap(Map<String, dynamic> data, {int? targetGen}) {
     final types = ((data['pokemon_v2_pokemontypes'] as List?) ?? []).map((e) => e['pokemon_v2_type']['name'] as String).toList();
     final stats = ((data['pokemon_v2_pokemonstats'] as List?) ?? []).map((s) => StatDto.fromMap(s)).toList();
-    final species = data['pokemon_v2_pokemonspecy'] as Map<String, dynamic>?;
 
-    String flavor = '';
+    final species = data['pokemon_v2_pokemonspecy'] as Map<String, dynamic>?;
+    String flavorVal = ''; // Usamos variable temporal
     String gender = 'Unknown';
     List<String> eggs = [];
     String region = '';
@@ -45,7 +55,7 @@ class PokemonDetailDto {
     if (species != null) {
       final texts = species['pokemon_v2_pokemonspeciesflavortexts'] as List?;
       if (texts != null && texts.isNotEmpty) {
-        flavor = (texts.first['flavor_text'] as String).replaceAll('\n', ' ').replaceAll('\f', ' ').trim();
+        flavorVal = (texts.first['flavor_text'] as String).replaceAll('\n', ' ').replaceAll('\f', ' ').trim();
       }
       gender = _parseGender(species['gender_rate'] as int?);
       eggs = (species['pokemon_v2_pokemonegggroups'] as List?)?.map((e) => e['pokemon_v2_egggroup']['name'] as String).toList() ?? [];
@@ -65,21 +75,28 @@ class PokemonDetailDto {
 
     final abilities = ((data['pokemon_v2_pokemonabilities'] as List?) ?? []).map((a) => AbilityDto.fromMap(a)).toList();
 
-    // --- PROCESAMIENTO DE MOVIMIENTOS ---
+    // --- MOVIMIENTOS ---
     final rawMoves = (data['pokemon_v2_pokemonmoves'] as List?) ?? [];
+    final List<MoveDto> validMoves = [];
+    final Set<String> uniqueKeys = {};
+
+    final Set<int>? allowedVersions = targetGen != null
+        ? (_genToVersionGroups[targetGen]?.toSet())
+        : null;
+
+    // Ordenar por versión descendente para priorizar datos recientes
     rawMoves.sort((a, b) {
       final vA = a['version_group_id'] as int? ?? 0;
       final vB = b['version_group_id'] as int? ?? 0;
       return vB.compareTo(vA);
     });
 
-    final List<MoveDto> validMoves = [];
-    final Set<String> uniqueKeys = {};
-    final allowedVersions = targetGen != null ? (_genToVersionGroups[targetGen] ?? []) : _genToVersionGroups[9]!;
-
     for (var m in rawMoves) {
       final vGroupId = m['version_group_id'] as int;
-      if (!allowedVersions.contains(vGroupId)) continue;
+      if (allowedVersions != null && !allowedVersions.contains(vGroupId)) {
+        continue;
+      }
+
       final dto = MoveDto.fromMap(m);
       final key = '${dto.name}-${dto.learnMethod}';
       if (!uniqueKeys.contains(key)) {
@@ -88,7 +105,7 @@ class PokemonDetailDto {
       }
     }
 
-    // --- PROCESAMIENTO DE UBICACIONES (NUEVO) ---
+    // --- UBICACIONES ---
     final rawEncounters = (data['pokemon_v2_encounters'] as List?) ?? [];
     final Map<String, LocationGroupDto> groups = {};
 
@@ -96,20 +113,16 @@ class PokemonDetailDto {
       final locData = e['pokemon_v2_locationarea']?['pokemon_v2_location'];
       if (locData == null) continue;
 
-      // Región
       final regionData = locData['pokemon_v2_region'];
       final regionRaw = regionData?['name'] as String? ?? 'unknown';
       final regionName = (regionData?['pokemon_v2_regionnames'] as List?)?.firstOrNull?['name'] ?? regionRaw;
 
-      // Ubicación
       final locRaw = locData['name'] as String? ?? '';
       final locName = (locData['pokemon_v2_locationnames'] as List?)?.firstOrNull?['name'] ?? locRaw;
 
-      // Versión del juego
       final verData = e['pokemon_v2_version'];
       final verName = (verData?['pokemon_v2_versionnames'] as List?)?.firstOrNull?['name'] ?? verData?['name'] ?? '';
 
-      // Agrupar
       if (!groups.containsKey(regionRaw)) {
         groups[regionRaw] = LocationGroupDto(
           regionId: regionRaw,
@@ -122,12 +135,13 @@ class PokemonDetailDto {
 
     final locationGroups = groups.values.toList();
     for (var g in locationGroups) {
-      g.locations = g.locations.toSet().toList(); // Unir duplicados
+      g.locations = g.locations.toSet().toList();
     }
 
     return PokemonDetailDto(
       id: data['id'], name: data['name'], height: data['height'], weight: data['weight'],
-      types: types, stats: stats, abilities: abilities, flavorText: flavor,
+      types: types, stats: stats, abilities: abilities,
+      flavorText: flavorVal, // Pasamos la variable correcta al parámetro flavorText
       genderText: gender, eggGroups: eggs, regionName: region, moves: validMoves,
       evolutionChain: evoEdges, forms: allForms,
       locations: locationGroups,
@@ -232,18 +246,13 @@ class PokemonDetailDto {
     );
   }
 
+  // Serialización para caché local
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'name': name,
-      'height': height,
-      'weight': weight,
-      'types': types,
+      'id': id, 'name': name, 'height': height, 'weight': weight, 'types': types,
       'stats': stats.map((e) => e.toMap()).toList(),
       'abilities': abilities.map((e) => e.toMap()).toList(),
-      'flavorText': flavorText,
-      'genderText': genderText,
-      'eggGroups': eggGroups,
+      'flavorText': flavorText, 'genderText': genderText, 'eggGroups': eggGroups,
       'regionName': regionName,
       'moves': moves.map((e) => e.toMap()).toList(),
       'evolutionChain': evolutionChain.map((e) => e.toMap()).toList(),
@@ -254,17 +263,12 @@ class PokemonDetailDto {
 
   factory PokemonDetailDto.fromLocalMap(Map<String, dynamic> map) {
     return PokemonDetailDto(
-      id: map['id'],
-      name: map['name'],
-      height: map['height'],
-      weight: map['weight'],
+      id: map['id'], name: map['name'], height: map['height'], weight: map['weight'],
       types: List<String>.from(map['types']),
       stats: (map['stats'] as List).map((e) => StatDto.fromLocalMap(Map<String, dynamic>.from(e))).toList(),
       abilities: (map['abilities'] as List).map((e) => AbilityDto.fromLocalMap(Map<String, dynamic>.from(e))).toList(),
-      flavorText: map['flavorText'],
-      genderText: map['genderText'],
-      eggGroups: List<String>.from(map['eggGroups']),
-      regionName: map['regionName'],
+      flavorText: map['flavorText'], genderText: map['genderText'],
+      eggGroups: List<String>.from(map['eggGroups']), regionName: map['regionName'],
       moves: (map['moves'] as List).map((e) => MoveDto.fromLocalMap(Map<String, dynamic>.from(e))).toList(),
       evolutionChain: (map['evolutionChain'] as List).map((e) => EvolutionEdgeDto.fromLocalMap(Map<String, dynamic>.from(e))).toList(),
       forms: (map['forms'] as List).map((e) => FormDto.fromLocalMap(Map<String, dynamic>.from(e))).toList(),
@@ -282,17 +286,10 @@ class LocationGroupDto {
   final String regionName;
   List<String> locations;
   LocationGroupDto({required this.regionId, required this.regionName, required this.locations});
-  
-  Map<String, dynamic> toMap() => {
-    'regionId': regionId,
-    'regionName': regionName,
-    'locations': locations,
-  };
-  
+
+  Map<String, dynamic> toMap() => {'regionId': regionId, 'regionName': regionName, 'locations': locations};
   factory LocationGroupDto.fromLocalMap(Map<String, dynamic> map) => LocationGroupDto(
-    regionId: map['regionId'],
-    regionName: map['regionName'],
-    locations: List<String>.from(map['locations']),
+    regionId: map['regionId'], regionName: map['regionName'], locations: List<String>.from(map['locations']),
   );
 }
 
@@ -300,7 +297,6 @@ class StatDto {
   final String name; final int value;
   StatDto(this.name, this.value);
   factory StatDto.fromMap(Map<String, dynamic> m) => StatDto(m['pokemon_v2_stat']['name'], m['base_stat']);
-  
   Map<String, dynamic> toMap() => {'name': name, 'value': value};
   factory StatDto.fromLocalMap(Map<String, dynamic> map) => StatDto(map['name'], map['value']);
 }
@@ -309,17 +305,16 @@ class AbilityDto {
   final String name;
   final String description;
   final bool isHidden;
+  // Constructor usa 'description'
   AbilityDto(this.name, this.description, this.isHidden);
 
   factory AbilityDto.fromMap(Map<String, dynamic> m) {
     final abilityData = m['pokemon_v2_ability'];
 
-    // Nombre Traducido
     final translatedName = (abilityData['pokemon_v2_abilitynames'] as List?)?.firstOrNull?['name'];
     final rawName = (abilityData['name'] as String? ?? 'Unknown');
     final displayName = translatedName ?? rawName[0].toUpperCase() + rawName.substring(1);
 
-    // Descripción (Prioridad: Flavor Text > Effect Text)
     final flavorEntry = (abilityData['pokemon_v2_abilityflavortexts'] as List?)?.firstOrNull;
     String? desc = flavorEntry?['flavor_text'];
 
@@ -334,34 +329,36 @@ class AbilityDto {
         m['is_hidden']
     );
   }
-  
-  Map<String, dynamic> toMap() => {
-    'name': name,
-    'description': description,
-    'isHidden': isHidden,
-  };
-  
-  factory AbilityDto.fromLocalMap(Map<String, dynamic> map) => AbilityDto(
-    map['name'],
-    map['description'],
-    map['isHidden'],
-  );
+
+  Map<String, dynamic> toMap() => {'name': name, 'description': description, 'isHidden': isHidden};
+  factory AbilityDto.fromLocalMap(Map<String, dynamic> map) => AbilityDto(map['name'], map['description'], map['isHidden']);
 }
 
 class MoveDto {
-  final String name; final String type; final String damageClass;
-  final int? power; final int? accuracy; final int? pp; final int level; final String learnMethod; final String description;
+  final String name;
+  final String type;
+  final String damageClass;
+  final int? power;
+  final int? accuracy;
+  final int? pp;
+  final int level;
+  final String learnMethod;
+  final String description; // Campo description
 
-  MoveDto({required this.name, required this.type, required this.damageClass, this.power, this.accuracy, this.pp, required this.level, required this.learnMethod, required this.description});
+  MoveDto({
+    required this.name, required this.type, required this.damageClass,
+    this.power, this.accuracy, this.pp, required this.level,
+    required this.learnMethod, required this.description // Constructor param
+  });
 
   factory MoveDto.fromMap(Map<String, dynamic> m) {
     final mv = m['pokemon_v2_move'];
 
-    // Nombre Traducido
     final translatedName = (mv['pokemon_v2_movenames'] as List?)?.firstOrNull?['name'];
     final rawName = (mv['name'] as String? ?? '-');
     final displayName = translatedName ?? (rawName.isNotEmpty ? rawName[0].toUpperCase() + rawName.substring(1) : rawName);
 
+    // Variable local
     final flavor = (mv['pokemon_v2_moveflavortexts'] as List?)?.firstOrNull;
 
     return MoveDto(
@@ -370,32 +367,21 @@ class MoveDto {
       damageClass: mv['pokemon_v2_movedamageclass']['name'] ?? 'status',
       power: mv['power'], accuracy: mv['accuracy'], pp: mv['pp'],
       level: m['level'] ?? 0, learnMethod: m['pokemon_v2_movelearnmethod']['name'],
+      // Pasamos la variable local 'flavor' al parámetro 'description'
       description: (flavor?['flavor_text'] as String? ?? '').replaceAll('\n', ' '),
     );
   }
-  
+
   Map<String, dynamic> toMap() => {
-    'name': name,
-    'type': type,
-    'damageClass': damageClass,
-    'power': power,
-    'accuracy': accuracy,
-    'pp': pp,
-    'level': level,
-    'learnMethod': learnMethod,
-    'description': description,
+    'name': name, 'type': type, 'damageClass': damageClass,
+    'power': power, 'accuracy': accuracy, 'pp': pp,
+    'level': level, 'learnMethod': learnMethod, 'description': description,
   };
-  
+
   factory MoveDto.fromLocalMap(Map<String, dynamic> map) => MoveDto(
-    name: map['name'],
-    type: map['type'],
-    damageClass: map['damageClass'],
-    power: map['power'],
-    accuracy: map['accuracy'],
-    pp: map['pp'],
-    level: map['level'],
-    learnMethod: map['learnMethod'],
-    description: map['description'],
+    name: map['name'], type: map['type'], damageClass: map['damageClass'],
+    power: map['power'], accuracy: map['accuracy'], pp: map['pp'],
+    level: map['level'], learnMethod: map['learnMethod'], description: map['description'],
   );
 }
 
@@ -415,25 +401,15 @@ class FormDto {
     final types = ((m['pokemon_v2_pokemonformtypes'] as List?) ?? []).map((t) => t['pokemon_v2_type']['name'] as String).toList();
     return FormDto(pokemonId: pid, title: display, types: types, isMega: isMega, isGmax: isGmax, isRegional: isReg, imageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$pid.png');
   }
-  
+
   Map<String, dynamic> toMap() => {
-    'pokemonId': pokemonId,
-    'title': title,
-    'types': types,
-    'isMega': isMega,
-    'isGmax': isGmax,
-    'isRegional': isRegional,
-    'imageUrl': imageUrl,
+    'pokemonId': pokemonId, 'title': title, 'types': types,
+    'isMega': isMega, 'isGmax': isGmax, 'isRegional': isRegional, 'imageUrl': imageUrl,
   };
-  
+
   factory FormDto.fromLocalMap(Map<String, dynamic> map) => FormDto(
-    pokemonId: map['pokemonId'],
-    title: map['title'],
-    types: List<String>.from(map['types']),
-    isMega: map['isMega'],
-    isGmax: map['isGmax'],
-    isRegional: map['isRegional'],
-    imageUrl: map['imageUrl'],
+    pokemonId: map['pokemonId'], title: map['title'], types: List<String>.from(map['types']),
+    isMega: map['isMega'], isGmax: map['isGmax'], isRegional: map['isRegional'], imageUrl: map['imageUrl'],
   );
 }
 
@@ -441,24 +417,15 @@ class EvolutionEdgeDto {
   final int fromSpeciesId; final int? fromPokemonId; final String fromName;
   final int toSpeciesId; final int? toPokemonId; final String toName; final Map<String, dynamic> method;
   EvolutionEdgeDto({required this.fromSpeciesId, this.fromPokemonId, required this.fromName, required this.toSpeciesId, this.toPokemonId, required this.toName, required this.method});
-  
+
   Map<String, dynamic> toMap() => {
-    'fromSpeciesId': fromSpeciesId,
-    'fromPokemonId': fromPokemonId,
-    'fromName': fromName,
-    'toSpeciesId': toSpeciesId,
-    'toPokemonId': toPokemonId,
-    'toName': toName,
-    'method': method,
+    'fromSpeciesId': fromSpeciesId, 'fromPokemonId': fromPokemonId, 'fromName': fromName,
+    'toSpeciesId': toSpeciesId, 'toPokemonId': toPokemonId, 'toName': toName, 'method': method,
   };
-  
+
   factory EvolutionEdgeDto.fromLocalMap(Map<String, dynamic> map) => EvolutionEdgeDto(
-    fromSpeciesId: map['fromSpeciesId'],
-    fromPokemonId: map['fromPokemonId'],
-    fromName: map['fromName'],
-    toSpeciesId: map['toSpeciesId'],
-    toPokemonId: map['toPokemonId'],
-    toName: map['toName'],
+    fromSpeciesId: map['fromSpeciesId'], fromPokemonId: map['fromPokemonId'], fromName: map['fromName'],
+    toSpeciesId: map['toSpeciesId'], toPokemonId: map['toPokemonId'], toName: map['toName'],
     method: Map<String, dynamic>.from(map['method']),
   );
 }
