@@ -15,7 +15,7 @@ class PokemonDetailDto {
   final List<MoveDto> moves;
   final List<EvolutionEdgeDto> evolutionChain;
   final List<FormDto> forms;
-  final List<LocationGroupDto> locations; // <--- NUEVO
+  final List<LocationGroupDto> locations;
 
   static const Map<int, List<int>> _genToVersionGroups = {
     1: [1, 2], 2: [3, 4], 3: [5, 6, 7], 4: [8, 9, 10],
@@ -228,7 +228,47 @@ class PokemonDetailDto {
       stats: stats, abilities: abilities, flavorText: flavorText,
       genderText: genderText, eggGroups: eggGroups, regionName: regionName,
       moves: moves, evolutionChain: evolutionChain, forms: forms,
-      locations: locations, // Mapeo a entidad
+      locations: locations,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'height': height,
+      'weight': weight,
+      'types': types,
+      'stats': stats.map((e) => e.toMap()).toList(),
+      'abilities': abilities.map((e) => e.toMap()).toList(),
+      'flavorText': flavorText,
+      'genderText': genderText,
+      'eggGroups': eggGroups,
+      'regionName': regionName,
+      'moves': moves.map((e) => e.toMap()).toList(),
+      'evolutionChain': evolutionChain.map((e) => e.toMap()).toList(),
+      'forms': forms.map((e) => e.toMap()).toList(),
+      'locations': locations.map((e) => e.toMap()).toList(),
+    };
+  }
+
+  factory PokemonDetailDto.fromLocalMap(Map<String, dynamic> map) {
+    return PokemonDetailDto(
+      id: map['id'],
+      name: map['name'],
+      height: map['height'],
+      weight: map['weight'],
+      types: List<String>.from(map['types']),
+      stats: (map['stats'] as List).map((e) => StatDto.fromLocalMap(Map<String, dynamic>.from(e))).toList(),
+      abilities: (map['abilities'] as List).map((e) => AbilityDto.fromLocalMap(Map<String, dynamic>.from(e))).toList(),
+      flavorText: map['flavorText'],
+      genderText: map['genderText'],
+      eggGroups: List<String>.from(map['eggGroups']),
+      regionName: map['regionName'],
+      moves: (map['moves'] as List).map((e) => MoveDto.fromLocalMap(Map<String, dynamic>.from(e))).toList(),
+      evolutionChain: (map['evolutionChain'] as List).map((e) => EvolutionEdgeDto.fromLocalMap(Map<String, dynamic>.from(e))).toList(),
+      forms: (map['forms'] as List).map((e) => FormDto.fromLocalMap(Map<String, dynamic>.from(e))).toList(),
+      locations: (map['locations'] as List).map((e) => LocationGroupDto.fromLocalMap(Map<String, dynamic>.from(e))).toList(),
     );
   }
 
@@ -242,12 +282,27 @@ class LocationGroupDto {
   final String regionName;
   List<String> locations;
   LocationGroupDto({required this.regionId, required this.regionName, required this.locations});
+  
+  Map<String, dynamic> toMap() => {
+    'regionId': regionId,
+    'regionName': regionName,
+    'locations': locations,
+  };
+  
+  factory LocationGroupDto.fromLocalMap(Map<String, dynamic> map) => LocationGroupDto(
+    regionId: map['regionId'],
+    regionName: map['regionName'],
+    locations: List<String>.from(map['locations']),
+  );
 }
 
 class StatDto {
   final String name; final int value;
   StatDto(this.name, this.value);
   factory StatDto.fromMap(Map<String, dynamic> m) => StatDto(m['pokemon_v2_stat']['name'], m['base_stat']);
+  
+  Map<String, dynamic> toMap() => {'name': name, 'value': value};
+  factory StatDto.fromLocalMap(Map<String, dynamic> map) => StatDto(map['name'], map['value']);
 }
 
 class AbilityDto {
@@ -279,6 +334,18 @@ class AbilityDto {
         m['is_hidden']
     );
   }
+  
+  Map<String, dynamic> toMap() => {
+    'name': name,
+    'description': description,
+    'isHidden': isHidden,
+  };
+  
+  factory AbilityDto.fromLocalMap(Map<String, dynamic> map) => AbilityDto(
+    map['name'],
+    map['description'],
+    map['isHidden'],
+  );
 }
 
 class MoveDto {
@@ -306,6 +373,30 @@ class MoveDto {
       description: (flavor?['flavor_text'] as String? ?? '').replaceAll('\n', ' '),
     );
   }
+  
+  Map<String, dynamic> toMap() => {
+    'name': name,
+    'type': type,
+    'damageClass': damageClass,
+    'power': power,
+    'accuracy': accuracy,
+    'pp': pp,
+    'level': level,
+    'learnMethod': learnMethod,
+    'description': description,
+  };
+  
+  factory MoveDto.fromLocalMap(Map<String, dynamic> map) => MoveDto(
+    name: map['name'],
+    type: map['type'],
+    damageClass: map['damageClass'],
+    power: map['power'],
+    accuracy: map['accuracy'],
+    pp: map['pp'],
+    level: map['level'],
+    learnMethod: map['learnMethod'],
+    description: map['description'],
+  );
 }
 
 class FormDto {
@@ -324,10 +415,50 @@ class FormDto {
     final types = ((m['pokemon_v2_pokemonformtypes'] as List?) ?? []).map((t) => t['pokemon_v2_type']['name'] as String).toList();
     return FormDto(pokemonId: pid, title: display, types: types, isMega: isMega, isGmax: isGmax, isRegional: isReg, imageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$pid.png');
   }
+  
+  Map<String, dynamic> toMap() => {
+    'pokemonId': pokemonId,
+    'title': title,
+    'types': types,
+    'isMega': isMega,
+    'isGmax': isGmax,
+    'isRegional': isRegional,
+    'imageUrl': imageUrl,
+  };
+  
+  factory FormDto.fromLocalMap(Map<String, dynamic> map) => FormDto(
+    pokemonId: map['pokemonId'],
+    title: map['title'],
+    types: List<String>.from(map['types']),
+    isMega: map['isMega'],
+    isGmax: map['isGmax'],
+    isRegional: map['isRegional'],
+    imageUrl: map['imageUrl'],
+  );
 }
 
 class EvolutionEdgeDto {
   final int fromSpeciesId; final int? fromPokemonId; final String fromName;
   final int toSpeciesId; final int? toPokemonId; final String toName; final Map<String, dynamic> method;
   EvolutionEdgeDto({required this.fromSpeciesId, this.fromPokemonId, required this.fromName, required this.toSpeciesId, this.toPokemonId, required this.toName, required this.method});
+  
+  Map<String, dynamic> toMap() => {
+    'fromSpeciesId': fromSpeciesId,
+    'fromPokemonId': fromPokemonId,
+    'fromName': fromName,
+    'toSpeciesId': toSpeciesId,
+    'toPokemonId': toPokemonId,
+    'toName': toName,
+    'method': method,
+  };
+  
+  factory EvolutionEdgeDto.fromLocalMap(Map<String, dynamic> map) => EvolutionEdgeDto(
+    fromSpeciesId: map['fromSpeciesId'],
+    fromPokemonId: map['fromPokemonId'],
+    fromName: map['fromName'],
+    toSpeciesId: map['toSpeciesId'],
+    toPokemonId: map['toPokemonId'],
+    toName: map['toName'],
+    method: Map<String, dynamic>.from(map['method']),
+  );
 }

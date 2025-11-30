@@ -8,6 +8,7 @@ import 'package:pokedex/domain/repositories/i_pokemon_repository.dart';
 import 'package:pokedex/domain/repositories/i_favorites_repository.dart';
 // Data
 import 'package:pokedex/data/datasources/pokemon_remote_data_source.dart';
+import 'package:pokedex/data/datasources/pokemon_local_data_source.dart';
 import 'package:pokedex/data/datasources/favorites_local_data_source.dart';
 import 'package:pokedex/data/datasources/trivia_local_data_source.dart';
 import 'package:pokedex/data/repositories/pokemon_repository_impl.dart';
@@ -22,9 +23,7 @@ import 'package:pokedex/presentation/providers/trivia_provider.dart';
 
 // Provider para el repositorio de Pokémon
 final pokemonRepositoryProvider = Provider<IPokemonRepository>((ref) {
-  final client = getGraphQLClient();
-  final remoteDataSource = PokemonRemoteDataSource(client);
-  return PokemonRepositoryImpl(remoteDataSource);
+  throw UnimplementedError('Provider must be overridden');
 });
 
 // Provider para el repositorio de Favoritos
@@ -39,6 +38,14 @@ void main() async {
   // Inicializar Hive
   await Hive.initFlutter();
   
+  // Inicializar Pokemon Datasource
+  final pokemonLocalDataSource = PokemonLocalDataSource();
+  await pokemonLocalDataSource.init();
+
+  final client = getGraphQLClient();
+  final pokemonRemoteDataSource = PokemonRemoteDataSource(client);
+  final pokemonRepository = PokemonRepositoryImpl(pokemonRemoteDataSource, pokemonLocalDataSource);
+  
   // Inicializar Trivia Datasource
   final triviaDataSource = TriviaLocalDataSource();
   await triviaDataSource.init();
@@ -49,6 +56,7 @@ void main() async {
   runApp(ProviderScope(
     overrides: [
       triviaRepositoryProvider.overrideWithValue(triviaRepository),
+      pokemonRepositoryProvider.overrideWithValue(pokemonRepository),
     ],
     child: const PokeDexApp(),
   ));

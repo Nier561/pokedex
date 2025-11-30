@@ -52,4 +52,15 @@ class PokemonListDto {
       baseStatTotal: baseStatTotal,
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'types': types,
+      'imageUrl': imageUrl,
+      'generationId': generationId,
+      'baseStatTotal': baseStatTotal,
+    };
+  }
 }

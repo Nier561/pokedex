@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:pokedex/presentation/widgets/type_badge.dart';
 import 'package:pokedex/presentation/widgets/type_gradients.dart';
 
@@ -126,34 +127,35 @@ class PokemonCard extends StatelessWidget {
                           height: imageSize,
                           child: Align(
                             alignment: Alignment.bottomRight,
-                            child: Image.network(
-                              imageUrl,
+                            child: CachedNetworkImage(
+                              imageUrl: imageUrl,
                               width: imageSize,
                               height: imageSize,
                               fit: BoxFit.contain,
                               filterQuality: FilterQuality.low,
                               // Hint de decodificación para reducir trabajo de imagen
-                              cacheWidth: imageSize.round(),
-                              cacheHeight: imageSize.round(),
+                              memCacheWidth: imageSize.round(),
+                              memCacheHeight: imageSize.round(),
                               // Si la imagen oficial falla (404/timeout), intenta sprite clásico
-                              errorBuilder: (context, error, stackTrace) {
+                              errorWidget: (context, url, error) {
                                 if (fallbackImageUrl != null && fallbackImageUrl!.isNotEmpty) {
-                                  return Image.network(
-                                    fallbackImageUrl!,
+                                  return CachedNetworkImage(
+                                    imageUrl: fallbackImageUrl!,
                                     width: imageSize,
                                     height: imageSize,
                                     fit: BoxFit.contain,
                                     filterQuality: FilterQuality.low,
-                                    cacheWidth: imageSize.round(),
-                                    cacheHeight: imageSize.round(),
+                                    memCacheWidth: imageSize.round(),
+                                    memCacheHeight: imageSize.round(),
                                     // Si también falla, muestra un placeholder local
-                                    errorBuilder: (context, _, __) {
+                                    errorWidget: (context, url, error) {
                                       return _PlaceholderImage(size: imageSize);
                                     },
                                   );
                                 }
                                 return _PlaceholderImage(size: imageSize);
                               },
+                              placeholder: (context, url) => _PlaceholderImage(size: imageSize),
                             ),
                           ),
                         ),
