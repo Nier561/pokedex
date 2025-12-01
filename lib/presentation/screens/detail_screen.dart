@@ -53,6 +53,8 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
   late int _idx;
   bool _isShiny = false;
   bool _isGeneratingCard = false;
+  bool _showShinyEffect = false;
+  final _sfxPlayer = AudioPlayer();
 
   static const int _initialVisibleMoves = 5;
   static const int _movesPageSize = 20;
@@ -74,6 +76,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
   void dispose() {
     _tabController.dispose();
     _player.dispose();
+    _sfxPlayer.dispose();
     super.dispose();
   }
 
@@ -579,8 +582,38 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
                                           const SizedBox(width: 4),
                                           Switch(
                                             value: _isShiny,
-                                            onChanged: (val) =>
-                                                setState(() => _isShiny = val),
+                                            onChanged: (val) {
+                                              setState(() {
+                                                _isShiny = val;
+                                                // Si se activa el modo shiny, reproducir sonido y mostrar animación
+                                                if (_isShiny) {
+                                                  // Reproduce el sonido de shiny
+                                                  _sfxPlayer.play(
+                                                    AssetSource(
+                                                      'sounds/shiny.mp3',
+                                                    ),
+                                                  );
+
+                                                  // Muestra el GIF de shiny
+                                                  _showShinyEffect = true;
+
+                                                  // Oculta el GIF después de 1.5 segundos (duración estimada de la animación)
+                                                  Future.delayed(
+                                                    const Duration(
+                                                      milliseconds: 1500,
+                                                    ),
+                                                    () {
+                                                      if (mounted) {
+                                                        setState(() {
+                                                          _showShinyEffect =
+                                                              false;
+                                                        });
+                                                      }
+                                                    },
+                                                  );
+                                                }
+                                              });
+                                            },
                                             activeColor: Colors.yellowAccent,
                                             activeTrackColor: Colors
                                                 .yellowAccent
@@ -643,6 +676,18 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
                             ),
                           ),
                         ),
+                        // Animación de Shiny (Sparkles) superpuesta
+                        if (_showShinyEffect)
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            left: 0,
+                            bottom: 0,
+                            child: Image.asset(
+                              'assets/gif/shiny.gif',
+                              fit: BoxFit.contain,
+                            ),
+                          ),
                       ],
                     ),
                   ),
