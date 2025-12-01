@@ -19,7 +19,8 @@ import 'package:pokedex/presentation/widgets/type_gradients.dart';
 
 import 'package:pokedex/presentation/widgets/matchup_grid.dart';
 import 'package:pokedex/presentation/widgets/animated_detail_screen.dart';
-import 'package:pokedex/presentation/widgets/error_view.dart'; // Importante
+import 'package:pokedex/presentation/widgets/error_view.dart';
+import 'package:pokedex/presentation/widgets/stat_bar.dart';
 
 class PokemonDetailScreen extends ConsumerStatefulWidget {
   final int id;
@@ -1113,53 +1114,10 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
-        ...stats.asMap().entries.map(
-          (e) => Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 60,
-                  child: Text(
-                    _statName(e.value.name, tr),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 40,
-                  child: Text(
-                    '${e.value.value}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Expanded(
-                  child: Stack(
-                    children: [
-                      Container(
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                      FractionallySizedBox(
-                        widthFactor: (e.value.value / 255).clamp(0.0, 1.0),
-                        child: Container(
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: _getStatColor(e.value.value),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+        ...stats.map(
+          (s) => Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: StatBar(label: s.name, value: s.value),
           ),
         ),
         const Divider(height: 32),
@@ -1185,32 +1143,6 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
         MatchupGrid(types: types),
       ],
     );
-  }
-
-  String _statName(String name, Function(String) tr) {
-    switch (name) {
-      case 'hp':
-        return 'HP';
-      case 'attack':
-        return 'ATK';
-      case 'defense':
-        return 'DEF';
-      case 'special-attack':
-        return 'SATK';
-      case 'special-defense':
-        return 'SDEF';
-      case 'speed':
-        return 'SPD';
-      default:
-        return name.toUpperCase();
-    }
-  }
-
-  Color _getStatColor(int value) {
-    if (value < 50) return Colors.red;
-    if (value < 100) return Colors.yellow;
-    if (value <= 150) return Colors.green;
-    return Colors.cyan;
   }
 
   Widget _buildEvolutionTab(

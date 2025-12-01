@@ -69,7 +69,7 @@ class TriviaRepositoryImpl implements ITriviaRepository {
   Future<void> saveGame(TriviaGame game) async {
     // Guardar resumen del juego
     await _localDataSource.saveGame(TriviaGameModel.fromEntity(game));
-    
+
     // Crear y guardar puntuación para ranking
     final score = TriviaScore(
       id: game.id,
@@ -79,9 +79,10 @@ class TriviaRepositoryImpl implements ITriviaRepository {
       accuracy: game.accuracy,
       completionTime: game.endTime!.difference(game.startTime).inSeconds,
       date: game.endTime!,
+      userName: game.userName,
       achievementsUnlocked: [], // Se llenará al procesar logros
     );
-    
+
     await _localDataSource.saveScore(TriviaScoreModel.fromEntity(score));
   }
 
@@ -100,7 +101,10 @@ class TriviaRepositoryImpl implements ITriviaRepository {
   @override
   Future<List<Achievement>> getAchievements() async {
     final unlockedModels = _localDataSource.getUnlockedAchievements();
-    final unlockedIds = unlockedModels.where((m) => m.isUnlocked).map((m) => m.id).toSet();
+    final unlockedIds = unlockedModels
+        .where((m) => m.isUnlocked)
+        .map((m) => m.id)
+        .toSet();
     final unlockedDates = {for (var m in unlockedModels) m.id: m.unlockedAt};
 
     return _allAchievements.map((achievement) {
@@ -121,11 +125,13 @@ class TriviaRepositoryImpl implements ITriviaRepository {
       orElse: () => throw Exception('Achievement not found'),
     );
 
-    await _localDataSource.updateAchievement(AchievementModel(
-      id: achievement.id,
-      isUnlocked: true,
-      unlockedAt: DateTime.now(),
-    ));
+    await _localDataSource.updateAchievement(
+      AchievementModel(
+        id: achievement.id,
+        isUnlocked: true,
+        unlockedAt: DateTime.now(),
+      ),
+    );
   }
 
   @override

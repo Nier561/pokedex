@@ -10,12 +10,15 @@ class TriviaRankingScreen extends ConsumerWidget {
   const TriviaRankingScreen({super.key});
 
   @override
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final translations = ref.watch(triviaTranslationsProvider);
     final topScoresAsync = ref.watch(topScoresProvider);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
           Positioned(
@@ -24,7 +27,9 @@ class TriviaRankingScreen extends ConsumerWidget {
             child: Icon(
               Icons.emoji_events,
               size: 300,
-              color: Colors.grey.withOpacity(0.05),
+              color: isDark
+                  ? Colors.white.withOpacity(0.05)
+                  : Colors.grey.withOpacity(0.05),
             ),
           ),
           CustomScrollView(
@@ -32,12 +37,17 @@ class TriviaRankingScreen extends ConsumerWidget {
               SliverAppBar(
                 title: Text(
                   translations.get('ranking'),
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: theme.textTheme.bodyLarge?.color,
+                  ),
                 ),
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 centerTitle: true,
-                iconTheme: const IconThemeData(color: Colors.black87),
+                iconTheme: IconThemeData(
+                  color: theme.textTheme.bodyLarge?.color,
+                ),
                 floating: true,
                 snap: true,
               ),
@@ -49,11 +59,18 @@ class TriviaRankingScreen extends ConsumerWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.sentiment_dissatisfied, size: 64, color: Colors.grey),
+                            const Icon(
+                              Icons.sentiment_dissatisfied,
+                              size: 64,
+                              color: Colors.grey,
+                            ),
                             const SizedBox(height: 16),
                             Text(
                               'No scores yet!',
-                              style: TextStyle(color: Colors.grey[600], fontSize: 18),
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 18,
+                              ),
                             ),
                           ],
                         ),
@@ -62,53 +79,70 @@ class TriviaRankingScreen extends ConsumerWidget {
                   }
 
                   return SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final score = scores[index];
-                        final isTop3 = index < 3;
-                        
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.1),
-                                blurRadius: 10,
-                                offset: const Offset(0, 5),
-                              ),
-                            ],
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final score = scores[index];
+                      final isTop3 = index < 3;
+
+                      return Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: theme.cardColor,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
                           ),
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            leading: CircleAvatar(
-                              backgroundColor: _getRankColor(index),
-                              child: Text(
-                                '#${index + 1}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                          leading: CircleAvatar(
+                            backgroundColor: _getRankColor(index),
+                            child: Text(
+                              '#${index + 1}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            title: Text(
-                              '${score.totalScore} pts',
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                            ),
-                            subtitle: Text(
-                              '${translations.get('accuracy')}: ${score.accuracy.toStringAsFixed(0)}% • ${score.date.day}/${score.date.month}/${score.date.year}',
-                            ),
-                            trailing: isTop3 ? const Icon(Icons.star, color: Colors.amber) : null,
                           ),
-                        );
-                      },
-                      childCount: scores.length,
-                    ),
+                          title: Text(
+                            score.userName,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: theme.textTheme.bodyLarge?.color,
+                            ),
+                          ),
+                          subtitle: Text(
+                            '${score.totalScore} pts • ${translations.get('accuracy')}: ${score.accuracy.toStringAsFixed(0)}% • ${score.date.day}/${score.date.month}/${score.date.year}',
+                            style: TextStyle(
+                              color: theme.textTheme.bodyMedium?.color
+                                  ?.withOpacity(0.7),
+                            ),
+                          ),
+                          trailing: isTop3
+                              ? const Icon(Icons.star, color: Colors.amber)
+                              : null,
+                        ),
+                      );
+                    }, childCount: scores.length),
                   );
                 },
-                loading: () => const SliverFillRemaining(child: Center(child: CircularProgressIndicator())),
-                error: (err, stack) => SliverFillRemaining(child: Center(child: Text('Error: $err'))),
+                loading: () => const SliverFillRemaining(
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+                error: (err, stack) => SliverFillRemaining(
+                  child: Center(child: Text('Error: $err')),
+                ),
               ),
             ],
           ),
@@ -119,10 +153,14 @@ class TriviaRankingScreen extends ConsumerWidget {
 
   Color _getRankColor(int index) {
     switch (index) {
-      case 0: return const Color(0xFFFFD700); // Gold
-      case 1: return const Color(0xFFC0C0C0); // Silver
-      case 2: return const Color(0xFFCD7F32); // Bronze
-      default: return const Color(0xFF8B7ED8); // Default theme color
+      case 0:
+        return const Color(0xFFFFD700); // Gold
+      case 1:
+        return const Color(0xFFC0C0C0); // Silver
+      case 2:
+        return const Color(0xFFCD7F32); // Bronze
+      default:
+        return const Color(0xFF8B7ED8); // Default theme color
     }
   }
 }

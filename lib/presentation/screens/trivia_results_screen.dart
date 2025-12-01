@@ -14,13 +14,16 @@ class TriviaResultsScreen extends ConsumerWidget {
   const TriviaResultsScreen({super.key});
 
   @override
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final gameState = ref.watch(gameStateProvider);
     final translations = ref.watch(triviaTranslationsProvider);
     final game = gameState.currentGame!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
           Positioned(
@@ -29,7 +32,9 @@ class TriviaResultsScreen extends ConsumerWidget {
             child: Icon(
               Icons.emoji_events,
               size: 300,
-              color: Colors.grey.withOpacity(0.05),
+              color: isDark
+                  ? Colors.white.withOpacity(0.05)
+                  : Colors.grey.withOpacity(0.05),
             ),
           ),
           SafeArea(
@@ -39,28 +44,26 @@ class TriviaResultsScreen extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Spacer(),
-                  const Text(
-                    '🏆',
-                    style: TextStyle(fontSize: 80),
-                  ),
+                  const Text('🏆', style: TextStyle(fontSize: 80)),
                   const SizedBox(height: 16),
                   Text(
-                    translations.get('game_over'),
-                    style: const TextStyle(
-                      fontSize: 32,
+                    '${translations.get('game_over')}, ${game.userName}!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: theme.textTheme.bodyLarge?.color,
                     ),
                   ),
                   const SizedBox(height: 48),
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: theme.cardColor,
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
+                          color: Colors.black.withOpacity(0.1),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -70,7 +73,12 @@ class TriviaResultsScreen extends ConsumerWidget {
                       children: [
                         Text(
                           translations.get('final_score'),
-                          style: const TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: theme.textTheme.bodyMedium?.color
+                                ?.withOpacity(0.6),
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -90,7 +98,13 @@ class TriviaResultsScreen extends ConsumerWidget {
                               value: '${game.correctAnswers}/10',
                               color: const Color(0xFF4FC1A6),
                             ),
-                            Container(width: 1, height: 40, color: Colors.grey[200]),
+                            Container(
+                              width: 1,
+                              height: 40,
+                              color: isDark
+                                  ? Colors.grey[700]
+                                  : Colors.grey[200],
+                            ),
                             _StatItem(
                               label: translations.get('accuracy'),
                               value: '${game.accuracy.toStringAsFixed(0)}%',
@@ -104,23 +118,32 @@ class TriviaResultsScreen extends ConsumerWidget {
                   const Spacer(),
                   ElevatedButton(
                     onPressed: () {
-                      ref.read(gameStateProvider.notifier).startGame();
+                      ref
+                          .read(gameStateProvider.notifier)
+                          .startGame(game.userName);
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const TriviaGameScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => const TriviaGameScreen(),
+                        ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF4FC1A6),
                       foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 56),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                       elevation: 4,
                       shadowColor: const Color(0xFF4FC1A6).withOpacity(0.4),
                     ),
                     child: Text(
                       translations.get('play_again'),
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -129,7 +152,8 @@ class TriviaResultsScreen extends ConsumerWidget {
                       Navigator.pop(context); // Volver al menú
                     },
                     style: TextButton.styleFrom(
-                      foregroundColor: Colors.grey,
+                      foregroundColor: theme.textTheme.bodyMedium?.color
+                          ?.withOpacity(0.6),
                       minimumSize: const Size(double.infinity, 56),
                     ),
                     child: Text(translations.get('back_to_menu')),
@@ -145,7 +169,7 @@ class TriviaResultsScreen extends ConsumerWidget {
   }
 }
 
-class _StatItem extends StatelessWidget {
+class _StatItem extends ConsumerWidget {
   final String label;
   final String value;
   final Color color;
@@ -157,7 +181,8 @@ class _StatItem extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     return Column(
       children: [
         Text(
@@ -170,7 +195,11 @@ class _StatItem extends StatelessWidget {
         ),
         Text(
           label,
-          style: const TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w500),
+          style: TextStyle(
+            color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ],
     );

@@ -133,7 +133,21 @@ class _TriviaGameScreenState extends ConsumerState<TriviaGameScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 16),
-                  // Header con progreso y puntaje
+                  // Header con nombre, progreso y puntaje
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        gameState.currentGame!.userName,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: theme.textTheme.bodyLarge?.color,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

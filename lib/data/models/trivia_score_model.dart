@@ -39,6 +39,10 @@ class TriviaScoreModel extends HiveObject {
   @HiveField(7)
   final List<String> achievementsUnlocked;
 
+  /// Nombre del jugador.
+  @HiveField(8, defaultValue: 'Trainer')
+  final String userName;
+
   TriviaScoreModel({
     required this.id,
     required this.totalScore,
@@ -48,6 +52,7 @@ class TriviaScoreModel extends HiveObject {
     required this.completionTime,
     required this.date,
     required this.achievementsUnlocked,
+    required this.userName,
   });
 
   /// Convierte una entidad de dominio [TriviaScore] a este modelo de base de datos.
@@ -61,6 +66,7 @@ class TriviaScoreModel extends HiveObject {
       completionTime: entity.completionTime,
       date: entity.date,
       achievementsUnlocked: entity.achievementsUnlocked,
+      userName: entity.userName,
     );
   }
 
@@ -75,6 +81,7 @@ class TriviaScoreModel extends HiveObject {
       completionTime: completionTime,
       date: date,
       achievementsUnlocked: achievementsUnlocked,
+      userName: userName,
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:pokedex/presentation/screens/trivia_achievements_screen.dart';
 import 'package:pokedex/presentation/screens/trivia_game_screen.dart';
 import 'package:pokedex/presentation/screens/trivia_ranking_screen.dart';
 import 'package:pokedex/presentation/widgets/page_transitions.dart';
+import 'package:pokedex/presentation/widgets/name_input_modal.dart';
 
 /// Pantalla de menú principal para el módulo de Trivia.
 /// Ofrece acceso a las diferentes secciones:
@@ -89,18 +90,28 @@ class TriviaMenuScreen extends ConsumerWidget {
                           colorStart: const Color(0xFF4FC1A6),
                           colorEnd: const Color(0xFF65D4BD),
                           onTap: () {
-                            ref.read(gameStateProvider.notifier).startGame();
-                            Future.microtask(() {
-                              if (context.mounted) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const TriviaGameScreen(),
-                                  ),
-                                );
-                              }
-                            });
+                            showDialog(
+                              context: context,
+                              builder: (context) => NameInputModal(
+                                onNameSubmitted: (name) {
+                                  Navigator.pop(context); // Close modal
+                                  ref
+                                      .read(gameStateProvider.notifier)
+                                      .startGame(name);
+                                  Future.microtask(() {
+                                    if (context.mounted) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const TriviaGameScreen(),
+                                        ),
+                                      );
+                                    }
+                                  });
+                                },
+                              ),
+                            );
                           },
                         ),
                         _TriviaMenuCard(

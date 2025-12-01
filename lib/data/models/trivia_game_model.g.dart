@@ -22,13 +22,14 @@ class TriviaGameModelAdapter extends TypeAdapter<TriviaGameModel> {
       endTime: fields[2] as DateTime?,
       totalScore: fields[3] as int,
       correctAnswers: fields[4] as int,
+      userName: fields[5] == null ? 'Trainer' : fields[5] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, TriviaGameModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class TriviaGameModelAdapter extends TypeAdapter<TriviaGameModel> {
       ..writeByte(3)
       ..write(obj.totalScore)
       ..writeByte(4)
-      ..write(obj.correctAnswers);
+      ..write(obj.correctAnswers)
+      ..writeByte(5)
+      ..write(obj.userName);
   }
 
   @override

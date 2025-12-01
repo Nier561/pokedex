@@ -51,6 +51,10 @@ class TriviaTranslations {
         'achievement_streak_title': 'On Fire',
         'achievement_streak_desc': 'Get a streak of 5 correct answers',
         'it_is': 'It\'s',
+        'enter_name_title': 'Enter Your Name',
+        'enter_name_subtitle': 'Who is challenging the Trivia?',
+        'trainer_name_hint': 'Trainer Name',
+        'start_game_button': 'Start Game',
       },
       'es': {
         'trivia_title': 'Trivia',
@@ -84,12 +88,18 @@ class TriviaTranslations {
         'achievement_champion_title': 'Campeón',
         'achievement_champion_desc': 'Consigue 1500 puntos en una partida',
         'achievement_speedster_title': 'Velocista',
-        'achievement_speedster_desc': 'Completa una partida en menos de 2 minutos',
+        'achievement_speedster_desc':
+            'Completa una partida en menos de 2 minutos',
         'achievement_perfect_title': 'Perfeccionista',
         'achievement_perfect_desc': 'Responde correctamente las 10 preguntas',
         'achievement_streak_title': 'En Racha',
-        'achievement_streak_desc': 'Consigue una racha de 5 respuestas correctas',
+        'achievement_streak_desc':
+            'Consigue una racha de 5 respuestas correctas',
         'it_is': 'Es',
+        'enter_name_title': 'Ingresa tu Nombre',
+        'enter_name_subtitle': '¿Quién desafía la Trivia?',
+        'trainer_name_hint': 'Nombre de Entrenador',
+        'start_game_button': 'Comenzar Juego',
       },
     };
 

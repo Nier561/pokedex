@@ -334,6 +334,8 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                                     ).pushWithScaleFadeTransition(
                                       PokemonDetailScreen(
                                         id: p.id,
+                                        cachedPokemon:
+                                            p, //Evita las pantallas de carga
                                         listIds: processedIds,
                                         initialIndex: index,
                                         genContext:

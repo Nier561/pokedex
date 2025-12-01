@@ -5,20 +5,24 @@ import 'package:pokedex/domain/entities/trivia_question.dart';
 class TriviaGame {
   /// Identificador único de la partida (usualmente timestamp).
   final String id;
-  
+
   /// Lista de preguntas generadas para esta partida.
   final List<TriviaQuestion> questions;
-  
+
   /// Momento en que inició la partida.
   final DateTime startTime;
-  
+
   /// Momento en que finalizó la partida (null si está en progreso).
   DateTime? endTime;
-  
+
+  /// Nombre del jugador.
+  final String userName;
+
   TriviaGame({
     required this.id,
     required this.questions,
     required this.startTime,
+    required this.userName,
     this.endTime,
   });
 
@@ -36,7 +40,9 @@ class TriviaGame {
   double get accuracy {
     if (questions.isEmpty) return 0.0;
     // Solo contamos las preguntas que ya han sido respondidas
-    final answeredQuestions = questions.where((q) => q.userAnswer != null).length;
+    final answeredQuestions = questions
+        .where((q) => q.userAnswer != null)
+        .length;
     if (answeredQuestions == 0) return 0.0;
     return (correctAnswers / answeredQuestions) * 100;
   }

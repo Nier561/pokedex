@@ -28,12 +28,17 @@ class TriviaGameModel extends HiveObject {
   @HiveField(4)
   final int correctAnswers;
 
+  /// Nombre del jugador.
+  @HiveField(5, defaultValue: 'Trainer')
+  final String userName;
+
   TriviaGameModel({
     required this.id,
     required this.startTime,
     this.endTime,
     required this.totalScore,
     required this.correctAnswers,
+    required this.userName,
   });
 
   /// Crea una instancia del modelo a partir de la entidad de dominio [TriviaGame].
@@ -45,8 +50,9 @@ class TriviaGameModel extends HiveObject {
       endTime: entity.endTime,
       totalScore: entity.totalScore,
       correctAnswers: entity.correctAnswers,
+      userName: entity.userName,
     );
   }
-  
+
   // No necesitamos toEntity completo porque el historial solo muestra resumen
 }
