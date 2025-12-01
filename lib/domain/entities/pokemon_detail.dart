@@ -33,6 +33,6 @@ class PokemonDetail {
     required this.moves,
     required this.evolutionChain,
     required this.forms,
-    required this.locations, 
+    required this.locations,
   });
 }

@@ -526,9 +526,24 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
                                     AnimatedLikeButton(
                                       isLiked: isFav,
                                       onPressed: () {
+                                        // Construimos el objeto Pokemon básico para la lista
+                                        final pokemon = Pokemon(
+                                          id: id,
+                                          name: name,
+                                          types: types,
+                                          imageUrl: _img(id),
+                                          generationId:
+                                              0, // No crítico para la lista de favoritos
+                                          baseStatTotal: 0,
+                                        );
+
                                         ref
                                             .read(favoritesProvider.notifier)
-                                            .toggle(id);
+                                            .toggle(
+                                              id,
+                                              pokemon: pokemon,
+                                              detail: detail,
+                                            );
                                         _heartsOverlayKey.currentState
                                             ?.showHearts(isBroken: isFav);
                                       },

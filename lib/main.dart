@@ -34,6 +34,11 @@ final pokemonRepositoryProvider = Provider<IPokemonRepository>((ref) {
 
 // Provider para el repositorio de Favoritos
 final favoritesRepositoryProvider = Provider<IFavoritesRepository>((ref) {
+  // Usamos una nueva instancia aquí si no la inyectamos globalmente,
+  // pero lo ideal es usar la misma que en main.
+  // Como Riverpod crea esto bajo demanda, podemos instanciarla aquí.
+  // OJO: Hive maneja cajas singleton, así que múltiples instancias de la clase
+  // apuntan a la misma caja abierta.
   final localDataSource = FavoritesLocalDataSource();
   return FavoritesRepositoryImpl(localDataSource);
 });
@@ -52,9 +57,21 @@ void main() async {
 
   final client = getGraphQLClient();
   final pokemonRemoteDataSource = PokemonRemoteDataSource(client);
+
+  // Instancia compartida de FavoritesLocalDataSource
+  final favoritesLocalDataSource = FavoritesLocalDataSource();
+  // No necesitamos init() aquí si ya se hace en el repositorio de favoritos,
+  // pero para asegurar que esté lista para PokemonRepository, podríamos llamarlo.
+  // Sin embargo, FavoritesRepositoryImpl llama a init() en loadFavorites().
+  // Para seguridad, podemos llamar init aquí también o asumir que se cargará.
+  // Dado que main llama a loadFavorites via provider, debería estar ok.
+  // Pero PokemonRepositoryImpl podría usarse antes.
+  await favoritesLocalDataSource.init();
+
   final pokemonRepository = PokemonRepositoryImpl(
     pokemonRemoteDataSource,
     pokemonLocalDataSource,
+    favoritesLocalDataSource,
   );
 
   // Inicializar Trivia Datasource
