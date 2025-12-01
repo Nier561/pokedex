@@ -70,4 +70,16 @@ class PreferencesLocalDataSource {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_keyTheme);
   }
+
+  static const _keyOnboarding = 'user_onboarding_seen';
+
+  Future<void> saveOnboardingSeen() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyOnboarding, true);
+  }
+
+  Future<bool> getOnboardingSeen() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_keyOnboarding) ?? false;
+  }
 }
