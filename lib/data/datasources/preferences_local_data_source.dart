@@ -30,6 +30,8 @@ class FilterSettingsModel {
       );
 }
 
+/// Fuente de datos local para preferencias de usuario.
+/// Gestiona la persistencia de filtros, idioma, tema y estado de onboarding usando SharedPreferences.
 class PreferencesLocalDataSource {
   static const _key = 'user_filter_settings';
   static const _keyLang = 'user_language_code';
@@ -69,5 +71,22 @@ class PreferencesLocalDataSource {
   Future<bool?> getThemeMode() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_keyTheme);
+  }
+
+  static const _keyOnboarding = 'onboarding_seen';
+
+  Future<void> saveOnboardingSeen() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyOnboarding, true);
+  }
+
+  Future<bool> getOnboardingSeen() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_keyOnboarding) ?? false;
+  }
+
+  Future<void> clearAll() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/presentation/providers/language_provider.dart';
 import 'package:pokedex/presentation/providers/theme_provider.dart';
+import 'package:pokedex/data/datasources/preferences_local_data_source.dart';
 
 /// Pantalla de configuración de la aplicación.
 /// Permite al usuario:
@@ -13,7 +14,7 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentLocale = ref.watch(languageProvider);
-    // Helper simple para traducir dentro del build
+    // Función auxiliar para traducción
     String tr(String key) => S(currentLocale).get(key);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
@@ -22,7 +23,7 @@ class SettingsScreen extends ConsumerWidget {
       backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
-          // Fondo decorativo
+          // Fondo decorativo con icono
           Positioned(
             top: -60,
             right: -60,
@@ -39,7 +40,7 @@ class SettingsScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 16),
-                // Header
+                // Encabezado de la pantalla
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
@@ -65,7 +66,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 32),
 
-                // Contenido
+                // Lista de opciones de configuración
                 Expanded(
                   child: ListView(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -132,14 +133,85 @@ class SettingsScreen extends ConsumerWidget {
 
                       const SizedBox(height: 32),
 
-                      const _SectionHeader(
-                        title: 'App Info',
-                      ), // Podría necesitar traducción
+                      const _SectionHeader(title: 'App Info'),
                       const SizedBox(height: 16),
                       _InfoCard(
                         icon: Icons.info_outline,
                         title: tr('about'),
                         subtitle: 'v1.0.0',
+                      ),
+
+                      const SizedBox(height: 32),
+
+                      const _SectionHeader(title: 'Debug'),
+                      const SizedBox(height: 16),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: theme.cardColor,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 15,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: ListTile(
+                          title: Text(
+                            'Reset App Data',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.redAccent,
+                            ),
+                          ),
+                          leading: const Icon(
+                            Icons.delete_forever,
+                            color: Colors.redAccent,
+                          ),
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Reset App Data?'),
+                                content: const Text(
+                                  'This will clear all your favorites, settings, and onboarding status. The app will close.',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      Navigator.pop(context);
+                                      await PreferencesLocalDataSource()
+                                          .clearAll();
+                                      // Cierra el diálogo y muestra confirmación
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              'Data cleared. Please restart the app.',
+                                            ),
+                                            duration: Duration(seconds: 3),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: const Text(
+                                      'Reset',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -306,8 +378,7 @@ class _InfoCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: theme
-                  .scaffoldBackgroundColor, // Use scaffold background for contrast
+              color: theme.scaffoldBackgroundColor,
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: Colors.grey[600]),

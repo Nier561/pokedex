@@ -24,6 +24,9 @@ import 'package:pokedex/presentation/widgets/stat_bar.dart';
 import 'package:pokedex/presentation/widgets/animated_like_button.dart';
 import 'package:pokedex/presentation/widgets/floating_hearts_overlay.dart';
 
+/// Pantalla de detalle de un Pokémon.
+/// Muestra información completa como estadísticas, movimientos, evoluciones y formas.
+/// Permite generar una tarjeta compartible y marcar como favorito.
 class PokemonDetailScreen extends ConsumerStatefulWidget {
   final int id;
   final List<int>? listIds;
@@ -107,7 +110,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
             orElse: () => StatDto('hp', 50),
           )
           .value;
-      // Pre-cache image to avoid loading issues during capture
+      // Pre-caché de la imagen para evitar problemas de carga durante la captura
       if (mounted) {
         await precacheImage(NetworkImage(_img(p.id)), context);
       }
@@ -117,7 +120,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
         cardWidget,
         delay: const Duration(
           milliseconds: 500,
-        ), // Increased delay to ensure rendering
+        ), // Retardo aumentado para asegurar el renderizado completo
         pixelRatio: 3.0,
       );
 
@@ -143,7 +146,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
   }
 
   List<MoveDto> _getRandomMovesForCard(PokemonDetail p) {
-    // Deduplicate moves by name to avoid repeats
+    // Deduplicar movimientos por nombre para evitar repeticiones
     final uniqueMoves = <String, MoveDto>{};
     for (var m in p.moves) {
       if (!uniqueMoves.containsKey(m.name)) {
@@ -616,17 +619,17 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
                                                   _isShiny = val;
                                                   // Si se activa el modo shiny, reproducir sonido y mostrar animación
                                                   if (_isShiny) {
-                                                    // Reproduce el sonido de shiny
+                                                    // Reproduce el efecto de sonido shiny
                                                     _sfxPlayer.play(
                                                       AssetSource(
                                                         'sounds/shiny.mp3',
                                                       ),
                                                     );
 
-                                                    // Muestra el GIF de shiny
+                                                    // Muestra la animación visual (GIF)
                                                     _showShinyEffect = true;
 
-                                                    // Oculta el GIF después de 1.5 segundos (duración estimada de la animación)
+                                                    // Oculta la animación después de 1.5 segundos
                                                     Future.delayed(
                                                       const Duration(
                                                         milliseconds: 1500,
@@ -706,7 +709,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
                               ),
                             ),
                           ),
-                          // Animación de Shiny (Sparkles) superpuesta
+                          // Animación de Shiny (destellos) superpuesta
                           if (_showShinyEffect)
                             Positioned(
                               top: 0,

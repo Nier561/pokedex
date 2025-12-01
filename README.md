@@ -1,94 +1,130 @@
-# Pokédex Flutter
+# Pokédex Flutter - Proyecto Final
 
-App Flutter que consume PokéAPI GraphQL para listar, buscar y explorar Pokémon. Incluye búsqueda por nombre, filtros por tipo y generación, paginación infinita y una pantalla de detalle con estadísticas.
-
-**Stack**
-
-- Flutter + Material 3
-- `graphql_flutter`, `gql`, `gql_dedupe_link`
-- `build_runner` + `graphql_codegen` (código de queries)
-- `google_fonts`, `audioplayers`, `hive` (opcional)
+**Pontificia Universidad Católica Madre y Maestra**
+**Facultad de Ciencias e Ingeniería**
+**Escuela de Ingeniería en Computación y Telecomunicaciones**
+**Desarrollo de Aplicaciones Móviles**
 
 ---
 
-## Arquitectura
+## Descripción General
 
-- `lib/api.dart`: configura `GraphQLClient` con `HttpLink` al endpoint y `DedupeLink`.
-- `lib/main.dart`: inyecta el cliente con `GraphQLProvider` y define rutas.
-- `lib/screens/list_screen.dart`: grilla, búsqueda, filtros y paginación (`fetchMore`).
-- `lib/screens/detail_screen.dart`: detalle con stats, habilidades y evolución.
-- `lib/widgets/`: tarjetas, badges, transiciones (`ScaleFadePageRoute`).
-- `lib/graphql/`: queries `.graphql` y sus `.dart` generados.
+Este proyecto es una aplicación móvil multiplataforma (Android/iOS) desarrollada con **Flutter** que funciona como una Pokédex interactiva y moderna. Utiliza la **API GraphQL de PokeAPI** para obtener datos en tiempo real, implementa **Clean Architecture** para una base de código mantenible y escalable, y utiliza **Riverpod** para una gestión de estado robusta.
+
+La aplicación no solo permite explorar Pokémon, sino que incluye características avanzadas como persistencia local, modo offline, temas dinámicos, y un juego de trivia integrado.
 
 ---
 
-## Flujo de Datos
+## Características Principales
 
-- `GraphQLProvider` provee el cliente a toda la app.
-- Lista:
-  - Query `PokemonListV2(limit, offset, search)` con `FetchPolicy.cacheAndNetwork`.
-  - Paginación: al acercarse al final, `fetchMore` agrega más resultados.
-  - Búsqueda por texto: filtra localmente; desactiva paginación y loader.
-  - Filtros por tipo y generación: filtran localmente; si no hay texto, la paginación sigue activa para capturar más coincidencias.
-- Detalle:
-  - Prefetch con `FetchPolicy.cacheFirst`, luego navegación con `pushReplacement` para mantener un solo detalle en el stack.
+### 1. Interfaz de Usuario (UI/UX)
+-   **Diseño Moderno**: Implementación de Material Design 3 con temas dinámicos y soporte para **Modo Oscuro y Claro**.
+-   **Animaciones**: Transiciones Hero, animaciones de carga (esqueletos/placeholders), y microinteracciones en botones y tarjetas.
+-   **Búsqueda y Filtrado**: Barra de búsqueda con *debounce* para optimizar consultas. Filtros por Generación, Tipo y ordenamiento (ID, Nombre, Poder).
+-   **Detalle Completo**:
+    -   Estadísticas base con barras visuales.
+    -   Tipos con gradientes dinámicos.
+    -   Habilidades (incluyendo ocultas).
+    -   Cadena de evolución interactiva.
+    -   Movimientos categorizados (Nivel, MT, Tutor, Huevo).
+    -   Variantes (Shiny) con toggle animado.
+    -   Reproducción del "grito" (cry) del Pokémon.
 
----
+### 2. Arquitectura y Tecnología
+-   **Clean Architecture**: Separación estricta en capas:
+    -   `domain`: Entidades, Repositorios (interfaces) y Casos de Uso.
+    -   `data`: Modelos (DTOs), Fuentes de Datos (Remota/Local) e Implementación de Repositorios.
+    -   `presentation`: Widgets, Pantallas y Providers (State Management).
+-   **GraphQL**: Cliente optimizado con `graphql_flutter`.
+    -   Paginación infinita basada en `offset`.
+    -   Caché local para minimizar peticiones de red.
+-   **Gestión de Estado**: Uso de **Riverpod** para inyección de dependencias y manejo reactivo del estado.
 
-## GraphQL
+### 3. Persistencia y Modo Offline
+-   **Hive / SharedPreferences**: Almacenamiento local para:
+    -   Pokémon Favoritos (accesibles sin internet).
+    -   Configuración de usuario (Tema, Idioma).
+    -   Progreso del juego de Trivia.
+    -   Estado del Onboarding.
 
-**Endpoint**
+### 4. Gamificación (Trivia)
+-   Juego "¿Quién es este Pokémon?" integrado.
+-   Sistema de puntuación y racha de victorias.
+-   Ranking local de mejores puntuaciones.
+-   Logros desbloqueables visualmente.
 
-- `https://beta.pokeapi.co/graphql/v1beta`
-
-**Query de lista (resumen)**
-
-- Campos: `id`, `name`, `pokemon_v2_pokemontypes { pokemon_v2_type { name } }`
-- Variables:
-  - `limit`: tamaño de página
-  - `offset`: desplazamiento
-  - `search`: nombre parcial (`_ilike`), ejemplo: `%pika%`
-
-**Query de detalle (resumen)**
-
-- `pokemon_v2_pokemon_by_pk(id)` con stats, abilities y cadena de evolución.
-
-**Políticas**
-
-- Lista: `cacheAndNetwork` (respuesta rápida y refresco en segundo plano).
-- Detalle: `cacheFirst` (minimiza red si ya está cacheado).
-- `DedupeLink`: evita repetir requests cuando hay scroll o taps rápidos.
-
----
-
-## Búsqueda y Filtros
-
-- Búsqueda por nombre: filtra localmente (case-insensitive, parcial).
-- Filtro por tipo: uno de `normal|fire|water|grass|...|fairy`.
-- Filtro por generación (rango local por `id`):
-  - Gen 1 `1–151`, Gen 2 `152–251`, ..., Gen 9 `899–1010`.
-- Loader de fin de grilla: aparece solo si no hay texto y parece haber más páginas (`pokes.length % _pageSize == 0`).
+### 5. Extras
+-   **Onboarding**: Pantalla de introducción animada para nuevos usuarios.
+-   **Reset App**: Opción de depuración para restablecer todos los datos.
+-   **Internacionalización**: Soporte básico para Español e Inglés.
 
 ---
 
-## Navegación y UX
+## Estructura del Proyecto
 
-- Transición personalizada `scale+fade` al abrir detalle.
-- Swipe horizontal en detalle usa `pushReplacement`: el botón atrás siempre vuelve a la lista.
-- Errores de red: pantalla con `RefreshIndicator` para reintentar (`refetch`).
+```
+lib/
+├── core/                   # Utilidades, configuración de red, constantes
+├── data/                   # Capa de Datos
+│   ├── datasources/        # Fuentes remotas (GraphQL) y locales (Hive/Prefs)
+│   ├── models/             # DTOs (Data Transfer Objects) y mapeadores
+│   └── repositories/       # Implementación de los repositorios del dominio
+├── domain/                 # Capa de Dominio (Reglas de Negocio)
+│   ├── entities/           # Objetos de negocio puros
+│   └── repositories/       # Interfaces (contratos) de los repositorios
+├── presentation/           # Capa de Presentación (UI)
+│   ├── providers/          # StateNotifiers y Providers de Riverpod
+│   ├── screens/            # Pantallas de la aplicación
+│   └── widgets/            # Componentes reutilizables
+└── main.dart               # Punto de entrada e inyección de dependencias
+```
 
 ---
 
-## Decisiones de Diseño
+## Configuración y Ejecución
 
-- Filtros locales (tipo/generación) por simplicidad y rapidez.
-- Desactivar paginación durante búsqueda por texto para evitar ruido visual y llamadas innecesarias.
-- Prefetch del detalle con `cacheFirst` para apertura inmediata.
-- `DedupeLink` para robustez ante múltiples interacciones concurrentes.
+### Requisitos Previos
+-   Flutter SDK (Stable)
+-   Dart SDK
+
+### Pasos
+1.  **Clonar el repositorio**:
+    ```bash
+    git clone <url-del-repo>
+    cd pokedex
+    ```
+2.  **Instalar dependencias**:
+    ```bash
+    flutter pub get
+    ```
+3.  **Generar código (si es necesario)**:
+    Si se modifican los archivos `.graphql` o modelos de Hive:
+    ```bash
+    dart run build_runner build --delete-conflicting-outputs
+    ```
+4.  **Ejecutar la aplicación**:
+    ```bash
+    flutter run
+    ```
 
 ---
 
-## Código Generado (GraphQL)
+## Decisiones de Diseño y GraphQL
 
-- Queries en `lib/graphql/*.graphql` con `.dart` generados junto a cada archivo.
-- Si cambias la ubicación de queries, ajusta `build.yaml` o elimínalo y usa generación “in place”.
+### Uso de GraphQL
+Se optó por **GraphQL** sobre REST para evitar el *over-fetching* y *under-fetching* de datos.
+-   **Queries**: Definidas en `lib/core/network/queries/`. Solicitamos solo los campos necesarios (nombre, id, tipos, stats) para la lista, y detalles completos solo en la vista de detalle.
+-   **Cliente**: Configurado en `lib/core/network/api.dart` con políticas de caché `cacheFirst` para detalles (rapidez) y `cacheAndNetwork` para listas (actualización).
+
+### Optimización de Imágenes
+-   Uso de `cached_network_image` para guardar en caché las imágenes de los Pokémon y reducir el consumo de datos.
+-   Implementación de `precacheImage` antes de generar capturas de pantalla para compartir.
+
+### Accesibilidad
+-   Uso de etiquetas `Semantics` en tarjetas y botones para soporte de lectores de pantalla.
+-   Contraste de colores verificado en modos Claro y Oscuro.
+
+---
+
+## Autor
+Proyecto realizado para la asignatura de Desarrollo de Aplicaciones Móviles.

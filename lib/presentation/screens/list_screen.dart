@@ -10,6 +10,9 @@ import 'package:pokedex/presentation/widgets/type_gradients.dart';
 import 'package:pokedex/presentation/widgets/page_transitions.dart';
 import 'package:pokedex/presentation/widgets/animated_pokemon_card.dart';
 
+/// Pantalla principal de listado de Pokémon.
+/// Soporta filtrado por generación, tipo, nombre y favoritos.
+/// Implementa paginación infinita y búsqueda en tiempo real.
 class PokemonListScreen extends ConsumerStatefulWidget {
   final int? initialGeneration;
   final bool showFavorites;
@@ -73,8 +76,8 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
 
     _scroll.addListener(() {
       if (_scroll.position.pixels > _scroll.position.maxScrollExtent - 800) {
+        // Evitamos paginar si estamos filtrando (ya sea por búsqueda, filtros o favoritos)
         final filters = ref.read(filterProvider);
-        // Evitamos paginar si estamos filtrando (ya sea por search, filtros o favoritos)
         final isFiltering =
             filters.searchQuery.isNotEmpty ||
             filters.selectedTypes.isNotEmpty ||
@@ -110,7 +113,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
 
     final filtered = pokes.where((p) {
       // 1. Filtro Generación (Modo Acumulativo / National Dex)
-      // Si seleccionamos Gen 2, mostramos TODOS los Pokémon con ID <= 251.
+      // Si se selecciona Gen 2, se muestran todos los Pokémon con ID <= 251.
       if (effectiveGen != null) {
         final maxId = _genMaxIds[effectiveGen];
         if (maxId != null && p.id > maxId) return false;
@@ -172,7 +175,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
 
     String title = tr('app_title');
     if (_showOnlyFavorites) {
-      // Idealmente agregar 'favorites' al diccionario, fallback a inglés si no existe
+      // Fallback a inglés si la traducción no existe
       title = tr('favorites') == 'favorites' ? 'Favorites' : tr('favorites');
     } else if (widget.initialGeneration != null) {
       title = '${tr('generation')} ${widget.initialGeneration}';
@@ -335,7 +338,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                                       PokemonDetailScreen(
                                         id: p.id,
                                         cachedPokemon:
-                                            p, //Evita las pantallas de carga
+                                            p, // Evita las pantallas de carga
                                         listIds: processedIds,
                                         initialIndex: index,
                                         genContext:
@@ -531,7 +534,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                         children: [
                           const SizedBox(height: 24),
 
-                          // --- SORT SECTION ---
+                          // --- SECCIÓN DE ORDENAMIENTO ---
                           Text(
                             tr('sort_by'),
                             style: const TextStyle(
@@ -639,7 +642,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                           ),
                           const SizedBox(height: 32),
 
-                          // --- TYPES SECTION ---
+                          // --- SECCIÓN DE TIPOS ---
                           Text(
                             tr('types'),
                             style: const TextStyle(
@@ -709,7 +712,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                           ),
                           const SizedBox(height: 32),
 
-                          // --- GENERATION SECTION (SOLO SI NO ESTÁ EN CONTEXTO) ---
+                          // --- SECCIÓN DE GENERACIÓN (SOLO SI NO ESTÁ EN CONTEXTO) ---
                           if (widget.initialGeneration == null) ...[
                             Text(
                               tr('generation'),

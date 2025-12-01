@@ -15,8 +15,10 @@ import 'package:pokedex/data/datasources/trivia_local_data_source.dart';
 import 'package:pokedex/data/repositories/pokemon_repository_impl.dart';
 import 'package:pokedex/data/repositories/favorites_repository_impl.dart';
 import 'package:pokedex/data/repositories/trivia_repository_impl.dart';
+import 'package:pokedex/data/datasources/preferences_local_data_source.dart';
 // Presentation
 import 'package:pokedex/presentation/screens/main_screen.dart';
+import 'package:pokedex/presentation/screens/onboarding_screen.dart';
 import 'package:pokedex/presentation/providers/trivia_provider.dart';
 import 'package:pokedex/presentation/providers/theme_provider.dart';
 
@@ -39,7 +41,7 @@ void main() async {
 
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
-  // Inicializar Hive
+  // Inicializar Hive para almacenamiento local
   await Hive.initFlutter();
 
   // Inicializar Pokemon Datasource
@@ -59,6 +61,10 @@ void main() async {
 
   final triviaRepository = TriviaRepositoryImpl(triviaDataSource);
 
+  // Inicializar Preferencias de Usuario
+  final prefs = PreferencesLocalDataSource();
+  final showOnboarding = !(await prefs.getOnboardingSeen());
+
   // ProviderScope es obligatorio para que Riverpod funcione
   runApp(
     ProviderScope(
@@ -66,13 +72,17 @@ void main() async {
         triviaRepositoryProvider.overrideWithValue(triviaRepository),
         pokemonRepositoryProvider.overrideWithValue(pokemonRepository),
       ],
-      child: const PokeDexApp(),
+      child: PokeDexApp(showOnboarding: showOnboarding),
     ),
   );
 }
 
+/// Widget principal de la aplicación.
+/// Configura el tema, el enrutamiento inicial y los providers globales.
 class PokeDexApp extends StatelessWidget {
-  const PokeDexApp({super.key});
+  final bool showOnboarding;
+
+  const PokeDexApp({super.key, required this.showOnboarding});
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +110,7 @@ class PokeDexApp extends StatelessWidget {
             scaffoldBackgroundColor: const Color(0xFF121212),
             brightness: Brightness.dark,
           ),
-          home: const MainScreen(),
+          home: showOnboarding ? const OnboardingScreen() : const MainScreen(),
         );
       },
     );

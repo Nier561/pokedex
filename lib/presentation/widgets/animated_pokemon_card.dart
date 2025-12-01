@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pokedex/presentation/widgets/type_badge.dart';
 
+/// Tarjeta animada que muestra la información básica de un Pokémon.
+/// Incluye animaciones de entrada (fade, scale, slide) y efectos visuales.
 class AnimatedPokemonCard extends StatefulWidget {
   final String name;
   final List<String> types;
@@ -44,7 +46,7 @@ class _AnimatedPokemonCardState extends State<AnimatedPokemonCard>
       vsync: this,
     );
 
-    // Animación de fundido
+    // Animación de opacidad
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
@@ -60,7 +62,7 @@ class _AnimatedPokemonCardState extends State<AnimatedPokemonCard>
       ),
     );
 
-    // Animación de deslizamiento desde abajo
+    // Animación de deslizamiento vertical
     _slideAnimation =
         Tween<Offset>(begin: const Offset(0.0, 0.3), end: Offset.zero).animate(
           CurvedAnimation(
@@ -69,7 +71,7 @@ class _AnimatedPokemonCardState extends State<AnimatedPokemonCard>
           ),
         );
 
-    // Iniciar la animación con un retraso basado en el índice
+    // Inicia la animación con un retraso escalonado basado en el índice
     final delayMs = (widget.index.clamp(0, 6)) * 70;
     Future.delayed(Duration(milliseconds: delayMs), () {
       if (mounted) {
@@ -86,37 +88,49 @@ class _AnimatedPokemonCardState extends State<AnimatedPokemonCard>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return FadeTransition(
-          opacity: _fadeAnimation,
-          child: SlideTransition(
-            position: _slideAnimation,
-            child: ScaleTransition(
-              scale: _scaleAnimation,
-              child: GestureDetector(
-                onTap: widget.onTap,
-                child: _PokemonCardContent(
-                  // Usamos el contenido corregido aquí
-                  name: widget.name,
-                  types: widget.types,
-                  imageUrl: widget.imageUrl,
-                  fallbackImageUrl: widget.fallbackImageUrl,
-                  background: widget.background,
-                  isLarge: widget.isLarge,
+    return Stack(
+      children: [
+        // Borde de marcador de posición (Placeholder)
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.white.withOpacity(0.2), width: 2),
+          ),
+        ),
+        // Contenido animado
+        AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            return FadeTransition(
+              opacity: _fadeAnimation,
+              child: SlideTransition(
+                position: _slideAnimation,
+                child: ScaleTransition(
+                  scale: _scaleAnimation,
+                  child: GestureDetector(
+                    onTap: widget.onTap,
+                    child: _PokemonCardContent(
+                      // Contenido interno de la tarjeta
+                      name: widget.name,
+                      types: widget.types,
+                      imageUrl: widget.imageUrl,
+                      fallbackImageUrl: widget.fallbackImageUrl,
+                      background: widget.background,
+                      isLarge: widget.isLarge,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-        );
-      },
+            );
+          },
+        ),
+      ],
     );
   }
 }
 
-/// Contenido interno de la tarjeta con el diseño corregido.
-/// Reemplaza al widget `PokemonCard` original para integrar la corrección de alineación.
+/// Widget interno que renderiza el diseño visual de la tarjeta.
 class _PokemonCardContent extends StatelessWidget {
   final String name;
   final List<String> types;
@@ -150,7 +164,7 @@ class _PokemonCardContent extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          // Decoración de fondo (Pokebola translúcida)
+          // Decoración de fondo (Pokébola translúcida)
           Positioned(
             bottom: -10,
             right: -10,
@@ -200,7 +214,7 @@ class _PokemonCardContent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 1. Nombre
+                // Nombre del Pokémon
                 Text(
                   name,
                   style: TextStyle(
@@ -221,7 +235,7 @@ class _PokemonCardContent extends StatelessWidget {
 
                 SizedBox(height: isLarge ? 12 : 8),
 
-                // 2. Tipos e Imagen
+                // Tipos e Imagen
                 if (isLarge) ...[
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,7 +257,7 @@ class _PokemonCardContent extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // CORRECCIÓN: Columna de Tipos (Izquierda)
+                        // Columna de Tipos
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: types
@@ -262,10 +276,10 @@ class _PokemonCardContent extends StatelessWidget {
                               .toList(),
                         ),
 
-                        // Espaciador
+                        // Espaciador flexible
                         const Spacer(),
 
-                        // Imagen
+                        // Imagen del Pokémon
                         Align(
                           alignment: Alignment.bottomRight,
                           child: Hero(
@@ -335,7 +349,7 @@ class _InteractivePokemonCardState extends State<InteractivePokemonCard>
     _scaleAnimation =
         Tween<double>(
           begin: 1.0,
-          end: 0.95, // Efecto de presión (shrink) al tocar
+          end: 0.95, // Efecto de reducción al presionar
         ).animate(
           CurvedAnimation(parent: _hoverController, curve: Curves.easeInOut),
         );
