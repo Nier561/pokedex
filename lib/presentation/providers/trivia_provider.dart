@@ -1,3 +1,17 @@
+/// Archivo: trivia_provider.dart
+///
+/// Descripción:
+/// Archivo de definición de providers de lectura para el módulo de Trivia.
+/// Facilita el acceso a datos estadísticos y de ranking desde la capa de presentación.
+///
+/// Funcionalidades Principales:
+/// - **Ranking**: `topScoresProvider` expone las mejores puntuaciones.
+/// - **Mejor Puntaje**: `bestScoreProvider` expone el récord personal.
+/// - **Logros**: `achievementsProvider` lista los logros y su estado de desbloqueo.
+/// - **Estadísticas**: `statisticsProvider` provee métricas agregadas del jugador.
+///
+/// Dependencias:
+/// - `triviaRepositoryProvider`: Fuente de verdad para los datos.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/domain/entities/achievement.dart';
 import 'package:pokedex/domain/entities/trivia_score.dart';

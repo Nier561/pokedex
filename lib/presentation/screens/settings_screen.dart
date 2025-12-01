@@ -1,3 +1,25 @@
+/// Archivo: settings_screen.dart
+///
+/// Descripción:
+/// Pantalla de configuración y preferencias de la aplicación.
+/// Permite al usuario personalizar su experiencia y gestionar datos de la aplicación.
+///
+/// Funcionalidades Principales:
+/// - **Cambio de Idioma**: Selector para alternar entre Inglés y Español en tiempo real.
+/// - **Tema Oscuro/Claro**: Interruptor para cambiar el modo de tema de la aplicación.
+/// - **Información de la App**: Muestra la versión actual y créditos.
+/// - **Gestión de Datos (Debug)**: Opción para restablecer todos los datos locales (favoritos,
+///   progreso, onboarding), útil para pruebas o reinicio total.
+///
+/// Componentes Internos:
+/// - `_LanguageSelector`: Widget personalizado para la selección de idioma con banderas.
+/// - `_SectionHeader`: Encabezados de sección reutilizables.
+/// - `_InfoCard`: Tarjetas informativas con estilo consistente.
+///
+/// Dependencias:
+/// - `languageProvider`: Para leer y actualizar el idioma global.
+/// - `themeProvider`: Para leer y actualizar el tema global.
+/// - `PreferencesLocalDataSource`: Para borrar los datos locales.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/presentation/providers/language_provider.dart';

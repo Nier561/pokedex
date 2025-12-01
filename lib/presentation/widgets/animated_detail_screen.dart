@@ -1,3 +1,22 @@
+/// Archivo: animated_detail_screen.dart
+///
+/// Descripción:
+/// Conjunto de widgets especializados para orquestar las animaciones de entrada en la
+/// pantalla de detalles del Pokémon.
+///
+/// Componentes:
+/// - `AnimatedDetailScreen`: Contenedor principal que maneja la animación de entrada general
+///   (fade y scale) de toda la página.
+/// - `StaggeredAnimationItem`: Wrapper para elementos individuales (como stats, evoluciones)
+///   que permite animarlos secuencialmente con un retraso configurable. Soporta varios tipos
+///   de animación (slide, scale).
+/// - `AnimatedPokemonImage`: Animación específica para la imagen principal del Pokémon,
+///   incluyendo rotación y rebote elástico.
+/// - `InteractiveButton`: Wrapper para botones que añade un efecto de escala al presionarlos.
+///
+/// Uso:
+/// Estos widgets se componen en `DetailScreen` para crear una experiencia de usuario fluida
+/// y dinámica, donde los elementos no aparecen de golpe, sino que entran con elegancia.
 import 'package:flutter/material.dart';
 
 /// Colección de widgets que aportan animaciones a la pantalla de detalles.
@@ -25,27 +44,25 @@ class _AnimatedDetailScreenState extends State<AnimatedDetailScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _mainController = AnimationController(
       duration: widget.duration,
       vsync: this,
     );
 
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _mainController,
-      curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _mainController,
+        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
+      ),
+    );
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.9,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _mainController,
-      curve: const Interval(0.0, 0.8, curve: Curves.easeOutBack),
-    ));
+    _scaleAnimation = Tween<double>(begin: 0.9, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _mainController,
+        curve: const Interval(0.0, 0.8, curve: Curves.easeOutBack),
+      ),
+    );
 
     // Iniciar la animación
     _mainController.forward();
@@ -64,10 +81,7 @@ class _AnimatedDetailScreenState extends State<AnimatedDetailScreen>
       builder: (context, child) {
         return FadeTransition(
           opacity: _fadeAnimation,
-          child: ScaleTransition(
-            scale: _scaleAnimation,
-            child: widget.child,
-          ),
+          child: ScaleTransition(scale: _scaleAnimation, child: widget.child),
         );
       },
     );
@@ -105,35 +119,23 @@ class _StaggeredAnimationItemState extends State<StaggeredAnimationItem>
   @override
   void initState() {
     super.initState();
-    
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+
+    _controller = AnimationController(duration: widget.duration, vsync: this);
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _slideAnimation = Tween<Offset>(
       begin: _getInitialOffset(),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
     _scaleAnimation = Tween<double>(
       begin: 0.8,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutBack,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
 
     // Iniciar la animación con retraso basado en el índice
     Future.delayed(
@@ -187,10 +189,7 @@ class _StaggeredAnimationItemState extends State<StaggeredAnimationItem>
           );
         }
 
-        return FadeTransition(
-          opacity: _fadeAnimation,
-          child: animatedChild,
-        );
+        return FadeTransition(opacity: _fadeAnimation, child: animatedChild);
       },
     );
   }
@@ -221,35 +220,29 @@ class _AnimatedPokemonImageState extends State<AnimatedPokemonImage>
   @override
   void initState() {
     super.initState();
-    
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
+
+    _controller = AnimationController(duration: widget.duration, vsync: this);
+
+    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.8, curve: Curves.elasticOut),
+      ),
     );
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.0, 0.8, curve: Curves.elasticOut),
-    ));
+    _rotationAnimation = Tween<double>(begin: -0.1, end: 0.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.2, 1.0, curve: Curves.easeOut),
+      ),
+    );
 
-    _rotationAnimation = Tween<double>(
-      begin: -0.1,
-      end: 0.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.2, 1.0, curve: Curves.easeOut),
-    ));
-
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
+      ),
+    );
 
     // Iniciar la animación con un pequeño retraso
     Future.delayed(const Duration(milliseconds: 200), () {
@@ -274,10 +267,7 @@ class _AnimatedPokemonImageState extends State<AnimatedPokemonImage>
           opacity: _fadeAnimation,
           child: Transform.rotate(
             angle: _rotationAnimation.value,
-            child: ScaleTransition(
-              scale: _scaleAnimation,
-              child: widget.child,
-            ),
+            child: ScaleTransition(scale: _scaleAnimation, child: widget.child),
           ),
         );
       },
@@ -310,19 +300,13 @@ class _InteractiveButtonState extends State<InteractiveButton>
   @override
   void initState() {
     super.initState();
-    
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+
+    _controller = AnimationController(duration: widget.duration, vsync: this);
 
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 0.95,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -353,10 +337,4 @@ class _InteractiveButtonState extends State<InteractiveButton>
   }
 }
 
-enum AnimationType {
-  slideUp,
-  slideDown,
-  slideLeft,
-  slideRight,
-  scale,
-}
+enum AnimationType { slideUp, slideDown, slideLeft, slideRight, scale }

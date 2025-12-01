@@ -1,3 +1,18 @@
+/// Archivo: trivia_score_model.dart
+///
+/// Descripción:
+/// Modelo detallado para una entrada en la Tabla de Posiciones (Leaderboard).
+/// Contiene métricas granulares sobre el desempeño en una partida específica.
+///
+/// Funcionalidades Principales:
+/// - **Métricas Detalladas**: Almacena precisión (%), tiempo de completado, logros desbloqueados
+///   en esa sesión, además del puntaje estándar.
+/// - **Persistencia**: Objeto Hive optimizado para consultas de ranking.
+/// - **Mapeo Bidireccional**: Métodos `fromEntity` y `toEntity` para interactuar con la capa de dominio.
+///
+/// Dependencias:
+/// - `hive`: Base de datos local.
+/// - `TriviaScore`: Entidad de dominio.
 import 'package:hive/hive.dart';
 import 'package:pokedex/domain/entities/trivia_score.dart';
 

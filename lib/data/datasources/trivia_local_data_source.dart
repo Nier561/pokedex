@@ -1,3 +1,20 @@
+/// Archivo: trivia_local_data_source.dart
+///
+/// Descripción:
+/// Sistema de persistencia completo para el módulo de Trivia.
+/// Gestiona todo el historial de partidas, puntuaciones y logros del usuario.
+///
+/// Funcionalidades Principales:
+/// - **Historial de Puntuaciones**: Guarda cada partida jugada (`TriviaScoreModel`) y permite
+///   consultar las mejores puntuaciones (`getTopScores`).
+/// - **Logros**: Rastrea el estado de desbloqueo de logros (`AchievementModel`).
+/// - **Estadísticas**: Calcula métricas agregadas como promedio de puntos y total de respuestas
+///   correctas (`getStatistics`).
+/// - **Inicialización**: Registra los adaptadores de Hive necesarios para guardar objetos complejos.
+///
+/// Dependencias:
+/// - `hive_flutter`: Base de datos.
+/// - Modelos de Trivia (`TriviaScoreModel`, `TriviaGameModel`, `AchievementModel`).
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pokedex/data/models/achievement_model.dart';
 import 'package:pokedex/data/models/trivia_game_model.dart';
@@ -17,9 +34,12 @@ class TriviaLocalDataSource {
   /// y abre las cajas para su uso.
   Future<void> init() async {
     // Registrar adaptadores si no están registrados para evitar errores en hot reload
-    if (!Hive.isAdapterRegistered(10)) Hive.registerAdapter(TriviaScoreModelAdapter());
-    if (!Hive.isAdapterRegistered(11)) Hive.registerAdapter(AchievementModelAdapter());
-    if (!Hive.isAdapterRegistered(12)) Hive.registerAdapter(TriviaGameModelAdapter());
+    if (!Hive.isAdapterRegistered(10))
+      Hive.registerAdapter(TriviaScoreModelAdapter());
+    if (!Hive.isAdapterRegistered(11))
+      Hive.registerAdapter(AchievementModelAdapter());
+    if (!Hive.isAdapterRegistered(12))
+      Hive.registerAdapter(TriviaGameModelAdapter());
 
     // Abrir las cajas de Hive. Esto carga los datos en memoria para un acceso rápido.
     await Hive.openBox<TriviaScoreModel>(scoresBoxName);
@@ -28,9 +48,11 @@ class TriviaLocalDataSource {
   }
 
   // Getters para acceder a las cajas abiertas de forma tipada
-  Box<TriviaScoreModel> get scoresBox => Hive.box<TriviaScoreModel>(scoresBoxName);
+  Box<TriviaScoreModel> get scoresBox =>
+      Hive.box<TriviaScoreModel>(scoresBoxName);
   Box<TriviaGameModel> get gamesBox => Hive.box<TriviaGameModel>(gamesBoxName);
-  Box<AchievementModel> get achievementsBox => Hive.box<AchievementModel>(achievementsBoxName);
+  Box<AchievementModel> get achievementsBox =>
+      Hive.box<AchievementModel>(achievementsBoxName);
 
   /// Guarda una nueva puntuación en la base de datos.
   /// Utiliza el ID de la puntuación como clave.
@@ -77,15 +99,14 @@ class TriviaLocalDataSource {
   Map<String, dynamic> getStatistics() {
     final games = gamesBox.values.toList();
     if (games.isEmpty) {
-      return {
-        'total_games': 0,
-        'total_correct': 0,
-        'average_score': 0.0,
-      };
+      return {'total_games': 0, 'total_correct': 0, 'average_score': 0.0};
     }
 
     // Calcular totales usando fold para iterar eficientemente
-    final totalCorrect = games.fold(0, (sum, game) => sum + game.correctAnswers);
+    final totalCorrect = games.fold(
+      0,
+      (sum, game) => sum + game.correctAnswers,
+    );
     final totalScore = games.fold(0, (sum, game) => sum + game.totalScore);
 
     return {

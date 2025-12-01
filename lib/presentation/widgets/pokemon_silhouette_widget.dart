@@ -1,3 +1,17 @@
+/// Archivo: pokemon_silhouette_widget.dart
+///
+/// Descripción:
+/// Widget que gestiona la visualización del Pokémon en el juego de Trivia.
+///
+/// Funcionalidades Principales:
+/// - **Modo Silueta**: Aplica un filtro de color negro (`ColorFiltered`) para ocultar la identidad
+///   del Pokémon mientras el usuario adivina.
+/// - **Modo Revelado**: Muestra la imagen original a todo color una vez que se responde.
+/// - **Transición Suave**: Utiliza `AnimatedSwitcher` para que el cambio entre silueta y
+///   imagen revelada no sea brusco.
+///
+/// Uso:
+/// Componente central de `TriviaGameScreen`.
 import 'package:flutter/material.dart';
 
 /// Widget que muestra la imagen de un Pokémon.
@@ -31,7 +45,8 @@ class PokemonSilhouetteWidget extends StatelessWidget {
                 width: size,
                 height: size,
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.error),
               )
             : ColorFiltered(
                 key: const ValueKey('silhouette'),
@@ -44,7 +59,8 @@ class PokemonSilhouetteWidget extends StatelessWidget {
                   width: size,
                   height: size,
                   fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.error),
                 ),
               ),
       ),

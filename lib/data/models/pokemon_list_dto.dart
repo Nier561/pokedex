@@ -1,3 +1,17 @@
+/// Archivo: pokemon_list_dto.dart
+///
+/// Descripción:
+/// DTO ligero optimizado para listas y rejillas de Pokémon.
+/// Contiene solo la información esencial para renderizar una tarjeta de resumen.
+///
+/// Funcionalidades Principales:
+/// - **Extracción de Datos**: Obtiene ID, nombre, tipos y generación de la respuesta GraphQL.
+/// - **Cálculo de Stats**: Suma las estadísticas base para obtener el `baseStatTotal` (útil para ordenar).
+/// - **Generación de URL**: Construye la URL de la imagen oficial (artwork) basada en el ID.
+/// - **Conversión**: Métodos para transformar hacia/desde Map (JSON) y hacia la entidad `Pokemon`.
+///
+/// Dependencias:
+/// - `Pokemon`: Entidad de dominio.
 import 'package:pokedex/domain/entities/pokemon.dart';
 
 /// DTO para el listado de Pokémon.
@@ -36,7 +50,8 @@ class PokemonListDto {
       id: map['id'] as int,
       name: map['name'] as String,
       types: types,
-      imageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${map['id']}.png',
+      imageUrl:
+          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${map['id']}.png',
       generationId: genId,
       baseStatTotal: total,
     );

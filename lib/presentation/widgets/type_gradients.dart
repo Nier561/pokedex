@@ -1,3 +1,18 @@
+/// Archivo: type_gradients.dart
+///
+/// Descripción:
+/// Archivo de recursos de diseño que define la paleta de colores oficial de la aplicación.
+/// Centraliza los gradientes y colores sólidos asociados a cada tipo de Pokémon.
+///
+/// Contenido:
+/// - `typeGradients`: Mapa que asocia cada tipo (string) con un `LinearGradient` específico.
+///   Diseñados para ser vibrantes y modernos.
+/// - `solidBadgeColorForType`: Función utilitaria que extrae un color sólido legible a partir
+///   del gradiente, ajustando su luminosidad para asegurar contraste en los badges.
+///
+/// Uso:
+/// Importado por `PokemonCard`, `TypeBadge`, `DetailScreen` y cualquier widget que necesite
+/// colorearse según el tipo del Pokémon.
 import 'package:flutter/material.dart';
 
 /// Utilidades de color que asignan gradientes y tonos sólidos a cada tipo.

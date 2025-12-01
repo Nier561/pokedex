@@ -1,3 +1,18 @@
+/// Archivo: trivia_game_model.dart
+///
+/// Descripción:
+/// Modelo de persistencia para el resumen de una partida de Trivia finalizada.
+/// Se utiliza para el historial de juegos y análisis estadístico.
+///
+/// Funcionalidades Principales:
+/// - **Registro de Partida**: Almacena metadatos clave como fecha de inicio/fin, puntuación
+///   total, respuestas correctas y nombre del jugador.
+/// - **Persistencia**: Anotado con `@HiveType` para ser guardado directamente en Hive.
+/// - **Conversión**: Factory `fromEntity` para crear el modelo desde la lógica del juego.
+///
+/// Dependencias:
+/// - `hive`: Base de datos local.
+/// - `TriviaGame`: Entidad de dominio.
 import 'package:hive/hive.dart';
 import 'package:pokedex/domain/entities/trivia_game.dart';
 

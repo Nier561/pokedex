@@ -1,3 +1,21 @@
+/// Archivo: stat_bar.dart
+///
+/// Descripción:
+/// Widget para visualizar las estadísticas base de un Pokémon (HP, Ataque, Defensa, etc.)
+/// mediante barras de progreso animadas.
+///
+/// Funcionalidades Principales:
+/// - **Normalización de Etiquetas**: Convierte nombres técnicos (ej: "special-attack") en
+///   abreviaturas estándar (ej: "SpA").
+/// - **Código de Colores**: Asigna colores semánticos según el valor de la estadística:
+///   - Rojo: Bajo (<60)
+///   - Amarillo: Medio (60-89)
+///   - Verde: Alto (90-149)
+///   - Cian: Excelente (150+)
+/// - **Animación**: La barra crece desde 0 hasta su valor final al cargar la pantalla.
+///
+/// Uso:
+/// Se utiliza en la pestaña "Base Stats" de la pantalla de detalles.
 import 'package:flutter/material.dart';
 
 class StatBar extends StatelessWidget {

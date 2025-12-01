@@ -1,3 +1,29 @@
+/// Archivo: list_screen.dart
+///
+/// Descripción:
+/// Pantalla principal de listado de la Pokédex. Es el núcleo de la navegación, permitiendo
+/// al usuario explorar todos los Pokémon disponibles, filtrarlos y buscarlos.
+///
+/// Funcionalidades Principales:
+/// - **Listado Infinito**: Implementa un `GridView` con carga perezosa (lazy loading) para
+///   manejar eficientemente grandes listas de Pokémon.
+/// - **Filtrado Avanzado**:
+///   - Por Generación (Kanto, Johto, etc.).
+///   - Por Tipo (Fuego, Agua, etc.).
+///   - Por Favoritos.
+/// - **Búsqueda en Tiempo Real**: Filtra por nombre o ID mientras el usuario escribe.
+/// - **Ordenamiento**: Permite ordenar la lista por ID, Nombre o Poder (Base Stat Total).
+/// - **Optimización de Rendimiento**: Utiliza `cacheExtent` y gestión inteligente de estado
+///   para asegurar un desplazamiento suave (60fps).
+///
+/// Gestión de Estado:
+/// - `pokemonListProvider`: Gestiona la lista paginada y la carga de datos.
+/// - `filterProvider`: Gestiona los criterios de filtrado y ordenamiento activos.
+/// - `favoritesProvider`: Sincroniza el estado de los iconos de "me gusta" en cada tarjeta.
+///
+/// Componentes:
+/// - `InteractivePokemonCard`: Tarjeta individual de Pokémon.
+/// - `FilterBottomSheet`: Panel modal para configuración de filtros.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/domain/entities/pokemon.dart';
@@ -182,7 +208,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
 
     final listState = ref.watch(pokemonListProvider);
     final filters = ref.watch(filterProvider);
-    final favorites = ref.watch(favoritesProvider);
+    final favorites = ref.watch(favoritesProvider.select((s) => s.ids));
 
     // Determinamos si hay filtros activos para cambiar la fuente de datos
     final isFiltering =
@@ -311,6 +337,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                         : GridView.builder(
                             controller: _scroll,
                             padding: const EdgeInsets.all(12),
+                            cacheExtent: 4000,
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,

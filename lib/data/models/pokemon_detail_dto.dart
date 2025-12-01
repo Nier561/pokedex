@@ -1,3 +1,21 @@
+/// Archivo: pokemon_detail_dto.dart
+///
+/// Descripción:
+/// Objeto de Transferencia de Datos (DTO) masivo que mapea la respuesta compleja de la API
+/// (GraphQL) a una estructura intermedia manejable antes de convertirla en entidades de dominio.
+///
+/// Funcionalidades Principales:
+/// - **Mapeo de Datos**: Extrae y transforma datos anidados de la PokeAPI (stats, tipos, habilidades,
+///   movimientos, evoluciones, ubicaciones, formas, etc.).
+/// - **Lógica de Negocio de Datos**:
+///   - Filtra movimientos por generación/versión.
+///   - Calcula la cadena evolutiva (`_processEvolutions`) determinando el método de evolución más probable.
+///   - Parsea el género y las descripciones (flavor text).
+/// - **Serialización**: Implementa `toMap` y `fromLocalMap` para guardar y recuperar este
+///   objeto complejo en la base de datos local (Hive).
+///
+/// Dependencias:
+/// - `PokemonDetail`: Entidad de dominio objetivo.
 import 'package:pokedex/domain/entities/pokemon_detail.dart';
 
 /// DTO para transformar la respuesta de la API en la entidad de detalle del Pokémon.

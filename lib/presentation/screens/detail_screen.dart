@@ -1,3 +1,37 @@
+/// Archivo: detail_screen.dart
+///
+/// Descripción:
+/// Pantalla principal de detalle para un Pokémon específico. Esta es una de las pantallas
+/// más complejas y ricas en funcionalidad de la aplicación. Muestra información exhaustiva
+/// sobre el Pokémon seleccionado, incluyendo sus estadísticas base, tipos, habilidades,
+/// movimientos, evoluciones y formas alternativas.
+///
+/// Funcionalidades Principales:
+/// - **Visualización de Datos**: Muestra nombre, ID, tipos, estadísticas (con barras animadas),
+///   habilidades, peso, altura y descripciones de la Pokédex.
+/// - **Sistema de Pestañas**: Organiza la información en secciones: Acerca de, Estadísticas,
+///   Evoluciones, Movimientos, Ubicaciones, Megas y Formas.
+/// - **Interactividad**:
+///   - Reproducción del grito (cry) del Pokémon.
+///   - Marcado como favorito con animación de corazones.
+///   - Visualización de versiones Shiny con interruptor y efectos visuales.
+///   - Navegación entre Pokémon anterior y siguiente mediante gestos de deslizamiento (swipe).
+/// - **Generación de Tarjeta**: Permite crear y previsualizar una "tarjeta de intercambio"
+///   con los datos del Pokémon para compartirla.
+/// - **Gestión de Estado**: Utiliza Riverpod para cargar los detalles del Pokémon de forma asíncrona
+///   y gestionar el estado de favoritos y configuración.
+///
+/// Componentes Clave:
+/// - `AnimatedDetailScreen`: Widget base para animaciones de entrada.
+/// - `FloatingHeartsOverlay`: Efecto visual al dar "me gusta".
+/// - `StatBar`: Visualización de estadísticas.
+/// - `TypeBadge` y `TypeGradients`: Estilizado dinámico basado en el tipo elemental.
+///
+/// Dependencias:
+/// - `flutter_riverpod`: Gestión de estado.
+/// - `audioplayers`: Reproducción de efectos de sonido.
+/// - `screenshot`: Captura de widgets para la generación de tarjetas.
+/// - `cached_network_image`: Carga eficiente de imágenes.
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -367,7 +401,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
     String tr(String key) => S(locale).get(key);
 
     final isFav = ref.watch(
-      favoritesProvider.select((s) => s.contains(widget.id)),
+      favoritesProvider.select((s) => s.ids.contains(widget.id)),
     );
 
     final detailAsync = ref.watch(
@@ -697,7 +731,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
                       ),
                     ),
                     SizedBox(
-                      height: 220,
+                      height: MediaQuery.of(context).size.height * 0.30,
                       child: Stack(
                         alignment: Alignment.bottomCenter,
                         children: [
@@ -710,12 +744,17 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
                                 child: CachedNetworkImage(
                                   key: ValueKey(_isShiny),
                                   imageUrl: _img(id),
-                                  height: 200,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.27,
                                   fit: BoxFit.contain,
-                                  placeholder: (context, url) => const SizedBox(
-                                    height: 200,
-                                    width: 200,
-                                    child: Center(
+                                  placeholder: (context, url) => SizedBox(
+                                    height:
+                                        MediaQuery.of(context).size.height *
+                                        0.27,
+                                    width:
+                                        MediaQuery.of(context).size.height *
+                                        0.27,
+                                    child: const Center(
                                       child: CircularProgressIndicator(
                                         strokeWidth: 2,
                                       ),

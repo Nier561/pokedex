@@ -1,3 +1,21 @@
+/// Archivo: favorites_local_data_source.dart
+///
+/// Descripción:
+/// Fuente de datos local encargada de la persistencia de los Pokémon favoritos.
+/// Utiliza Hive (base de datos NoSQL ligera) para almacenar tanto la lista de favoritos
+/// como los detalles completos de cada Pokémon, permitiendo el acceso offline.
+///
+/// Funcionalidades Principales:
+/// - **Persistencia de Favoritos**: Guarda y recupera la lista de Pokémon marcados por el usuario.
+/// - **Caché de Detalles**: Almacena el objeto `PokemonDetailDto` completo para que la pantalla
+///   de detalles funcione sin conexión para los favoritos.
+/// - **Sincronización**: Mantiene dos cajas de Hive sincronizadas: una para la lista ligera
+///   (`_box`) y otra para los detalles pesados (`_detailsBox`).
+///
+/// Dependencias:
+/// - `hive_flutter`: Motor de base de datos local.
+/// - `Pokemon`: Entidad de dominio.
+/// - `PokemonDetailDto`: Modelo de datos para detalles.
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pokedex/domain/entities/pokemon.dart';
 import 'package:pokedex/data/models/pokemon_detail_dto.dart';

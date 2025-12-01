@@ -1,5 +1,16 @@
-/// Entidad de Dominio: Representa una puntuación guardada en el ranking.
-/// Es un resumen inmutable de una partida finalizada.
+/// Archivo: trivia_score.dart
+///
+/// Descripción:
+/// Entidad inmutable que representa un registro histórico de puntuación.
+/// Es el resultado final de una partida (`TriviaGame`) una vez concluida.
+///
+/// Propósito:
+/// - Servir como modelo de lectura para la pantalla de Ranking (`TriviaRankingScreen`).
+/// - Desacoplar la lógica de juego activo (`TriviaGame`) de los datos históricos estáticos.
+///
+/// Contenido:
+/// - Resumen de métricas: Puntos, aciertos, tiempo, precisión, fecha.
+/// - Logros obtenidos en esa sesión específica.
 class TriviaScore {
   /// Identificador único del registro.
   final String id;

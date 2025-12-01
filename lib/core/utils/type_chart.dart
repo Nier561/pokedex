@@ -1,25 +1,167 @@
+/// Archivo: type_chart.dart
+///
+/// Descripción:
+/// Utilidad lógica que contiene la tabla de tipos de Pokémon y algoritmos para calcular
+/// la eficacia de los ataques. Es fundamental para mostrar las debilidades y resistencias
+/// en la pantalla de detalles.
+///
+/// Funcionalidades Principales:
+/// - **Tabla de Tipos**: Matriz estática (`_chart`) que define los multiplicadores de daño
+///   (x0.5, x2.0, x0.0) entre tipos atacantes y defensores.
+/// - **Cálculo de Debilidades**: Método `calculateWeaknesses` que determina cuánto daño recibe
+///   un Pokémon basado en sus tipos (puede tener 1 o 2 tipos).
+///   - Maneja combinaciones complejas (ej: Agua/Volador vs Eléctrico = x4.0).
+///   - Filtra resultados neutros (x1.0) para mostrar solo lo relevante.
+///
+/// Uso:
+/// Se utiliza principalmente en `DetailScreen` para renderizar los badges de debilidades.
 /// Utilidad estática para calcular la eficacia de tipos defensivos.
 /// Calcula el daño recibido multiplicando los factores de ambos tipos del Pokémon.
 class TypeChart {
   static const Map<String, Map<String, double>> _chart = {
     'normal': {'rock': 0.5, 'ghost': 0.0, 'steel': 0.5},
-    'fire': {'fire': 0.5, 'water': 0.5, 'grass': 2.0, 'ice': 2.0, 'bug': 2.0, 'rock': 0.5, 'dragon': 0.5, 'steel': 2.0},
-    'water': {'fire': 2.0, 'water': 0.5, 'grass': 0.5, 'ground': 2.0, 'rock': 2.0, 'dragon': 0.5},
-    'grass': {'fire': 0.5, 'water': 2.0, 'grass': 0.5, 'poison': 0.5, 'ground': 2.0, 'flying': 0.5, 'bug': 0.5, 'rock': 2.0, 'dragon': 0.5, 'steel': 0.5},
-    'electric': {'water': 2.0, 'grass': 0.5, 'electric': 0.5, 'ground': 0.0, 'flying': 2.0, 'dragon': 0.5},
-    'ice': {'fire': 0.5, 'water': 0.5, 'grass': 2.0, 'ice': 0.5, 'ground': 2.0, 'flying': 2.0, 'dragon': 2.0, 'steel': 0.5},
-    'fighting': {'normal': 2.0, 'ice': 2.0, 'poison': 0.5, 'flying': 0.5, 'psychic': 0.5, 'bug': 0.5, 'rock': 2.0, 'ghost': 0.0, 'dark': 2.0, 'steel': 2.0, 'fairy': 0.5},
-    'poison': {'grass': 2.0, 'poison': 0.5, 'ground': 0.5, 'rock': 0.5, 'ghost': 0.5, 'steel': 0.0, 'fairy': 2.0},
-    'ground': {'fire': 2.0, 'grass': 0.5, 'electric': 2.0, 'poison': 2.0, 'flying': 0.0, 'bug': 0.5, 'rock': 2.0, 'steel': 2.0},
-    'flying': {'grass': 2.0, 'electric': 0.5, 'fighting': 2.0, 'bug': 2.0, 'rock': 0.5, 'steel': 0.5},
-    'psychic': {'fighting': 2.0, 'poison': 2.0, 'psychic': 0.5, 'dark': 0.0, 'steel': 0.5},
-    'bug': {'fire': 0.5, 'grass': 2.0, 'fighting': 0.5, 'poison': 0.5, 'flying': 0.5, 'psychic': 2.0, 'ghost': 0.5, 'dark': 2.0, 'steel': 0.5, 'fairy': 0.5},
-    'rock': {'fire': 2.0, 'ice': 2.0, 'fighting': 0.5, 'ground': 0.5, 'flying': 2.0, 'bug': 2.0, 'steel': 0.5},
+    'fire': {
+      'fire': 0.5,
+      'water': 0.5,
+      'grass': 2.0,
+      'ice': 2.0,
+      'bug': 2.0,
+      'rock': 0.5,
+      'dragon': 0.5,
+      'steel': 2.0,
+    },
+    'water': {
+      'fire': 2.0,
+      'water': 0.5,
+      'grass': 0.5,
+      'ground': 2.0,
+      'rock': 2.0,
+      'dragon': 0.5,
+    },
+    'grass': {
+      'fire': 0.5,
+      'water': 2.0,
+      'grass': 0.5,
+      'poison': 0.5,
+      'ground': 2.0,
+      'flying': 0.5,
+      'bug': 0.5,
+      'rock': 2.0,
+      'dragon': 0.5,
+      'steel': 0.5,
+    },
+    'electric': {
+      'water': 2.0,
+      'grass': 0.5,
+      'electric': 0.5,
+      'ground': 0.0,
+      'flying': 2.0,
+      'dragon': 0.5,
+    },
+    'ice': {
+      'fire': 0.5,
+      'water': 0.5,
+      'grass': 2.0,
+      'ice': 0.5,
+      'ground': 2.0,
+      'flying': 2.0,
+      'dragon': 2.0,
+      'steel': 0.5,
+    },
+    'fighting': {
+      'normal': 2.0,
+      'ice': 2.0,
+      'poison': 0.5,
+      'flying': 0.5,
+      'psychic': 0.5,
+      'bug': 0.5,
+      'rock': 2.0,
+      'ghost': 0.0,
+      'dark': 2.0,
+      'steel': 2.0,
+      'fairy': 0.5,
+    },
+    'poison': {
+      'grass': 2.0,
+      'poison': 0.5,
+      'ground': 0.5,
+      'rock': 0.5,
+      'ghost': 0.5,
+      'steel': 0.0,
+      'fairy': 2.0,
+    },
+    'ground': {
+      'fire': 2.0,
+      'grass': 0.5,
+      'electric': 2.0,
+      'poison': 2.0,
+      'flying': 0.0,
+      'bug': 0.5,
+      'rock': 2.0,
+      'steel': 2.0,
+    },
+    'flying': {
+      'grass': 2.0,
+      'electric': 0.5,
+      'fighting': 2.0,
+      'bug': 2.0,
+      'rock': 0.5,
+      'steel': 0.5,
+    },
+    'psychic': {
+      'fighting': 2.0,
+      'poison': 2.0,
+      'psychic': 0.5,
+      'dark': 0.0,
+      'steel': 0.5,
+    },
+    'bug': {
+      'fire': 0.5,
+      'grass': 2.0,
+      'fighting': 0.5,
+      'poison': 0.5,
+      'flying': 0.5,
+      'psychic': 2.0,
+      'ghost': 0.5,
+      'dark': 2.0,
+      'steel': 0.5,
+      'fairy': 0.5,
+    },
+    'rock': {
+      'fire': 2.0,
+      'ice': 2.0,
+      'fighting': 0.5,
+      'ground': 0.5,
+      'flying': 2.0,
+      'bug': 2.0,
+      'steel': 0.5,
+    },
     'ghost': {'normal': 0.0, 'psychic': 2.0, 'ghost': 2.0, 'dark': 0.5},
     'dragon': {'dragon': 2.0, 'steel': 0.5, 'fairy': 0.0},
-    'dark': {'fighting': 0.5, 'psychic': 2.0, 'ghost': 2.0, 'dark': 0.5, 'fairy': 0.5},
-    'steel': {'fire': 0.5, 'water': 0.5, 'electric': 0.5, 'ice': 2.0, 'rock': 2.0, 'steel': 0.5, 'fairy': 2.0},
-    'fairy': {'fire': 0.5, 'fighting': 2.0, 'poison': 0.5, 'dragon': 2.0, 'dark': 2.0, 'steel': 0.5},
+    'dark': {
+      'fighting': 0.5,
+      'psychic': 2.0,
+      'ghost': 2.0,
+      'dark': 0.5,
+      'fairy': 0.5,
+    },
+    'steel': {
+      'fire': 0.5,
+      'water': 0.5,
+      'electric': 0.5,
+      'ice': 2.0,
+      'rock': 2.0,
+      'steel': 0.5,
+      'fairy': 2.0,
+    },
+    'fairy': {
+      'fire': 0.5,
+      'fighting': 2.0,
+      'poison': 0.5,
+      'dragon': 2.0,
+      'dark': 2.0,
+      'steel': 0.5,
+    },
   };
 
   /// Calcula las debilidades defensivas de un Pokémon dados sus tipos.

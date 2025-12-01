@@ -1,3 +1,21 @@
+/// Archivo: trivia_achievements_screen.dart
+///
+/// Descripción:
+/// Pantalla que muestra la galería de logros del juego de Trivia.
+/// Permite al usuario ver qué hitos ha desbloqueado y cuáles le faltan por conseguir.
+///
+/// Funcionalidades Principales:
+/// - **Listado de Logros**: Muestra todos los logros definidos en el sistema.
+/// - **Estado de Desbloqueo**: Diferencia visualmente entre logros obtenidos (color, fecha)
+///   y pendientes (gris, bloqueado).
+/// - **Carga Asíncrona**: Obtiene los logros desde la base de datos local a través de `achievementsProvider`.
+///
+/// Componentes:
+/// - `AchievementCardWidget`: Widget individual para renderizar cada logro.
+/// - `CustomScrollView`: Para una experiencia de desplazamiento fluida con `SliverGrid`.
+///
+/// Dependencias:
+/// - `trivia_provider`: Proveedor que suministra la lista de logros y su estado.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/presentation/providers/trivia_provider.dart';

@@ -1,3 +1,18 @@
+/// Archivo: favorites_store.dart
+///
+/// Descripción:
+/// Servicio de almacenamiento simple para la gestión de favoritos.
+/// Actúa como una capa de persistencia ligera utilizando `SharedPreferences`.
+///
+/// Funcionalidades Principales:
+/// - **Persistencia Local**: Guarda y recupera la lista de IDs de Pokémon favoritos del disco.
+/// - **Gestión de Estado**: Mantiene un `Set<int>` en memoria para acceso O(1) rápido.
+/// - **Notificación**: Extiende `ChangeNotifier` para actualizar la UI instantáneamente al cambiar un favorito.
+/// - **Singleton**: Asegura que solo exista una instancia del almacén en toda la app.
+///
+/// Nota:
+/// Este servicio es complementario o alternativo al `FavoritesRepository` basado en Hive,
+/// utilizado posiblemente para migraciones o almacenamiento de preferencias simples.
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

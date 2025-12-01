@@ -1,3 +1,24 @@
+/// Archivo: trivia_results_screen.dart
+///
+/// Descripción:
+/// Pantalla de resumen que se muestra al finalizar una partida de Trivia.
+/// Proporciona feedback inmediato sobre el desempeño del jugador.
+///
+/// Funcionalidades Principales:
+/// - **Resumen de Estadísticas**:
+///   - Puntuación Total alcanzada.
+///   - Número de respuestas correctas (ej: 8/10).
+///   - Porcentaje de precisión.
+/// - **Acciones**:
+///   - "Jugar de nuevo": Reinicia el juego inmediatamente con el mismo usuario.
+///   - "Volver al menú": Regresa a la pantalla `TriviaMenuScreen`.
+///
+/// Diseño:
+/// - Presentación visual impactante con emojis y tipografía grande para celebrar el resultado.
+/// - Tarjeta central con las estadísticas clave desglosadas.
+///
+/// Dependencias:
+/// - `gameStateProvider`: Para leer los resultados de la partida finalizada y reiniciar el juego.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/presentation/providers/game_state_provider.dart';

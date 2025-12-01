@@ -1,3 +1,24 @@
+/// Archivo: main_screen.dart
+///
+/// Descripción:
+/// Pantalla de inicio de la aplicación (Dashboard). Sirve como el punto de entrada principal
+/// y menú de navegación hacia las diferentes secciones de la Pokédex.
+///
+/// Funcionalidades Principales:
+/// - **Menú Principal**: Presenta tarjetas de navegación animadas para acceder a:
+///   - Pokédex (Lista completa).
+///   - Favoritos.
+///   - Generaciones (Selector de regiones).
+///   - Trivia (Minijuego).
+///   - Configuración.
+/// - **Animaciones de Entrada**: Utiliza `AnimationController` para crear una secuencia
+///   de entrada escalonada (staggered animation) de los elementos del menú.
+/// - **Diseño Visual**: Implementa un diseño moderno con tarjetas de colores degradados,
+///   iconos decorativos y efectos de sombra/escala al interactuar.
+///
+/// Componentes Internos:
+/// - `_MenuCard`: Widget privado reutilizable para construir cada opción del menú con
+///   sus estilos y comportamientos de animación específicos.
 // Importaciones necesarias para la pantalla principal
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

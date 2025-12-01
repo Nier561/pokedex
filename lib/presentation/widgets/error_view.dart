@@ -1,3 +1,18 @@
+/// Archivo: error_view.dart
+///
+/// Descripción:
+/// Widget reutilizable para mostrar estados de error de manera amigable.
+///
+/// Funcionalidades Principales:
+/// - **Feedback Visual**: Muestra un icono de error y un mensaje descriptivo.
+/// - **Acción de Reintento**: Incluye un botón para ejecutar una función de callback (`onRetry`)
+///   y permitir al usuario intentar la operación nuevamente.
+/// - **Modo Compacto**: Puede renderizarse en una versión reducida para ocupar menos espacio
+///   (útil dentro de listas o tarjetas).
+///
+/// Uso:
+/// Se emplea en pantallas de carga de datos (Listas, Detalles, Trivia) cuando falla la red
+/// o ocurre una excepción.
 import 'package:flutter/material.dart';
 
 class ErrorView extends StatelessWidget {
@@ -39,10 +54,7 @@ class ErrorView extends StatelessWidget {
             Text(
               message,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade600,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
@@ -50,9 +62,14 @@ class ErrorView extends StatelessWidget {
               icon: const Icon(Icons.refresh),
               label: const Text('Try Again'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF8B7ED8), // Color principal de tu app
+                backgroundColor: const Color(
+                  0xFF8B7ED8,
+                ), // Color principal de tu app
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),

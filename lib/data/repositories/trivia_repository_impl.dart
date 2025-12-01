@@ -1,3 +1,21 @@
+/// Archivo: trivia_repository_impl.dart
+///
+/// Descripción:
+/// Implementación de la lógica de negocio para el juego de Trivia.
+/// Centraliza las reglas de puntuación, logros y estadísticas.
+///
+/// Funcionalidades Principales:
+/// - **Guardado de Partidas**: Persiste el resultado del juego y genera una entrada en el ranking.
+/// - **Ranking**: Recupera las mejores puntuaciones históricas.
+/// - **Sistema de Logros**:
+///   - Define la lista estática de logros disponibles (`_allAchievements`).
+///   - Verifica cuáles están desbloqueados consultando la fuente de datos local.
+///   - Desbloquea nuevos logros.
+/// - **Estadísticas**: Provee métricas agregadas al usuario.
+///
+/// Dependencias:
+/// - `ITriviaRepository`: Interfaz.
+/// - `TriviaLocalDataSource`: Persistencia.
 import 'package:pokedex/data/datasources/trivia_local_data_source.dart';
 import 'package:pokedex/data/models/achievement_model.dart';
 import 'package:pokedex/data/models/trivia_game_model.dart';

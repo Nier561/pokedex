@@ -1,3 +1,19 @@
+/// Archivo: api.dart
+///
+/// Descripción:
+/// Configuración central de la red y cliente GraphQL para la aplicación.
+/// Define cómo se conecta la app a la PokeAPI.
+///
+/// Funcionalidades Principales:
+/// - **Cliente HTTP Personalizado**: Implementa `TimeoutClient` para manejar tiempos de espera
+///   en solicitudes lentas (importante para APIs públicas gratuitas).
+/// - **Configuración GraphQL**: Define el `HttpLink` con la URL base y encabezados necesarios.
+/// - **Caché**: Configura `GraphQLCache` en memoria para optimizar consultas repetidas.
+/// - **Deduplicación**: Utiliza `DedupeLink` para evitar enviar solicitudes idénticas simultáneas.
+///
+/// Dependencias:
+/// - `graphql_flutter`: Cliente GraphQL principal.
+/// - `http`: Cliente HTTP base.
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:gql_dedupe_link/gql_dedupe_link.dart';
@@ -11,7 +27,9 @@ class TimeoutClient extends http.BaseClient {
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) {
-    debugPrint('TimeoutClient: Sending request to ${request.url} with timeout $_timeout');
+    debugPrint(
+      'TimeoutClient: Sending request to ${request.url} with timeout $_timeout',
+    );
     return _inner.send(request).timeout(_timeout);
   }
 }

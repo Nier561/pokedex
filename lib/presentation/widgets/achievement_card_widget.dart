@@ -1,3 +1,19 @@
+/// Archivo: achievement_card_widget.dart
+///
+/// Descripción:
+/// Widget visual que representa una tarjeta de logro en la pantalla de logros.
+/// Muestra el estado (bloqueado/desbloqueado) de un logro específico.
+///
+/// Funcionalidades Principales:
+/// - **Estado Visual**:
+///   - **Desbloqueado**: Fondo blanco, borde dorado, icono visible y descripción completa.
+///   - **Bloqueado**: Fondo gris, sin borde, icono de candado y descripción oculta.
+/// - **Internacionalización**: Utiliza claves de traducción para mostrar el nombre y
+///   descripción del logro en el idioma seleccionado.
+///
+/// Dependencias:
+/// - `Achievement`: Modelo de datos del logro.
+/// - `triviaTranslationsProvider`: Para textos localizados.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/domain/entities/achievement.dart';
@@ -15,21 +31,21 @@ class AchievementCardWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final translations = ref.watch(triviaTranslationsProvider);
-    
+
     return Container(
       decoration: BoxDecoration(
         color: achievement.isUnlocked ? Colors.white : Colors.grey[100],
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: achievement.isUnlocked 
-                ? const Color(0xFFFFCE4B).withOpacity(0.2) 
+            color: achievement.isUnlocked
+                ? const Color(0xFFFFCE4B).withOpacity(0.2)
                 : Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
         ],
-        border: achievement.isUnlocked 
+        border: achievement.isUnlocked
             ? Border.all(color: const Color(0xFFFFCE4B), width: 2)
             : null,
       ),

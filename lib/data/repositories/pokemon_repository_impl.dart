@@ -1,3 +1,23 @@
+/// Archivo: pokemon_repository_impl.dart
+///
+/// Descripción:
+/// Repositorio principal que coordina la obtención de datos de Pokémon.
+/// Implementa la estrategia de "Cache-First" o "Network-First" según el contexto.
+///
+/// Funcionalidades Principales:
+/// - **Listado**: Intenta obtener datos de la API; si falla (y es la primera página),
+///   recurre a la caché local (`PokemonLocalDataSource`).
+/// - **Detalles**:
+///   1. Busca en la API.
+///   2. Si tiene éxito, guarda en caché local y actualiza la copia de favoritos si existe.
+///   3. Si falla, busca en caché local.
+///   4. Si no está en caché, busca en la caja de favoritos como último recurso.
+///
+/// Dependencias:
+/// - `IPokemonRepository`: Interfaz.
+/// - `PokemonRemoteDataSource`: API GraphQL.
+/// - `PokemonLocalDataSource`: Caché general.
+/// - `FavoritesLocalDataSource`: Caché persistente de favoritos.
 import 'package:pokedex/domain/repositories/i_pokemon_repository.dart';
 import 'package:pokedex/domain/entities/pokemon.dart';
 import 'package:pokedex/domain/entities/pokemon_detail.dart';

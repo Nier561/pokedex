@@ -1,3 +1,22 @@
+/// Archivo: animated_pokemon_card.dart
+///
+/// Descripción:
+/// Widget principal para mostrar tarjetas de Pokémon en listas y cuadrículas.
+/// Es uno de los componentes más complejos y visualmente ricos de la UI.
+///
+/// Funcionalidades Principales:
+/// - **Animaciones de Entrada**: Fade, Scale y Slide al aparecer en pantalla.
+/// - **Diseño Responsivo**:
+///   - Adapta el tamaño de la imagen y la disposición de los elementos según si es una
+///     tarjeta grande (favoritos) o normal (lista).
+///   - Utiliza `LayoutBuilder` para cálculos precisos.
+/// - **Optimización de Imágenes**: Implementa `CachedNetworkImage` con `memCacheWidth/Height`
+///   para reducir el uso de memoria al cargar cientos de sprites.
+/// - **Interactividad**: Efecto de escala al presionar (`InteractivePokemonCard`).
+///
+/// Componentes Internos:
+/// - `_PokemonCardContent`: Estructura visual de la tarjeta (fondo, nombre, tipos, imagen).
+/// - `TypeBadge`: Chips para los tipos elementales.
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pokedex/presentation/widgets/type_badge.dart';
@@ -151,174 +170,196 @@ class _PokemonCardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: background,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: background.colors.first.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          // Decoración de fondo (Pokébola translúcida)
-          Positioned(
-            bottom: -10,
-            right: -10,
-            child: Icon(
-              Icons.catching_pokemon,
-              size: 100,
-              color: Colors.white.withOpacity(0.15),
-            ),
-          ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Calculate responsive image size
+        // For large cards (favorites), use ~35% of width
+        // For small cards (grid), use ~45% of width
+        final double imageSize = isLarge
+            ? constraints.maxWidth * 0.35
+            : constraints.maxWidth * 0.45;
 
-          if (isLarge)
-            Positioned(
-              right: 15,
-              bottom: 0,
-              child: Hero(
-                tag: 'pokemon-img-$name',
-                child: CachedNetworkImage(
-                  imageUrl: imageUrl,
-                  width: 120,
-                  height: 120,
-                  fit: BoxFit.contain,
-                  memCacheWidth: 200,
-                  placeholder: (context, url) => Center(
-                    child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white.withOpacity(0.5),
-                      ),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => Image.asset(
-                    'assets/images/pokedex icono 2.webp',
-                    width: 40,
-                    height: 40,
-                    color: Colors.white.withOpacity(0.5),
-                    colorBlendMode: BlendMode.modulate,
-                  ),
+        // Ensure reasonable limits but allow growth on larger screens
+        final double finalImageSize = imageSize.clamp(60.0, 500.0);
+
+        return Container(
+          decoration: BoxDecoration(
+            gradient: background,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: background.colors.first.withOpacity(0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Stack(
+            children: [
+              // Decoración de fondo (Pokébola translúcida)
+              Positioned(
+                bottom: -10,
+                right: -10,
+                child: Icon(
+                  Icons.catching_pokemon,
+                  size: constraints.maxWidth * 0.5,
+                  color: Colors.white.withOpacity(0.15),
                 ),
               ),
-            ),
 
-          // Contenido Principal
-          Padding(
-            padding: EdgeInsets.all(isLarge ? 20.0 : 12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Nombre del Pokémon
-                Text(
-                  name,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: isLarge ? 24 : 16,
-                    fontWeight: FontWeight.bold,
-                    shadows: const [
-                      Shadow(
-                        color: Colors.black12,
-                        offset: Offset(0, 1),
-                        blurRadius: 2,
+              if (isLarge)
+                Positioned(
+                  right: 15,
+                  bottom: 0,
+                  child: Hero(
+                    tag: 'pokemon-img-$name',
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      width: finalImageSize,
+                      height: finalImageSize,
+                      fit: BoxFit.contain,
+                      memCacheWidth: (finalImageSize * 2).toInt(),
+                      memCacheHeight: (finalImageSize * 2).toInt(),
+                      fadeInDuration: const Duration(milliseconds: 200),
+                      placeholder: (context, url) => Center(
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white.withOpacity(0.5),
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-
-                SizedBox(height: isLarge ? 12 : 8),
-
-                // Tipos e Imagen
-                if (isLarge) ...[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: types
-                        .map(
-                          (type) => Padding(
-                            padding: const EdgeInsets.only(bottom: 6),
-                            child: TypeBadge(
-                              type: type,
-                              backgroundColor: Colors.white.withOpacity(0.25),
-                              small: false,
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  ),
-                ] else
-                  Expanded(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Columna de Tipos
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: types
-                              .map(
-                                (type) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 6),
-                                  child: TypeBadge(
-                                    type: type,
-                                    backgroundColor: Colors.white.withOpacity(
-                                      0.25,
-                                    ),
-                                    small: true,
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                        ),
-
-                        // Espaciador flexible
-                        const Spacer(),
-
-                        // Imagen del Pokémon
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Hero(
-                            tag: 'pokemon-img-$name',
-                            child: CachedNetworkImage(
-                              imageUrl: imageUrl,
-                              width: 90,
-                              height: 90,
-                              fit: BoxFit.contain,
-                              memCacheWidth: 200,
-                              placeholder: (context, url) => Center(
-                                child: SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white.withOpacity(0.5),
-                                  ),
-                                ),
-                              ),
-                              errorWidget: (context, url, error) => Image.asset(
-                                'assets/images/pokedex icono 2.webp',
-                                width: 40,
-                                height: 40,
-                                color: Colors.white.withOpacity(0.5),
-                                colorBlendMode: BlendMode.modulate,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                      errorWidget: (context, url, error) => Image.asset(
+                        'assets/images/pokedex icono 2.webp',
+                        width: finalImageSize * 0.5,
+                        height: finalImageSize * 0.5,
+                        color: Colors.white.withOpacity(0.5),
+                        colorBlendMode: BlendMode.modulate,
+                      ),
                     ),
                   ),
-              ],
-            ),
+                ),
+
+              // Contenido Principal
+              Padding(
+                padding: EdgeInsets.all(isLarge ? 20.0 : 12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Nombre del Pokémon
+                    Text(
+                      name,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: isLarge ? 24 : 16,
+                        fontWeight: FontWeight.bold,
+                        shadows: const [
+                          Shadow(
+                            color: Colors.black12,
+                            offset: Offset(0, 1),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+
+                    SizedBox(height: isLarge ? 12 : 8),
+
+                    // Tipos e Imagen
+                    if (isLarge) ...[
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: types
+                            .map(
+                              (type) => Padding(
+                                padding: const EdgeInsets.only(bottom: 6),
+                                child: TypeBadge(
+                                  type: type,
+                                  backgroundColor: Colors.white.withOpacity(
+                                    0.25,
+                                  ),
+                                  small: false,
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ] else
+                      Expanded(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Columna de Tipos
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: types
+                                  .map(
+                                    (type) => Padding(
+                                      padding: const EdgeInsets.only(bottom: 6),
+                                      child: TypeBadge(
+                                        type: type,
+                                        backgroundColor: Colors.white
+                                            .withOpacity(0.25),
+                                        small: true,
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+
+                            // Espaciador flexible
+                            const Spacer(),
+
+                            // Imagen del Pokémon
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Hero(
+                                tag: 'pokemon-img-$name',
+                                child: CachedNetworkImage(
+                                  imageUrl: imageUrl,
+                                  width: finalImageSize,
+                                  height: finalImageSize,
+                                  fit: BoxFit.contain,
+                                  memCacheWidth: (finalImageSize * 2).toInt(),
+                                  memCacheHeight: (finalImageSize * 2).toInt(),
+                                  fadeInDuration: const Duration(
+                                    milliseconds: 200,
+                                  ),
+                                  placeholder: (context, url) => Center(
+                                    child: SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white.withOpacity(0.5),
+                                      ),
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Image.asset(
+                                        'assets/images/pokedex icono 2.webp',
+                                        width: finalImageSize * 0.5,
+                                        height: finalImageSize * 0.5,
+                                        color: Colors.white.withOpacity(0.5),
+                                        colorBlendMode: BlendMode.modulate,
+                                      ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

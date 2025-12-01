@@ -1,3 +1,20 @@
+/// Archivo: trivia_timer_widget.dart
+///
+/// Descripción:
+/// Temporizador visual circular para el juego de Trivia.
+/// Indica cuánto tiempo le queda al jugador para responder.
+///
+/// Funcionalidades Principales:
+/// - **Feedback de Color**: El anillo cambia de color progresivamente:
+///   - Verde: > 50% del tiempo.
+///   - Amarillo: > 20% del tiempo.
+///   - Rojo: < 20% del tiempo (Peligro).
+/// - **Animación de Latido**: Cuando quedan 5 segundos o menos, el número central pulsa
+///   para generar tensión y alertar al usuario.
+/// - **Interpolación**: Movimiento fluido del indicador de progreso entre segundos.
+///
+/// Uso:
+/// Se coloca en la parte superior de `TriviaGameScreen`.
 import 'package:flutter/material.dart';
 
 /// Widget de temporizador circular animado.
@@ -19,7 +36,7 @@ class TriviaTimerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double targetProgress = timeLeft / totalTime;
-    
+
     // Colores dinámicos basados en el tiempo restante
     Color getColor(double val) {
       if (val > 0.5) return const Color(0xFF4FC1A6); // Verde
@@ -37,7 +54,7 @@ class TriviaTimerWidget extends StatelessWidget {
         curve: Curves.linear,
         builder: (context, value, _) {
           final color = getColor(value);
-          
+
           return Stack(
             alignment: Alignment.center,
             fit: StackFit.expand,

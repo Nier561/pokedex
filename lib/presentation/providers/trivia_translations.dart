@@ -1,3 +1,15 @@
+/// Archivo: trivia_translations.dart
+///
+/// Descripción:
+/// Módulo de localización específico para el juego de Trivia.
+/// Separa los textos del juego del resto de la aplicación para mantener el orden.
+///
+/// Funcionalidades Principales:
+/// - **Diccionario Bilingüe**: Contiene textos en Inglés y Español para todos los elementos del juego.
+/// - **Textos Dinámicos**: Provee claves para títulos de logros, descripciones y mensajes de estado.
+///
+/// Dependencias:
+/// - `languageProvider`: Determina el idioma activo para seleccionar la traducción correcta.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/presentation/providers/language_provider.dart';

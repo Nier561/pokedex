@@ -1,3 +1,15 @@
+/// Archivo: theme_provider.dart
+///
+/// Descripción:
+/// Provider que controla el tema visual de la aplicación (Claro / Oscuro).
+///
+/// Funcionalidades Principales:
+/// - **Cambio de Tema**: Permite alternar entre `ThemeMode.light` y `ThemeMode.dark`.
+/// - **Persistencia**: Guarda la elección del usuario para sesiones futuras.
+/// - **Detección Inicial**: Carga la preferencia guardada o usa el valor del sistema por defecto.
+///
+/// Dependencias:
+/// - `PreferencesLocalDataSource`: Almacenamiento local.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/data/datasources/preferences_local_data_source.dart';

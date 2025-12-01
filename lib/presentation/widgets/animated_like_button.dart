@@ -1,3 +1,16 @@
+/// Archivo: animated_like_button.dart
+///
+/// Descripción:
+/// Botón de "Me gusta" (Corazón) con animación de rebote personalizada.
+///
+/// Funcionalidades Principales:
+/// - **Animación de Cambio**: Al cambiar de estado (like/unlike), ejecuta una secuencia
+///   de escala (crece y se encoge) para dar feedback táctil visual.
+/// - **Estado Reactivo**: Se actualiza automáticamente cuando cambia la propiedad `isLiked`.
+/// - **Personalizable**: Permite definir el color del icono.
+///
+/// Uso:
+/// Se utiliza en las tarjetas de Pokémon y en la pantalla de detalles para marcar favoritos.
 import 'package:flutter/material.dart';
 
 class AnimatedLikeButton extends StatefulWidget {

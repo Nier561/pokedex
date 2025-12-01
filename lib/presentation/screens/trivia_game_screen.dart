@@ -1,3 +1,29 @@
+/// Archivo: trivia_game_screen.dart
+///
+/// Descripción:
+/// Pantalla principal donde se desarrolla la partida del juego de Trivia.
+/// Gestiona el flujo del juego, la interacción del usuario y el feedback visual.
+///
+/// Funcionalidades Principales:
+/// - **Ciclo de Juego**: Presenta preguntas secuenciales (total de 10 por partida).
+/// - **Temporizador**: Implementa un `TriviaTimerWidget` que limita el tiempo de respuesta.
+/// - **Mecánica de Respuesta**:
+///   - Muestra la silueta del Pokémon (`PokemonSilhouetteWidget`).
+///   - Ofrece 4 opciones de respuesta.
+///   - Valida la selección del usuario y muestra colores (verde/rojo) según el resultado.
+///   - Revela la imagen del Pokémon tras responder.
+/// - **Puntuación**: Actualiza y muestra el puntaje en tiempo real.
+/// - **Conectividad**: Verifica la conexión a internet antes de iniciar, ya que se requieren
+///   imágenes de la API.
+/// - **Transición**: Navega automáticamente a la pantalla de resultados al finalizar.
+///
+/// Gestión de Estado:
+/// - Escucha `gameStateProvider` para reaccionar a cambios de estado (pregunta actual,
+///   tiempo restante, fin del juego).
+///
+/// Dependencias:
+/// - `connectivity_plus`: Para verificar el estado de la red.
+/// - `flutter_riverpod`: Para la lógica del juego reactiva.
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,3 +1,18 @@
+/// Archivo: type_badge.dart
+///
+/// Descripción:
+/// Chip o etiqueta visual que representa un tipo elemental de Pokémon (Fuego, Agua, etc.).
+///
+/// Funcionalidades Principales:
+/// - **Estilo Consistente**: Aplica el color oficial del tipo (o un gradiente) y texto blanco.
+/// - **Variantes**:
+///   - **Normal**: Rectángulo redondeado con nombre completo.
+///   - **Pequeño**: Versión compacta para listas densas.
+///   - **Sin Texto**: Círculo de color puro (usado en contextos decorativos o muy pequeños).
+/// - **Sombra**: Sutil elevación para separarlo del fondo.
+///
+/// Uso:
+/// Omnipresente en la app: tarjetas, detalles, filtros, tabla de tipos.
 import 'package:flutter/material.dart';
 import 'package:pokedex/presentation/widgets/type_gradients.dart';
 

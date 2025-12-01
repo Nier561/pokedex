@@ -1,3 +1,22 @@
+/// Archivo: main.dart
+///
+/// Descripción:
+/// Punto de entrada principal de la aplicación.
+/// Orquestador que inicializa servicios críticos antes de levantar la interfaz de usuario.
+///
+/// Funcionalidades Principales:
+/// - **Inicialización de Servicios**: Configura Hive (base de datos), SystemChrome (UI del sistema)
+///   y fuentes de datos (DataSources).
+/// - **Inyección de Dependencias**: Configura el `ProviderScope` de Riverpod y sus overrides
+///   para repositorios.
+/// - **Enrutamiento Inicial**: Decide si mostrar `OnboardingScreen` o `MainScreen` según
+///   las preferencias guardadas.
+/// - **Configuración Global**: Define el tema (claro/oscuro) y el título de la app.
+///
+/// Dependencias:
+/// - `flutter_riverpod`: Gestión de estado e inyección de dependencias.
+/// - `hive_flutter`: Inicialización de base de datos.
+/// - `SystemChrome`: Configuración de barra de estado y navegación.
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

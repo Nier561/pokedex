@@ -1,3 +1,22 @@
+/// Archivo: onboarding_screen.dart
+///
+/// Descripción:
+/// Pantalla de introducción (Onboarding) que se muestra a los usuarios la primera vez
+/// que abren la aplicación. Su objetivo es configurar preferencias iniciales y presentar
+/// las características clave de la app.
+///
+/// Funcionalidades Principales:
+/// - **Selección de Idioma**: Permite al usuario elegir entre Inglés y Español. Esta selección
+///   se guarda en las preferencias locales y configura el proveedor de idioma global.
+/// - **Carrusel Informativo**: Muestra una serie de diapositivas (`PageView`) destacando
+///   funcionalidades como la exploración de generaciones, el juego de trivia y los favoritos.
+/// - **Persistencia**: Marca el onboarding como "visto" en `SharedPreferences` para no
+///   volver a mostrarlo en futuras sesiones.
+/// - **Navegación**: Redirige automáticamente a la `MainScreen` al finalizar el flujo.
+///
+/// Dependencias:
+/// - `audioplayers`: Reproduce un sonido de bienvenida (efecto de Pokéball) al seleccionar idioma.
+/// - `PreferencesLocalDataSource`: Para guardar el estado de onboarding y el idioma seleccionado.
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:pokedex/data/datasources/preferences_local_data_source.dart';

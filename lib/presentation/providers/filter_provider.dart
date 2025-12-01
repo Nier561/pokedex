@@ -1,3 +1,17 @@
+/// Archivo: filter_provider.dart
+///
+/// Descripción:
+/// Provider que gestiona los filtros y la configuración de búsqueda en la Pokédex.
+/// Permite a los usuarios refinar la lista de Pokémon visible.
+///
+/// Funcionalidades Principales:
+/// - **Filtrado Multicriterio**: Soporta filtros por Generación y Tipos.
+/// - **Ordenamiento**: Permite ordenar por ID, Nombre o Poder Total (ascendente/descendente).
+/// - **Búsqueda**: Gestiona el término de búsqueda actual.
+/// - **Persistencia**: Guarda y recupera la configuración de filtros usando `PreferencesLocalDataSource`.
+///
+/// Dependencias:
+/// - `PreferencesLocalDataSource`: Para persistir la configuración entre sesiones.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/data/datasources/preferences_local_data_source.dart';
 
@@ -35,8 +49,11 @@ class FilterState {
   }
 
   FilterState resetGen() => FilterState(
-      sortMode: sortMode, isAscending: isAscending, selectedTypes: selectedTypes,
-      selectedGen: null, searchQuery: searchQuery
+    sortMode: sortMode,
+    isAscending: isAscending,
+    selectedTypes: selectedTypes,
+    selectedGen: null,
+    searchQuery: searchQuery,
   );
 }
 
@@ -60,7 +77,8 @@ class FilterNotifier extends StateNotifier<FilterState> {
         selectedTypes: saved.selectedTypes,
         selectedGen: saved.selectedGen,
       );
-      if (saved.selectedGen != null) state = state.copyWith(selectedGen: saved.selectedGen);
+      if (saved.selectedGen != null)
+        state = state.copyWith(selectedGen: saved.selectedGen);
     }
   }
 
@@ -102,6 +120,8 @@ class FilterNotifier extends StateNotifier<FilterState> {
   }
 }
 
-final filterProvider = StateNotifierProvider<FilterNotifier, FilterState>((ref) {
+final filterProvider = StateNotifierProvider<FilterNotifier, FilterState>((
+  ref,
+) {
   return FilterNotifier(PreferencesLocalDataSource());
 });

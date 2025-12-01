@@ -1,3 +1,21 @@
+/// Archivo: matchup_grid.dart
+///
+/// Descripción:
+/// Widget que visualiza la tabla de debilidades y resistencias de un Pokémon.
+/// Transforma los datos crudos de eficacia de tipos en una interfaz legible.
+///
+/// Funcionalidades Principales:
+/// - **Cálculo de Eficacia**: Utiliza `TypeChart.calculateWeaknesses` para obtener los factores.
+/// - **Agrupación Visual**: Clasifica los tipos atacantes por su multiplicador de daño:
+///   - **4x Weak**: Rojo oscuro (Super efectivo).
+///   - **2x Weak**: Rojo.
+///   - **0.5x Resist**: Verde.
+///   - **0.25x Resist**: Verde oscuro (Super resistente).
+///   - **Immune**: Gris (Daño nulo).
+/// - **Ordenamiento**: Muestra primero las debilidades más críticas para información rápida.
+///
+/// Componentes:
+/// - `TypeBadge`: Reutiliza los chips de tipos para mostrar los iconos de cada elemento.
 import 'package:flutter/material.dart';
 import 'package:pokedex/core/utils/type_chart.dart';
 import 'package:pokedex/presentation/widgets/type_badge.dart';
@@ -21,7 +39,9 @@ class MatchupGrid extends StatelessWidget {
     final sortedKeys = groups.keys.toList()..sort((a, b) => b.compareTo(a));
 
     if (sortedKeys.isEmpty) {
-      return const Center(child: Text('No particular weaknesses or resistances.'));
+      return const Center(
+        child: Text('No particular weaknesses or resistances.'),
+      );
     }
 
     return Column(
@@ -30,11 +50,22 @@ class MatchupGrid extends StatelessWidget {
         String label = '';
         Color color = Colors.black;
 
-        if (factor == 4.0) { label = '4x Weak'; color = Colors.red[900]!; }
-        else if (factor == 2.0) { label = '2x Weak'; color = Colors.red; }
-        else if (factor == 0.5) { label = '0.5x Resist'; color = Colors.green; }
-        else if (factor == 0.25) { label = '0.25x Resist'; color = Colors.green[800]!; }
-        else if (factor == 0.0) { label = 'Immune'; color = Colors.grey; }
+        if (factor == 4.0) {
+          label = '4x Weak';
+          color = Colors.red[900]!;
+        } else if (factor == 2.0) {
+          label = '2x Weak';
+          color = Colors.red;
+        } else if (factor == 0.5) {
+          label = '0.5x Resist';
+          color = Colors.green;
+        } else if (factor == 0.25) {
+          label = '0.25x Resist';
+          color = Colors.green[800]!;
+        } else if (factor == 0.0) {
+          label = 'Immune';
+          color = Colors.grey;
+        }
 
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -43,13 +74,22 @@ class MatchupGrid extends StatelessWidget {
             children: [
               SizedBox(
                 width: 80,
-                child: Text(label, style: TextStyle(fontWeight: FontWeight.bold, color: color, fontSize: 12)),
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                    fontSize: 12,
+                  ),
+                ),
               ),
               Expanded(
                 child: Wrap(
                   spacing: 6,
                   runSpacing: 6,
-                  children: typeList.map((t) => TypeBadge(type: t, small: true)).toList(),
+                  children: typeList
+                      .map((t) => TypeBadge(type: t, small: true))
+                      .toList(),
                 ),
               ),
             ],

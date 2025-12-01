@@ -1,3 +1,19 @@
+/// Archivo: pokemon_provider.dart
+///
+/// Descripción:
+/// Colección de providers para la obtención y gestión de datos de Pokémon.
+/// Cubre tanto listados paginados como detalles individuales.
+///
+/// Funcionalidades Principales:
+/// - **Paginación Infinita**: `pokemonListProvider` gestiona la carga incremental de la lista.
+/// - **Caché de Detalles**: `pokemonDetailProvider` utiliza `FutureProvider.family` para cachear
+///   detalles por ID y parámetros.
+/// - **Soporte Multilenguaje**: Adapta las peticiones de detalles al idioma seleccionado por el usuario.
+/// - **Manejo de Errores**: Captura fallos de red y expone mensajes amigables en el estado.
+///
+/// Dependencias:
+/// - `pokemonRepositoryProvider`: Fuente de datos.
+/// - `languageProvider`: Contexto de idioma para las peticiones.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/domain/entities/pokemon.dart';
 import 'package:pokedex/domain/entities/pokemon_detail.dart';
@@ -36,7 +52,7 @@ class PokemonListController extends StateNotifier<PokemonListState> {
   PokemonListController(this.ref) : super(PokemonListState(pokemons: []));
 
   int _offset = 0;
-  static const _limit = 32;
+  static const _limit = 20;
   bool _hasMore = true;
 
   /// Carga la siguiente página de Pokémon.
@@ -49,7 +65,10 @@ class PokemonListController extends StateNotifier<PokemonListState> {
 
     try {
       final repo = ref.read(pokemonRepositoryProvider);
-      final newItems = await repo.getPokemonList(limit: _limit, offset: _offset);
+      final newItems = await repo.getPokemonList(
+        limit: _limit,
+        offset: _offset,
+      );
 
       if (newItems.isEmpty) {
         _hasMore = false;
@@ -65,15 +84,17 @@ class PokemonListController extends StateNotifier<PokemonListState> {
       // En caso de error, guardamos el mensaje y detenemos la carga
       state = state.copyWith(
         isLoading: false,
-        errorMessage: "Failed to connect to the Pokédex server.\nPlease check your internet connection.",
+        errorMessage:
+            "Failed to connect to the Pokédex server.\nPlease check your internet connection.",
       );
     }
   }
 }
 
-final pokemonListProvider = StateNotifierProvider<PokemonListController, PokemonListState>((ref) {
-  return PokemonListController(ref);
-});
+final pokemonListProvider =
+    StateNotifierProvider<PokemonListController, PokemonListState>((ref) {
+      return PokemonListController(ref);
+    });
 
 /// Provider para pre-cargar la lista completa (usado para filtros globales).
 final allPokemonProvider = FutureProvider<List<Pokemon>>((ref) async {
@@ -91,10 +112,10 @@ class PokemonDetailParams {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is PokemonDetailParams &&
-              runtimeType == other.runtimeType &&
-              id == other.id &&
-              gen == other.gen;
+      other is PokemonDetailParams &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          gen == other.gen;
 
   @override
   int get hashCode => id.hashCode ^ gen.hashCode;
@@ -102,24 +123,28 @@ class PokemonDetailParams {
 
 /// Provider familia para obtener el detalle de un Pokémon.
 /// Reacciona a cambios de idioma para traer traducciones frescas.
-final pokemonDetailProvider = FutureProvider.family<PokemonDetail, PokemonDetailParams>((ref, args) async {
-  final repo = ref.read(pokemonRepositoryProvider);
+final pokemonDetailProvider =
+    FutureProvider.family<PokemonDetail, PokemonDetailParams>((
+      ref,
+      args,
+    ) async {
+      final repo = ref.read(pokemonRepositoryProvider);
 
-  // 1. Escuchamos el idioma actual para invalidar el caché si cambia
-  final currentLocale = ref.watch(languageProvider);
+      // 1. Escuchamos el idioma actual para invalidar el caché si cambia
+      final currentLocale = ref.watch(languageProvider);
 
-  // 2. Mapeamos el código de idioma a ID de PokeAPI
-  int langId = 9; // Default Inglés
-  if (currentLocale.languageCode == 'es') {
-    langId = 7;
-  } else if (currentLocale.languageCode == 'fr') {
-    langId = 5;
-  }
+      // 2. Mapeamos el código de idioma a ID de PokeAPI
+      int langId = 9; // Default Inglés
+      if (currentLocale.languageCode == 'es') {
+        langId = 7;
+      } else if (currentLocale.languageCode == 'fr') {
+        langId = 5;
+      }
 
-  // 3. Solicitamos el detalle con el idioma correcto
-  return await repo.getPokemonDetail(
-      id: args.id,
-      targetGen: args.gen,
-      langId: langId
-  );
-});
+      // 3. Solicitamos el detalle con el idioma correcto
+      return await repo.getPokemonDetail(
+        id: args.id,
+        targetGen: args.gen,
+        langId: langId,
+      );
+    });

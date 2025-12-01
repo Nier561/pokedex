@@ -1,3 +1,17 @@
+/// Archivo: achievement_model.dart
+///
+/// Descripción:
+/// Modelo de datos para la persistencia de logros en la base de datos local (Hive).
+/// Representa el estado de un logro específico para el usuario actual.
+///
+/// Funcionalidades Principales:
+/// - **Persistencia de Estado**: Almacena si un logro está desbloqueado (`isUnlocked`) y
+///   la fecha en que se consiguió (`unlockedAt`).
+/// - **Eficiencia**: Solo guarda los datos dinámicos necesarios. La información estática
+///   (título, descripción, icono) se mantiene en la capa de dominio/configuración para ahorrar espacio.
+///
+/// Dependencias:
+/// - `hive`: Para las anotaciones `@HiveType` y `@HiveField`.
 import 'package:hive/hive.dart';
 
 part 'achievement_model.g.dart';

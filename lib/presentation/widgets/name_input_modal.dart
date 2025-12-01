@@ -1,3 +1,16 @@
+/// Archivo: name_input_modal.dart
+///
+/// Descripción:
+/// Cuadro de diálogo modal que solicita el nombre del usuario antes de iniciar el juego de Trivia.
+///
+/// Funcionalidades Principales:
+/// - **Validación**: Impide enviar el formulario si el campo de texto está vacío.
+/// - **Diseño Adaptativo**: Se ajusta al tema claro/oscuro de la aplicación.
+/// - **Internacionalización**: Textos de título, subtítulo y placeholder traducidos.
+/// - **Feedback Táctil**: Botón de "Comenzar" que se habilita/deshabilita dinámicamente.
+///
+/// Uso:
+/// Se invoca desde `TriviaMenuScreen` cuando el usuario selecciona "Jugar".
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/presentation/providers/trivia_translations.dart';

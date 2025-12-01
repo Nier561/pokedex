@@ -1,3 +1,21 @@
+/// Archivo: trivia_ranking_screen.dart
+///
+/// Descripción:
+/// Pantalla de Tabla de Posiciones (Leaderboard) local.
+/// Muestra el historial de las mejores puntuaciones obtenidas en el dispositivo.
+///
+/// Funcionalidades Principales:
+/// - **Top Scores**: Lista las 10 mejores partidas ordenadas por puntuación.
+/// - **Podio**: Destaca visualmente los 3 primeros lugares con medallas de Oro, Plata y Bronce.
+/// - **Detalles**: Muestra nombre del jugador, puntaje, precisión y fecha de la partida.
+/// - **Estado Vacío**: Muestra un mensaje amigable si aún no hay partidas registradas.
+///
+/// Diseño:
+/// - Uso de `SliverList` dentro de un `CustomScrollView` para un desplazamiento eficiente.
+/// - `CircleAvatar` con colores dinámicos según el rango.
+///
+/// Dependencias:
+/// - `trivia_provider` (`topScoresProvider`): Fuente de datos reactiva para las puntuaciones.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/presentation/providers/trivia_provider.dart';

@@ -1,3 +1,15 @@
+/// Archivo: i_trivia_repository.dart
+///
+/// Descripción:
+/// Contrato (interfaz) para el repositorio del módulo de Trivia.
+///
+/// Responsabilidades:
+/// - Definir métodos para guardar resultados de juegos.
+/// - Definir métodos para consultar rankings y estadísticas.
+/// - Definir métodos para gestionar el sistema de logros.
+///
+/// Propósito:
+/// Abstraer la lógica de persistencia del juego de la lógica de presentación y control.
 import 'package:pokedex/domain/entities/trivia_game.dart';
 import 'package:pokedex/domain/entities/trivia_score.dart';
 import 'package:pokedex/domain/entities/achievement.dart';

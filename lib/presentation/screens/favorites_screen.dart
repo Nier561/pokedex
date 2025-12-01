@@ -1,7 +1,24 @@
+/// Archivo: favorites_screen.dart
+///
+/// Descripción:
+/// Pantalla que muestra la colección de Pokémon marcados como favoritos por el usuario.
+/// Permite visualizar, buscar y acceder rápidamente a los detalles de los Pokémon guardados.
+///
+/// Funcionalidades Principales:
+/// - **Listado en Cuadrícula**: Muestra los Pokémon favoritos en un GridView optimizado.
+/// - **Búsqueda Local**: Barra de búsqueda para filtrar los favoritos por nombre o número de Pokédex.
+/// - **Persistencia**: Se sincroniza con el `favoritesProvider` que gestiona el almacenamiento local (Hive).
+/// - **Navegación**: Permite navegar al detalle de cualquier Pokémon seleccionado.
+/// - **Feedback Visual**: Muestra estados vacíos con mensajes e iconos apropiados si no hay favoritos
+///   o si la búsqueda no arroja resultados.
+///
+/// Diseño:
+/// - Utiliza tarjetas interactivas (`InteractivePokemonCard`) con animaciones.
+/// - Fondo decorativo con icono de corazón sutil.
+/// - Adaptable al tema claro/oscuro de la aplicación.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:pokedex/presentation/providers/pokemon_provider.dart';
 import 'package:pokedex/presentation/providers/favorites_provider.dart';
 import 'package:pokedex/presentation/providers/language_provider.dart';
 import 'package:pokedex/presentation/screens/detail_screen.dart';
@@ -97,7 +114,6 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     final isDark = theme.brightness == Brightness.dark;
 
     final favorites = ref.watch(favoritesProvider);
-    final allPokesAsync = ref.watch(allPokemonProvider);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -147,10 +163,9 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                 ),
                 _buildSearchBar(_searchQuery, tr),
                 Expanded(
-                  child: allPokesAsync.when(
-                    data: (allPokemons) {
-                      final favoritePokemons = allPokemons.where((p) {
-                        if (!favorites.contains(p.id)) return false;
+                  child: Builder(
+                    builder: (context) {
+                      final favoritePokemons = favorites.list.where((p) {
                         if (_searchQuery.isEmpty) return true;
                         final q = _searchQuery.toLowerCase();
                         return p.name.toLowerCase().contains(q) ||
@@ -248,9 +263,6 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                         },
                       );
                     },
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-                    error: (err, stack) => Center(child: Text('Error: $err')),
                   ),
                 ),
               ],

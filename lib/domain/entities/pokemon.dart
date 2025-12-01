@@ -1,4 +1,19 @@
-/// Entidad de Dominio: Representa un Pokémon en la lista.
+/// Archivo: pokemon.dart
+///
+/// Descripción:
+/// Entidad de dominio fundamental que representa a un Pokémon en su forma resumida.
+/// Contiene la información esencial para listados y tarjetas de vista previa.
+///
+/// Propiedades:
+/// - **Identidad**: ID y Nombre.
+/// - **Visual**: URL de la imagen y Tipos elementales.
+/// - **Metadatos**: ID de Generación y Total de Estadísticas Base (para ordenamiento).
+///
+/// Lógica de Dominio:
+/// - `displayName`: Getter que formatea nombres especiales (ej: Zygarde-50 -> Zygarde).
+///
+/// Uso:
+/// Utilizado en `PokemonListScreen`, `FavoritesScreen` y búsquedas.
 class Pokemon {
   final int id;
   final String name;

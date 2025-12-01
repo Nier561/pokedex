@@ -1,3 +1,22 @@
+/// Archivo: pokemon_card.dart
+///
+/// Descripción:
+/// Versión estática y base de la tarjeta de Pokémon.
+/// A diferencia de `AnimatedPokemonCard`, este widget se centra en la estructura y el layout
+/// sin animaciones de entrada complejas.
+///
+/// Funcionalidades Principales:
+/// - **Layout Flexible**: Utiliza `LayoutBuilder` para calcular tamaños relativos de imagen
+///   y texto, asegurando que se vea bien en diferentes tamaños de pantalla.
+/// - **Manejo de Imágenes**:
+///   - Carga imágenes desde red con caché.
+///   - Soporta imagen de respaldo (`fallbackImageUrl`) si la principal falla.
+///   - Muestra un placeholder local si todo falla.
+/// - **Diseño Visual**: Fondo con gradiente, nombre destacado y badges de tipos.
+///
+/// Uso:
+/// Puede ser utilizado como base para widgets más complejos o en listas donde no se requieran
+/// animaciones de entrada costosas.
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -37,10 +56,7 @@ class PokemonCard extends StatelessWidget {
         final imageSize = math
             .max(
               0,
-              math.min(
-                w * 1.00,
-                contentHeight - imagePadding - extraForBadges,
-              ),
+              math.min(w * 1.00, contentHeight - imagePadding - extraForBadges),
             )
             .toDouble();
 
@@ -138,7 +154,8 @@ class PokemonCard extends StatelessWidget {
                               memCacheHeight: imageSize.round(),
                               // Si la imagen oficial falla (404/timeout), intenta sprite clásico
                               errorWidget: (context, url, error) {
-                                if (fallbackImageUrl != null && fallbackImageUrl!.isNotEmpty) {
+                                if (fallbackImageUrl != null &&
+                                    fallbackImageUrl!.isNotEmpty) {
                                   return CachedNetworkImage(
                                     imageUrl: fallbackImageUrl!,
                                     width: imageSize,
@@ -155,7 +172,8 @@ class PokemonCard extends StatelessWidget {
                                 }
                                 return _PlaceholderImage(size: imageSize);
                               },
-                              placeholder: (context, url) => _PlaceholderImage(size: imageSize),
+                              placeholder: (context, url) =>
+                                  _PlaceholderImage(size: imageSize),
                             ),
                           ),
                         ),
@@ -183,9 +201,7 @@ class _PlaceholderImage extends StatelessWidget {
       width: size,
       height: size,
       alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        color: Color(0x11FFFFFF),
-      ),
+      decoration: const BoxDecoration(color: Color(0x11FFFFFF)),
       child: Image.asset(
         'assets/images/pokedex icono 2.webp',
         width: size * 0.6,

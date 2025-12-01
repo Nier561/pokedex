@@ -1,3 +1,19 @@
+/// Archivo: game_state_provider.dart
+///
+/// Descripción:
+/// Motor lógico central del juego de Trivia.
+/// Gestiona el ciclo de vida completo de una partida, desde el menú hasta los resultados.
+///
+/// Funcionalidades Principales:
+/// - **Máquina de Estados**: Controla las transiciones entre Menú -> Cargando -> Jugando -> Resultados.
+/// - **Generación de Partida**: Selecciona preguntas aleatorias y opciones distractores.
+/// - **Control de Tiempo**: Gestiona el temporizador por pregunta.
+/// - **Sistema de Puntuación**: Valida respuestas, calcula puntos y rachas en tiempo real.
+/// - **Verificación de Logros**: Al finalizar, comprueba y desbloquea logros automáticamente.
+///
+/// Dependencias:
+/// - `pokemonRepositoryProvider`: Para obtener datos de preguntas.
+/// - `triviaRepositoryProvider`: Para guardar resultados y logros.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,3 +1,18 @@
+/// Archivo: page_transitions.dart
+///
+/// Descripción:
+/// Colección de rutas personalizadas (`PageRouteBuilder`) para definir transiciones
+/// de navegación animadas y consistentes en toda la aplicación.
+///
+/// Tipos de Transición:
+/// - **SlideRight**: Desliza la nueva página desde la derecha (estándar en iOS/Android).
+/// - **Fade**: Fundido suave de opacidad (útil para diálogos o cambios de modo).
+/// - **ScaleFade**: Combinación de escala y opacidad (usado para abrir detalles).
+/// - **SlideUp**: Desliza desde abajo (estilo modal).
+///
+/// Extensiones:
+/// - `NavigatorExtensions`: Añade métodos convenientes al `Navigator` (`pushWithSlideTransition`, etc.)
+///   para usar estas transiciones sin escribir boilerplate.
 import 'package:flutter/material.dart';
 
 /// Colección de rutas personalizadas para crear transiciones animadas

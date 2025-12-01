@@ -1,3 +1,21 @@
+/// Archivo: region_selection_screen.dart
+///
+/// Descripción:
+/// Pantalla que permite al usuario filtrar la Pokédex por Generación (Región).
+/// Presenta una interfaz visual atractiva con tarjetas para cada una de las 9 generaciones
+/// principales de Pokémon.
+///
+/// Funcionalidades Principales:
+/// - **Grid de Generaciones**: Muestra las generaciones de Kanto a Paldea en una cuadrícula.
+/// - **Navegación Filtrada**: Al seleccionar una tarjeta, navega a la `PokemonListScreen`
+///   configurada para mostrar solo los Pokémon de esa generación específica.
+/// - **Diseño Temático**: Cada tarjeta tiene un color y una imagen representativa de la generación.
+///
+/// Datos Estáticos:
+/// - Contiene una lista `_generations` con los metadatos (nombre, id, color, asset) de cada región.
+///
+/// Dependencias:
+/// - `PokemonListScreen`: Destino de la navegación.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/presentation/providers/language_provider.dart';

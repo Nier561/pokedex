@@ -1,3 +1,16 @@
+/// Archivo: language_provider.dart
+///
+/// Descripción:
+/// Provider encargado de la internacionalización (i18n) de la aplicación.
+/// Gestiona el idioma activo y provee las traducciones.
+///
+/// Funcionalidades Principales:
+/// - **Gestión de Idioma**: Permite cambiar entre Inglés ('en') y Español ('es').
+/// - **Persistencia**: Guarda la preferencia de idioma del usuario.
+/// - **Localización (Clase S)**: Diccionario centralizado de textos traducidos para toda la app.
+///
+/// Dependencias:
+/// - `PreferencesLocalDataSource`: Almacenamiento de la preferencia.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/data/datasources/preferences_local_data_source.dart';

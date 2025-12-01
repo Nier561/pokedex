@@ -1,3 +1,22 @@
+/// Archivo: floating_hearts_overlay.dart
+///
+/// Descripción:
+/// Widget de efectos visuales que genera una animación de corazones flotantes.
+/// Se utiliza para celebrar acciones del usuario, como marcar un Pokémon como favorito.
+///
+/// Funcionalidades Principales:
+/// - **Partículas Animadas**: Genera múltiples instancias de `_FloatingHeart` que se mueven
+///   hacia arriba con una trayectoria sinusoidal (oscilación lateral).
+/// - **Variedad Visual**:
+///   - Corazones rojos para "Like".
+///   - Corazones rotos grises para "Unlike".
+///   - Tamaños y velocidades aleatorias para un efecto natural.
+/// - **Gestión de Recursos**: Elimina automáticamente los controladores de animación cuando
+///   las partículas salen de la pantalla para evitar fugas de memoria.
+///
+/// Uso:
+/// Envuelve la pantalla o el widget donde se desea mostrar el efecto y se activa mediante
+/// el método `showHearts`.
 import 'dart:math';
 import 'package:flutter/material.dart';
 

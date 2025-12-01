@@ -1,3 +1,18 @@
+/// Archivo: favorites_repository_impl.dart
+///
+/// Descripción:
+/// Implementación concreta del repositorio de favoritos.
+/// Actúa como orquestador entre el dominio y la fuente de datos local (Hive).
+///
+/// Funcionalidades Principales:
+/// - **Gestión de Favoritos**: Agrega y elimina Pokémon de la lista de favoritos.
+/// - **Persistencia de Detalles**: Cuando se marca un favorito, guarda una copia local completa
+///   de sus detalles (`PokemonDetailDto`) para garantizar acceso offline.
+/// - **Conversión**: Transforma entidades de dominio a DTOs para almacenamiento y viceversa.
+///
+/// Dependencias:
+/// - `IFavoritesRepository`: Interfaz que implementa.
+/// - `FavoritesLocalDataSource`: Fuente de datos.
 import 'package:pokedex/domain/repositories/i_favorites_repository.dart';
 import 'package:pokedex/domain/entities/pokemon.dart';
 import 'package:pokedex/domain/entities/pokemon_detail.dart';

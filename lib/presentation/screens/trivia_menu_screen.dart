@@ -1,3 +1,21 @@
+/// Archivo: trivia_menu_screen.dart
+///
+/// Descripción:
+/// Pantalla de inicio (Lobby) para el módulo de Trivia Pokémon.
+/// Sirve como punto de acceso a las distintas funcionalidades del minijuego.
+///
+/// Funcionalidades Principales:
+/// - **Jugar**: Inicia una nueva partida. Solicita el nombre del jugador mediante un modal
+///   (`NameInputModal`) antes de comenzar.
+/// - **Ranking**: Navega a la pantalla de tabla de posiciones (`TriviaRankingScreen`).
+/// - **Logros**: Navega a la pantalla de logros desbloqueados (`TriviaAchievementsScreen`).
+///
+/// Diseño:
+/// - Utiliza tarjetas grandes y coloridas (`_TriviaMenuCard`) con iconos para cada opción.
+/// - Mantiene la coherencia visual con el resto de la aplicación (fondo, tipografía).
+///
+/// Dependencias:
+/// - `gameStateProvider`: Se utiliza para inicializar el juego con el nombre del usuario.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/presentation/providers/game_state_provider.dart';

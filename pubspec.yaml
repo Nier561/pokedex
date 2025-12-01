@@ -1,3 +1,4 @@
+# Este archivo define la configuración del proyecto Flutter, incluyendo metadatos (nombre, descripción, versión), el entorno SDK, y las dependencias (librerías externas) necesarias para que la aplicación funcione. También gestiona los recursos (assets) como imágenes y fuentes.
 name: pokedex
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to

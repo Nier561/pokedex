@@ -1,3 +1,21 @@
+/// Archivo: preferences_local_data_source.dart
+///
+/// Descripción:
+/// Fuente de datos para la configuración y preferencias del usuario.
+/// Utiliza `SharedPreferences` para almacenamiento simple de pares clave-valor.
+///
+/// Funcionalidades Principales:
+/// - **Filtros de Búsqueda**: Persiste la configuración de filtros (tipos, generación, orden)
+///   para que el usuario no tenga que reconfigurarlos cada vez.
+/// - **Configuración Global**: Guarda el idioma (`saveLanguage`) y el tema (`saveThemeMode`).
+/// - **Estado de Onboarding**: Registra si el usuario ya vio la introducción (`saveOnboardingSeen`).
+/// - **Gestión de Datos**: Permite borrar todas las preferencias (`clearAll`).
+///
+/// Modelos:
+/// - `FilterSettingsModel`: Clase auxiliar para serializar la configuración de filtros a JSON.
+///
+/// Dependencias:
+/// - `shared_preferences`: Plugin estándar para preferencias de usuario en Android/iOS.
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 

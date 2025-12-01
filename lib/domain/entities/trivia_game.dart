@@ -1,3 +1,17 @@
+/// Archivo: trivia_game.dart
+///
+/// Descripción:
+/// Entidad raíz (Aggregate Root) del módulo de Trivia.
+/// Modela una sesión de juego completa, gestionando su estado y ciclo de vida.
+///
+/// Funcionalidades:
+/// - **Estado del Juego**: Mantiene la lista de preguntas, tiempo de inicio/fin y usuario.
+/// - **Lógica de Puntuación**: Calcula dinámicamente el puntaje total (`totalScore`) y
+///   la precisión (`accuracy`) basándose en las respuestas de las preguntas.
+/// - **Ciclo de Vida**: Métodos para verificar si el juego terminó (`isCompleted`) y finalizarlo (`finish`).
+///
+/// Relaciones:
+/// - Contiene una lista de `TriviaQuestion`.
 import 'package:pokedex/domain/entities/trivia_question.dart';
 
 /// Entidad de Dominio: Representa una partida completa de trivia.
