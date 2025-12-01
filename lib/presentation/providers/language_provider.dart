@@ -101,6 +101,8 @@ class S {
       'stat_sdef': 'SPD',
       'stat_spd': 'SPD',
       'no_pokemon_found': 'No Pokémon found',
+      'no_megas': 'No Mega Evolutions',
+      'no_forms': 'No Alternate Forms',
     },
     'es': {
       'app_title': 'Pokédex',
@@ -174,6 +176,8 @@ class S {
       'stat_sdef': 'DEF.ESP',
       'stat_spd': 'VEL',
       'no_pokemon_found': 'No se encontraron Pokémon',
+      'no_megas': 'No tiene Mega Evoluciones',
+      'no_forms': 'No tiene Formas Alternativas',
     },
   };
 

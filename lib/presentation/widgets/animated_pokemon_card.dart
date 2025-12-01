@@ -43,31 +43,29 @@ class _AnimatedPokemonCardState extends State<AnimatedPokemonCard>
     );
 
     // Animación de fundido
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.0, 0.8, curve: Curves.easeOut),
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.8, curve: Curves.easeOut),
+      ),
+    );
 
     // Animación de escala
-    _scaleAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.2, 1.0, curve: Curves.elasticOut),
-    ));
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.2, 1.0, curve: Curves.elasticOut),
+      ),
+    );
 
     // Animación de deslizamiento desde abajo
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.0, 0.8, curve: Curves.easeOutCubic),
-    ));
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0.0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0.0, 0.8, curve: Curves.easeOutCubic),
+          ),
+        );
 
     // Iniciar la animación con un retraso basado en el índice
     final delayMs = (widget.index.clamp(0, 6)) * 70;
@@ -97,7 +95,8 @@ class _AnimatedPokemonCardState extends State<AnimatedPokemonCard>
               scale: _scaleAnimation,
               child: GestureDetector(
                 onTap: widget.onTap,
-                child: _PokemonCardContent( // Usamos el contenido corregido aquí
+                child: _PokemonCardContent(
+                  // Usamos el contenido corregido aquí
                   name: widget.name,
                   types: widget.types,
                   imageUrl: widget.imageUrl,
@@ -175,7 +174,7 @@ class _PokemonCardContent extends StatelessWidget {
                         color: Colors.black12,
                         offset: Offset(0, 1),
                         blurRadius: 2,
-                      )
+                      ),
                     ],
                   ),
                   maxLines: 1,
@@ -192,14 +191,20 @@ class _PokemonCardContent extends StatelessWidget {
                       // CORRECCIÓN: Columna de Tipos (Izquierda)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: types.map((type) => Padding(
-                          padding: const EdgeInsets.only(bottom: 6),
-                          child: TypeBadge(
-                            type: type,
-                            backgroundColor: Colors.white.withOpacity(0.25),
-                            small: true,
-                          ),
-                        )).toList(),
+                        children: types
+                            .map(
+                              (type) => Padding(
+                                padding: const EdgeInsets.only(bottom: 6),
+                                child: TypeBadge(
+                                  type: type,
+                                  backgroundColor: Colors.white.withOpacity(
+                                    0.25,
+                                  ),
+                                  small: true,
+                                ),
+                              ),
+                            )
+                            .toList(),
                       ),
 
                       // Espaciador
@@ -226,10 +231,12 @@ class _PokemonCardContent extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            errorWidget: (context, url, error) => Icon(
-                              Icons.image_not_supported,
+                            errorWidget: (context, url, error) => Image.asset(
+                              'assets/images/pokedex icono 2.webp',
+                              width: 40,
+                              height: 40,
                               color: Colors.white.withOpacity(0.5),
-                              size: 40,
+                              colorBlendMode: BlendMode.modulate,
                             ),
                           ),
                         ),
@@ -250,11 +257,7 @@ class InteractivePokemonCard extends StatefulWidget {
   final Widget child;
   final VoidCallback? onTap;
 
-  const InteractivePokemonCard({
-    super.key,
-    required this.child,
-    this.onTap,
-  });
+  const InteractivePokemonCard({super.key, required this.child, this.onTap});
 
   @override
   State<InteractivePokemonCard> createState() => _InteractivePokemonCardState();
@@ -274,13 +277,13 @@ class _InteractivePokemonCardState extends State<InteractivePokemonCard>
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.95, // Efecto de presión (shrink) al tocar
-    ).animate(CurvedAnimation(
-      parent: _hoverController,
-      curve: Curves.easeInOut,
-    ));
+    _scaleAnimation =
+        Tween<double>(
+          begin: 1.0,
+          end: 0.95, // Efecto de presión (shrink) al tocar
+        ).animate(
+          CurvedAnimation(parent: _hoverController, curve: Curves.easeInOut),
+        );
   }
 
   @override
@@ -296,10 +299,7 @@ class _InteractivePokemonCardState extends State<InteractivePokemonCard>
       onTapUp: (_) => _hoverController.reverse(),
       onTapCancel: () => _hoverController.reverse(),
       onTap: widget.onTap,
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: widget.child,
-      ),
+      child: ScaleTransition(scale: _scaleAnimation, child: widget.child),
     );
   }
 }
