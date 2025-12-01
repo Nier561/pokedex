@@ -53,6 +53,4 @@ class TriviaGameModel extends HiveObject {
       userName: entity.userName,
     );
   }
-
-  // No necesitamos toEntity completo porque el historial solo muestra resumen
 }

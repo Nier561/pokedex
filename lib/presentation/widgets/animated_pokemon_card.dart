@@ -10,6 +10,7 @@ class AnimatedPokemonCard extends StatefulWidget {
   final LinearGradient background;
   final VoidCallback? onTap;
   final int index;
+  final bool isLarge;
 
   const AnimatedPokemonCard({
     super.key,
@@ -20,6 +21,7 @@ class AnimatedPokemonCard extends StatefulWidget {
     required this.background,
     this.onTap,
     required this.index,
+    this.isLarge = false,
   });
 
   @override
@@ -102,6 +104,7 @@ class _AnimatedPokemonCardState extends State<AnimatedPokemonCard>
                   imageUrl: widget.imageUrl,
                   fallbackImageUrl: widget.fallbackImageUrl,
                   background: widget.background,
+                  isLarge: widget.isLarge,
                 ),
               ),
             ),
@@ -120,6 +123,7 @@ class _PokemonCardContent extends StatelessWidget {
   final String imageUrl;
   final String? fallbackImageUrl;
   final LinearGradient background;
+  final bool isLarge;
 
   const _PokemonCardContent({
     required this.name,
@@ -127,6 +131,7 @@ class _PokemonCardContent extends StatelessWidget {
     required this.imageUrl,
     this.fallbackImageUrl,
     required this.background,
+    required this.isLarge,
   });
 
   @override
@@ -156,20 +161,53 @@ class _PokemonCardContent extends StatelessWidget {
             ),
           ),
 
+          if (isLarge)
+            Positioned(
+              right: 15,
+              bottom: 0,
+              child: Hero(
+                tag: 'pokemon-img-$name',
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  width: 120,
+                  height: 120,
+                  fit: BoxFit.contain,
+                  memCacheWidth: 200,
+                  placeholder: (context, url) => Center(
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white.withOpacity(0.5),
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Image.asset(
+                    'assets/images/pokedex icono 2.webp',
+                    width: 40,
+                    height: 40,
+                    color: Colors.white.withOpacity(0.5),
+                    colorBlendMode: BlendMode.modulate,
+                  ),
+                ),
+              ),
+            ),
+
           // Contenido Principal
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: EdgeInsets.all(isLarge ? 20.0 : 12.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 1. Nombre
                 Text(
                   name,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: isLarge ? 24 : 16,
                     fontWeight: FontWeight.bold,
-                    shadows: [
+                    shadows: const [
                       Shadow(
                         color: Colors.black12,
                         offset: Offset(0, 1),
@@ -181,69 +219,86 @@ class _PokemonCardContent extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
 
-                const SizedBox(height: 8),
+                SizedBox(height: isLarge ? 12 : 8),
 
                 // 2. Tipos e Imagen
-                Expanded(
-                  child: Row(
+                if (isLarge) ...[
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // CORRECCIÓN: Columna de Tipos (Izquierda)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: types
-                            .map(
-                              (type) => Padding(
-                                padding: const EdgeInsets.only(bottom: 6),
-                                child: TypeBadge(
-                                  type: type,
-                                  backgroundColor: Colors.white.withOpacity(
-                                    0.25,
-                                  ),
-                                  small: true,
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-
-                      // Espaciador
-                      const Spacer(),
-
-                      // Imagen
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Hero(
-                          tag: 'pokemon-img-$name',
-                          child: CachedNetworkImage(
-                            imageUrl: imageUrl,
-                            width: 90,
-                            height: 90,
-                            fit: BoxFit.contain,
-                            memCacheWidth: 200,
-                            placeholder: (context, url) => Center(
-                              child: SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white.withOpacity(0.5),
-                                ),
-                              ),
+                    children: types
+                        .map(
+                          (type) => Padding(
+                            padding: const EdgeInsets.only(bottom: 6),
+                            child: TypeBadge(
+                              type: type,
+                              backgroundColor: Colors.white.withOpacity(0.25),
+                              small: false,
                             ),
-                            errorWidget: (context, url, error) => Image.asset(
-                              'assets/images/pokedex icono 2.webp',
-                              width: 40,
-                              height: 40,
-                              color: Colors.white.withOpacity(0.5),
-                              colorBlendMode: BlendMode.modulate,
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ] else
+                  Expanded(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // CORRECCIÓN: Columna de Tipos (Izquierda)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: types
+                              .map(
+                                (type) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 6),
+                                  child: TypeBadge(
+                                    type: type,
+                                    backgroundColor: Colors.white.withOpacity(
+                                      0.25,
+                                    ),
+                                    small: true,
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ),
+
+                        // Espaciador
+                        const Spacer(),
+
+                        // Imagen
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Hero(
+                            tag: 'pokemon-img-$name',
+                            child: CachedNetworkImage(
+                              imageUrl: imageUrl,
+                              width: 90,
+                              height: 90,
+                              fit: BoxFit.contain,
+                              memCacheWidth: 200,
+                              placeholder: (context, url) => Center(
+                                child: SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white.withOpacity(0.5),
+                                  ),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Image.asset(
+                                'assets/images/pokedex icono 2.webp',
+                                width: 40,
+                                height: 40,
+                                color: Colors.white.withOpacity(0.5),
+                                colorBlendMode: BlendMode.modulate,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
               ],
             ),
           ),

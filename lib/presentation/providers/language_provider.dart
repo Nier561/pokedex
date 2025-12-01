@@ -103,6 +103,7 @@ class S {
       'no_pokemon_found': 'No Pokémon found',
       'no_megas': 'No Mega Evolutions',
       'no_forms': 'No Alternate Forms',
+      'no_favorites': 'No Favorites Yet',
     },
     'es': {
       'app_title': 'Pokédex',
@@ -178,6 +179,7 @@ class S {
       'no_pokemon_found': 'No se encontraron Pokémon',
       'no_megas': 'No tiene Mega Evoluciones',
       'no_forms': 'No tiene Formas Alternativas',
+      'no_favorites': 'No hay Favoritos',
     },
   };
 

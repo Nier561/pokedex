@@ -7,6 +7,7 @@ import 'package:pokedex/presentation/screens/list_screen.dart';
 import 'package:pokedex/presentation/screens/settings_screen.dart';
 import 'package:pokedex/presentation/widgets/page_transitions.dart';
 import 'package:pokedex/presentation/screens/trivia_menu_screen.dart';
+import 'package:pokedex/presentation/screens/favorites_screen.dart';
 
 /// Pantalla principal del menú de la Pokédex
 /// Utiliza ConsumerStatefulWidget para manejar estado y animaciones
@@ -203,9 +204,7 @@ class _MainScreenState extends ConsumerState<MainScreen>
                               Navigator.push(
                                 context,
                                 SlideRightPageRoute(
-                                  child: const PokemonListScreen(
-                                    showFavorites: true,
-                                  ),
+                                  child: const FavoritesScreen(),
                                 ),
                               );
                             },
