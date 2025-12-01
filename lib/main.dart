@@ -18,6 +18,7 @@ import 'package:pokedex/data/repositories/trivia_repository_impl.dart';
 // Presentation
 import 'package:pokedex/presentation/screens/main_screen.dart';
 import 'package:pokedex/presentation/providers/trivia_provider.dart';
+import 'package:pokedex/presentation/providers/theme_provider.dart';
 
 /// INYECCIÓN DE DEPENDENCIAS CON RIVERPOD
 /// Estos providers crean las instancias de los repositorios que usaremos en la app.
@@ -37,32 +38,37 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  
+
   // Inicializar Hive
   await Hive.initFlutter();
-  
+
   // Inicializar Pokemon Datasource
   final pokemonLocalDataSource = PokemonLocalDataSource();
   await pokemonLocalDataSource.init();
 
   final client = getGraphQLClient();
   final pokemonRemoteDataSource = PokemonRemoteDataSource(client);
-  final pokemonRepository = PokemonRepositoryImpl(pokemonRemoteDataSource, pokemonLocalDataSource);
-  
+  final pokemonRepository = PokemonRepositoryImpl(
+    pokemonRemoteDataSource,
+    pokemonLocalDataSource,
+  );
+
   // Inicializar Trivia Datasource
   final triviaDataSource = TriviaLocalDataSource();
   await triviaDataSource.init();
-  
+
   final triviaRepository = TriviaRepositoryImpl(triviaDataSource);
 
   // ProviderScope es obligatorio para que Riverpod funcione
-  runApp(ProviderScope(
-    overrides: [
-      triviaRepositoryProvider.overrideWithValue(triviaRepository),
-      pokemonRepositoryProvider.overrideWithValue(pokemonRepository),
-    ],
-    child: const PokeDexApp(),
-  ));
+  runApp(
+    ProviderScope(
+      overrides: [
+        triviaRepositoryProvider.overrideWithValue(triviaRepository),
+        pokemonRepositoryProvider.overrideWithValue(pokemonRepository),
+      ],
+      child: const PokeDexApp(),
+    ),
+  );
 }
 
 class PokeDexApp extends StatelessWidget {
@@ -70,15 +76,33 @@ class PokeDexApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Pokédex',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF8B7ED8)),
-        useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFFF5F5F5),
-      ),
-      home: const MainScreen(),
+    return Consumer(
+      builder: (context, ref, child) {
+        final themeMode = ref.watch(themeProvider);
+        return MaterialApp(
+          title: 'Pokédex',
+          debugShowCheckedModeBanner: false,
+          themeMode: themeMode,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF8B7ED8),
+            ),
+            useMaterial3: true,
+            scaffoldBackgroundColor: const Color(0xFFF5F5F5),
+            brightness: Brightness.light,
+          ),
+          darkTheme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF8B7ED8),
+              brightness: Brightness.dark,
+            ),
+            useMaterial3: true,
+            scaffoldBackgroundColor: const Color(0xFF121212),
+            brightness: Brightness.dark,
+          ),
+          home: const MainScreen(),
+        );
+      },
     );
   }
 }

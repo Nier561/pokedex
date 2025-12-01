@@ -82,9 +82,11 @@ class _MainScreenState extends ConsumerState<MainScreen>
     final locale = ref.watch(languageProvider);
     // Función helper para traducciones
     String tr(String key) => S(locale).get(key);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
           // Decoración de fondo: Pokeball gigante con opacidad baja
@@ -94,7 +96,9 @@ class _MainScreenState extends ConsumerState<MainScreen>
             child: Icon(
               Icons.catching_pokemon,
               size: 300,
-              color: Colors.grey.withOpacity(0.05),
+              color: isDark
+                  ? Colors.white.withOpacity(0.05)
+                  : Colors.grey.withOpacity(0.05),
             ),
           ),
           SafeArea(
@@ -137,10 +141,10 @@ class _MainScreenState extends ConsumerState<MainScreen>
                           // Título principal
                           Text(
                             tr('app_title'), // "Pokédex"
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 36,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black87,
+                              color: theme.textTheme.bodyLarge?.color,
                               letterSpacing: 1.2,
                             ),
                           ),
@@ -148,10 +152,11 @@ class _MainScreenState extends ConsumerState<MainScreen>
                           // Subtítulo traducible
                           Text(
                             tr('main_subtitle'),
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
-                              color: Colors.black54,
+                              color: theme.textTheme.bodyMedium?.color
+                                  ?.withOpacity(0.6),
                             ),
                           ),
                         ],

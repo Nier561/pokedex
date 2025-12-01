@@ -18,9 +18,11 @@ class TriviaMenuScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final translations = ref.watch(triviaTranslationsProvider);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
           // Decoración de fondo: Pokeball gigante con opacidad baja
@@ -30,7 +32,9 @@ class TriviaMenuScreen extends ConsumerWidget {
             child: Icon(
               Icons.catching_pokemon,
               size: 300,
-              color: Colors.grey.withOpacity(0.05),
+              color: isDark
+                  ? Colors.white.withOpacity(0.05)
+                  : Colors.grey.withOpacity(0.05),
             ),
           ),
           SafeArea(
@@ -42,27 +46,32 @@ class TriviaMenuScreen extends ConsumerWidget {
                   const SizedBox(height: 20),
                   // Botón de regreso
                   IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black87),
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: theme.textTheme.bodyLarge?.color,
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                   const SizedBox(height: 20),
                   // Título principal
                   Text(
                     translations.get('trivia_title'),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: theme.textTheme.bodyLarge?.color,
                       letterSpacing: 1.2,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     translations.get('trivia_subtitle'),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Colors.black54,
+                      color: theme.textTheme.bodyMedium?.color?.withOpacity(
+                        0.6,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 32),
@@ -85,7 +94,10 @@ class TriviaMenuScreen extends ConsumerWidget {
                               if (context.mounted) {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const TriviaGameScreen()),
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const TriviaGameScreen(),
+                                  ),
                                 );
                               }
                             });
@@ -99,7 +111,12 @@ class TriviaMenuScreen extends ConsumerWidget {
                           onTap: () {
                             WidgetsBinding.instance.addPostFrameCallback((_) {
                               if (context.mounted) {
-                                Navigator.push(context, SlideRightPageRoute(child: const TriviaRankingScreen()));
+                                Navigator.push(
+                                  context,
+                                  SlideRightPageRoute(
+                                    child: const TriviaRankingScreen(),
+                                  ),
+                                );
                               }
                             });
                           },
@@ -112,7 +129,12 @@ class TriviaMenuScreen extends ConsumerWidget {
                           onTap: () {
                             WidgetsBinding.instance.addPostFrameCallback((_) {
                               if (context.mounted) {
-                                Navigator.push(context, SlideRightPageRoute(child: const TriviaAchievementsScreen()));
+                                Navigator.push(
+                                  context,
+                                  SlideRightPageRoute(
+                                    child: const TriviaAchievementsScreen(),
+                                  ),
+                                );
                               }
                             });
                           },
@@ -221,7 +243,7 @@ class _TriviaMenuCardState extends State<_TriviaMenuCard> {
                               color: Colors.black12,
                               offset: Offset(0, 2),
                               blurRadius: 2,
-                            )
+                            ),
                           ],
                         ),
                       ),

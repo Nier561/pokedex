@@ -11,24 +11,71 @@ class GenerationSelectionScreen extends ConsumerWidget {
   const GenerationSelectionScreen({super.key});
 
   static const List<Map<String, dynamic>> _generations = [
-    {'gen': 1, 'name': 'Kanto', 'image': 'assets/images/gen1dex.png', 'color': Color(0xFF78C850)},
-    {'gen': 2, 'name': 'Johto', 'image': 'assets/images/gen2dex.png', 'color': Color(0xFFA7DB8D)},
-    {'gen': 3, 'name': 'Hoenn', 'image': 'assets/images/gen3dex.png', 'color': Color(0xFF98D8D8)},
-    {'gen': 4, 'name': 'Sinnoh', 'image': 'assets/images/gen4dex.png', 'color': Color(0xFFA8A878)},
-    {'gen': 5, 'name': 'Unova', 'image': 'assets/images/gen5dex.png', 'color': Color(0xFFA040A0)},
-    {'gen': 6, 'name': 'Kalos', 'image': 'assets/images/gen6dex.png', 'color': Color(0xFFF85888)},
-    {'gen': 7, 'name': 'Alola', 'image': 'assets/images/gen7dex.png', 'color': Color(0xFFF08030)},
-    {'gen': 8, 'name': 'Galar', 'image': 'assets/images/gen8dex.png', 'color': Color(0xFF6890F0)},
-    {'gen': 9, 'name': 'Paldea', 'image': 'assets/images/gen9dex.png', 'color': Color(0xFF7038F8)},
+    {
+      'gen': 1,
+      'name': 'Kanto',
+      'image': 'assets/images/gen1dex.png',
+      'color': Color(0xFF78C850),
+    },
+    {
+      'gen': 2,
+      'name': 'Johto',
+      'image': 'assets/images/gen2dex.png',
+      'color': Color(0xFFA7DB8D),
+    },
+    {
+      'gen': 3,
+      'name': 'Hoenn',
+      'image': 'assets/images/gen3dex.png',
+      'color': Color(0xFF98D8D8),
+    },
+    {
+      'gen': 4,
+      'name': 'Sinnoh',
+      'image': 'assets/images/gen4dex.png',
+      'color': Color(0xFFA8A878),
+    },
+    {
+      'gen': 5,
+      'name': 'Unova',
+      'image': 'assets/images/gen5dex.png',
+      'color': Color(0xFFA040A0),
+    },
+    {
+      'gen': 6,
+      'name': 'Kalos',
+      'image': 'assets/images/gen6dex.png',
+      'color': Color(0xFFF85888),
+    },
+    {
+      'gen': 7,
+      'name': 'Alola',
+      'image': 'assets/images/gen7dex.png',
+      'color': Color(0xFFF08030),
+    },
+    {
+      'gen': 8,
+      'name': 'Galar',
+      'image': 'assets/images/gen8dex.png',
+      'color': Color(0xFF6890F0),
+    },
+    {
+      'gen': 9,
+      'name': 'Paldea',
+      'image': 'assets/images/gen9dex.png',
+      'color': Color(0xFF7038F8),
+    },
   ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(languageProvider);
     String tr(String key) => S(locale).get(key);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
           // Fondo decorativo
@@ -38,7 +85,9 @@ class GenerationSelectionScreen extends ConsumerWidget {
             child: Icon(
               Icons.catching_pokemon,
               size: 300,
-              color: Colors.grey.withOpacity(0.05),
+              color: isDark
+                  ? Colors.white.withOpacity(0.05)
+                  : Colors.grey.withOpacity(0.05),
             ),
           ),
           SafeArea(
@@ -52,17 +101,20 @@ class GenerationSelectionScreen extends ConsumerWidget {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.black87),
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: theme.textTheme.bodyLarge?.color,
+                        ),
                         onPressed: () => Navigator.pop(context),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           tr('select_generation_dex'),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                            color: theme.textTheme.bodyLarge?.color,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -72,17 +124,18 @@ class GenerationSelectionScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Grid de Generaciones
                 Expanded(
                   child: GridView.builder(
                     padding: const EdgeInsets.all(24),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      childAspectRatio: 0.85,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.85,
+                        ),
                     itemCount: _generations.length,
                     itemBuilder: (context, index) {
                       final g = _generations[index];
@@ -92,7 +145,14 @@ class GenerationSelectionScreen extends ConsumerWidget {
                         imageAsset: g['image'],
                         color: g['color'],
                         onTap: () {
-                          Navigator.push(context, SlideRightPageRoute(child: PokemonListScreen(initialGeneration: g['gen'])));
+                          Navigator.push(
+                            context,
+                            SlideRightPageRoute(
+                              child: PokemonListScreen(
+                                initialGeneration: g['gen'],
+                              ),
+                            ),
+                          );
                         },
                         tr: tr,
                       );
@@ -130,9 +190,10 @@ class _GenerationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -176,9 +237,9 @@ class _GenerationCard extends StatelessWidget {
                     ),
                     Text(
                       regionName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: theme.textTheme.bodyLarge?.color,
                         fontSize: 20,
                       ),
                     ),
@@ -190,7 +251,11 @@ class _GenerationCard extends StatelessWidget {
                         fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) {
                           debugPrint('Error loading image $imageAsset: $error');
-                          return Icon(Icons.broken_image, size: 50, color: color.withOpacity(0.5));
+                          return Icon(
+                            Icons.broken_image,
+                            size: 50,
+                            color: color.withOpacity(0.5),
+                          );
                         },
                       ),
                     ),

@@ -102,10 +102,17 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
             orElse: () => StatDto('hp', 50),
           )
           .value;
+      // Pre-cache image to avoid loading issues during capture
+      if (mounted) {
+        await precacheImage(NetworkImage(_img(p.id)), context);
+      }
+
       final cardWidget = _buildCardForCapture(p, moves, hp, tr);
       final Uint8List? image = await _screenshotController.captureFromWidget(
         cardWidget,
-        delay: const Duration(milliseconds: 300),
+        delay: const Duration(
+          milliseconds: 500,
+        ), // Increased delay to ensure rendering
         pixelRatio: 3.0,
       );
 
@@ -131,13 +138,24 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
   }
 
   List<MoveDto> _getRandomMovesForCard(PokemonDetail p) {
-    var typeMoves = p.moves
+    // Deduplicate moves by name to avoid repeats
+    final uniqueMoves = <String, MoveDto>{};
+    for (var m in p.moves) {
+      if (!uniqueMoves.containsKey(m.name)) {
+        uniqueMoves[m.name] = m;
+      }
+    }
+    final allMoves = uniqueMoves.values.toList();
+
+    var typeMoves = allMoves
         .where((m) => p.types.contains(m.type) && (m.power != null))
         .toList();
+
     if (typeMoves.length < 2) {
-      typeMoves = p.moves.where((m) => m.power != null).toList();
+      typeMoves = allMoves.where((m) => m.power != null).toList();
     }
-    if (typeMoves.isEmpty) typeMoves = p.moves;
+    if (typeMoves.isEmpty) typeMoves = allMoves;
+
     typeMoves.shuffle();
     return typeMoves.take(2).toList();
   }
@@ -361,7 +379,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
-          foregroundColor: Colors.black,
+          foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
         ),
         body: ErrorView(
           message:
@@ -694,9 +712,9 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
                   Expanded(
                     child: Container(
                       width: double.infinity,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.vertical(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(30),
                         ),
                       ),
@@ -707,7 +725,9 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
                                 const SizedBox(height: 16),
                                 TabBar(
                                   controller: _tabController,
-                                  labelColor: Colors.black87,
+                                  labelColor: Theme.of(
+                                    context,
+                                  ).textTheme.bodyLarge?.color,
                                   unselectedLabelColor: Colors.grey,
                                   indicatorColor: color,
                                   indicatorSize: TabBarIndicatorSize.label,
@@ -845,10 +865,10 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
             ),
             child: Text(
               p.flavorText.replaceAll('\n', ' '),
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 height: 1.4,
-                color: Colors.black87,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
               textAlign: TextAlign.center,
             ),
@@ -1428,7 +1448,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           collapsedBackgroundColor: typeColor.withOpacity(0.05),
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).cardColor,
           childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           title: Row(
             children: [
@@ -1437,9 +1457,10 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
               Expanded(
                 child: Text(
                   _pretty(m.name),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                 ),
               ),
@@ -1496,8 +1517,10 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
               m.description.isNotEmpty
                   ? m.description
                   : 'No description available.',
-              style: const TextStyle(
-                color: Colors.black54,
+              style: TextStyle(
+                color: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.color?.withOpacity(0.7),
                 fontStyle: FontStyle.italic,
               ),
             ),
@@ -1519,7 +1542,11 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
       ),
       Text(
         val,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).textTheme.bodyLarge?.color,
+        ),
       ),
     ],
   );

@@ -31,16 +31,17 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
   // Estado local para el filtro rápido de favoritos
   late bool _showOnlyFavorites;
 
-  static const Map<int, List<int>> _genRanges = {
-    1: [1, 151],
-    2: [152, 251],
-    3: [252, 386],
-    4: [387, 493],
-    5: [494, 649],
-    6: [650, 721],
-    7: [722, 809],
-    8: [810, 898],
-    9: [899, 1025],
+  // Límite superior de ID por generación (National Dex Acumulativo)
+  static const Map<int, int> _genMaxIds = {
+    1: 151, // Kanto
+    2: 251, // Johto (incluye Kanto)
+    3: 386, // Hoenn (incluye anteriores)
+    4: 493, // Sinnoh ...
+    5: 649, // Unova
+    6: 721, // Kalos
+    7: 809, // Alola
+    8: 905, // Galar + Hisui
+    9: 1025, // Paldea
   };
 
   static const Set<String> _hyphenBaseWhitelist = {
@@ -66,7 +67,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
     super.initState();
     _showOnlyFavorites = widget.showFavorites;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Carga inicial
+      // Carga inicial de datos
       ref.read(pokemonListProvider.notifier).loadMore();
     });
 
@@ -96,19 +97,26 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
     super.dispose();
   }
 
+  /// Procesa la lista de Pokémon aplicando filtros y ordenamiento.
   List<Pokemon> _processList(
     List<Pokemon> pokes,
     FilterState filters,
     Set<int> favorites,
   ) {
     final q = filters.searchQuery.trim().toLowerCase();
+
+    // Determinamos la generación activa (Contexto de navegación o Filtro manual)
     final int? effectiveGen = widget.initialGeneration ?? filters.selectedGen;
 
     final filtered = pokes.where((p) {
+      // 1. Filtro Generación (Modo Acumulativo / National Dex)
+      // Si seleccionamos Gen 2, mostramos TODOS los Pokémon con ID <= 251.
       if (effectiveGen != null) {
-        final range = _genRanges[effectiveGen];
-        if (range != null && (p.id < range[0] || p.id > range[1])) return false;
+        final maxId = _genMaxIds[effectiveGen];
+        if (maxId != null && p.id > maxId) return false;
       }
+
+      // 2. Filtro Nombres / Variantes (Exclusión de formas técnicas)
       final name = p.name.toLowerCase();
       if (name.startsWith('zygarde-')) {
         if (name.contains('power-construct')) return false;
@@ -116,16 +124,25 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
       } else if (name.contains('-') && !_hyphenBaseWhitelist.contains(name)) {
         return false;
       }
+
+      // 3. Filtro de Búsqueda (Texto o ID)
       if (q.isNotEmpty && !name.contains(q) && p.id.toString() != q)
         return false;
+
+      // 4. Filtro Favoritos
       if (_showOnlyFavorites && !favorites.contains(p.id)) return false;
+
+      // 5. Filtro de Tipos
       if (filters.selectedTypes.isNotEmpty) {
+        // AND estricto: debe tener todos los tipos seleccionados
         if (!filters.selectedTypes.every((t) => p.types.contains(t)))
           return false;
       }
+
       return true;
     }).toList();
 
+    // Ordenamiento
     filtered.sort((a, b) {
       int cmp = 0;
       switch (filters.sortMode) {
@@ -150,10 +167,13 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
   Widget build(BuildContext context) {
     final locale = ref.watch(languageProvider);
     String tr(String key) => S(locale).get(key);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     String title = tr('app_title');
     if (_showOnlyFavorites) {
-      title = tr('favorites');
+      // Idealmente agregar 'favorites' al diccionario, fallback a inglés si no existe
+      title = tr('favorites') == 'favorites' ? 'Favorites' : tr('favorites');
     } else if (widget.initialGeneration != null) {
       title = '${tr('generation')} ${widget.initialGeneration}';
     }
@@ -162,6 +182,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
     final filters = ref.watch(filterProvider);
     final favorites = ref.watch(favoritesProvider);
 
+    // Determinamos si hay filtros activos para cambiar la fuente de datos
     final isFiltering =
         filters.searchQuery.isNotEmpty ||
         filters.selectedTypes.isNotEmpty ||
@@ -173,6 +194,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
 
     List<Pokemon> sourceList;
     if (isFiltering) {
+      // Si filtramos, usamos la lista completa (cacheada) para buscar globalmente
       final allPokesAsync = ref.watch(allPokemonProvider);
       sourceList = allPokesAsync.valueOrNull ?? listState.pokemons;
     } else {
@@ -183,7 +205,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
     final processedIds = processedList.map((e) => e.id).toList();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
           Positioned(
@@ -192,7 +214,9 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
             child: Icon(
               Icons.catching_pokemon,
               size: 300,
-              color: Colors.grey.withOpacity(0.05),
+              color: isDark
+                  ? Colors.white.withOpacity(0.05)
+                  : Colors.grey.withOpacity(0.05),
             ),
           ),
           SafeArea(
@@ -207,9 +231,9 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.arrow_back,
-                          color: Colors.black87,
+                          color: theme.textTheme.bodyLarge?.color,
                         ),
                         onPressed: () => Navigator.pop(context),
                       ),
@@ -217,10 +241,10 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                       Expanded(
                         child: Text(
                           title,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                            color: theme.textTheme.bodyLarge?.color,
                             letterSpacing: 0.5,
                           ),
                           maxLines: 1,
@@ -233,7 +257,9 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                               ? Icons.favorite
                               : Icons.favorite_border,
                         ),
-                        color: _showOnlyFavorites ? Colors.red : Colors.black87,
+                        color: _showOnlyFavorites
+                            ? Colors.red
+                            : theme.textTheme.bodyLarge?.color,
                         onPressed: () {
                           setState(() {
                             _showOnlyFavorites = !_showOnlyFavorites;
@@ -241,7 +267,10 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                         },
                       ),
                       IconButton(
-                        icon: const Icon(Icons.tune, color: Colors.black87),
+                        icon: Icon(
+                          Icons.tune,
+                          color: theme.textTheme.bodyLarge?.color,
+                        ),
                         onPressed: () => _openFilterSheet(context, tr),
                       ),
                     ],
@@ -265,7 +294,10 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                                     const SizedBox(height: 80),
                                     Center(
                                       child: Text(
-                                        tr('no_pokemon_found'),
+                                        tr('no_pokemon_found') ==
+                                                'no_pokemon_found'
+                                            ? 'No Pokémon found'
+                                            : tr('no_pokemon_found'),
                                         style: const TextStyle(
                                           color: Colors.grey,
                                           fontSize: 16,
@@ -307,7 +339,6 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                                         genContext:
                                             widget.initialGeneration ??
                                             filters.selectedGen,
-                                        cachedPokemon: p,
                                       ),
                                     );
                                   },
@@ -349,6 +380,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
   }
 
   Widget _buildSearchBar(String currentQuery, Function(String) tr) {
+    final theme = Theme.of(context);
     if (_searchController.text != currentQuery) {
       _searchController.text = currentQuery;
       _searchController.selection = TextSelection.fromPosition(
@@ -360,7 +392,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
@@ -372,7 +404,11 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
         ),
         child: TextField(
           controller: _searchController,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: theme.textTheme.bodyLarge?.color,
+          ),
           decoration: InputDecoration(
             hintText: tr('search_hint'),
             hintStyle: TextStyle(color: Colors.grey.shade400),
@@ -429,11 +465,14 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) {
+        final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
+
         return Container(
           height: MediaQuery.of(context).size.height * 0.85,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          decoration: BoxDecoration(
+            color: theme.scaffoldBackgroundColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: StatefulBuilder(
             builder: (ctx, setModal) {
@@ -460,9 +499,10 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                       children: [
                         Text(
                           tr('filters'),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
+                            color: theme.textTheme.bodyLarge?.color,
                           ),
                         ),
                         TextButton(
@@ -471,7 +511,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                             Navigator.pop(ctx);
                           },
                           child: Text(
-                            'Reset',
+                            tr('reset') == 'reset' ? 'Reset' : tr('reset'),
                             style: TextStyle(
                               color: Colors.red.shade400,
                               fontSize: 16,
@@ -505,7 +545,9 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                                 child: Container(
                                   height: 48,
                                   decoration: BoxDecoration(
-                                    color: Colors.grey.shade100,
+                                    color: isDark
+                                        ? Colors.grey[800]
+                                        : Colors.grey.shade100,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Row(
@@ -522,7 +564,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                                             child: Container(
                                               decoration: BoxDecoration(
                                                 color: tempSort == mode
-                                                    ? Colors.white
+                                                    ? theme.cardColor
                                                     : Colors.transparent,
                                                 borderRadius:
                                                     BorderRadius.circular(10),
@@ -555,7 +597,10 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                                                       ? FontWeight.bold
                                                       : FontWeight.normal,
                                                   color: tempSort == mode
-                                                      ? Colors.black87
+                                                      ? theme
+                                                            .textTheme
+                                                            .bodyLarge
+                                                            ?.color
                                                       : Colors.grey.shade600,
                                                   fontSize: 13,
                                                 ),
@@ -575,14 +620,16 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                                   width: 48,
                                   height: 48,
                                   decoration: BoxDecoration(
-                                    color: Colors.grey.shade100,
+                                    color: isDark
+                                        ? Colors.grey[800]
+                                        : Colors.grey.shade100,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Icon(
                                     tempAsc
                                         ? Icons.arrow_upward
                                         : Icons.arrow_downward,
-                                    color: Colors.black87,
+                                    color: theme.textTheme.bodyLarge?.color,
                                   ),
                                 ),
                               ),
@@ -625,12 +672,14 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                                     vertical: 8,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: isSel ? typeColor : Colors.white,
+                                    color: isSel ? typeColor : theme.cardColor,
                                     borderRadius: BorderRadius.circular(20),
                                     border: Border.all(
                                       color: isSel
                                           ? typeColor
-                                          : Colors.grey.shade300,
+                                          : (isDark
+                                                ? Colors.grey[700]!
+                                                : Colors.grey.shade300),
                                       width: 1.5,
                                     ),
                                     boxShadow: isSel
@@ -658,7 +707,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                           ),
                           const SizedBox(height: 32),
 
-                          // --- GENERATION SECTION ---
+                          // --- GENERATION SECTION (SOLO SI NO ESTÁ EN CONTEXTO) ---
                           if (widget.initialGeneration == null) ...[
                             Text(
                               tr('generation'),
@@ -696,7 +745,9 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                                       decoration: BoxDecoration(
                                         color: isSel
                                             ? Colors.deepPurpleAccent
-                                            : Colors.grey.shade100,
+                                            : (isDark
+                                                  ? Colors.grey[800]
+                                                  : Colors.grey.shade100),
                                         borderRadius: BorderRadius.circular(25),
                                       ),
                                       child: Text(
@@ -738,7 +789,7 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
                                 Navigator.pop(ctx);
                               },
                               child: Text(
-                                tr('apply_filters'),
+                                tr('apply') == 'apply' ? 'Apply' : tr('apply'),
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,

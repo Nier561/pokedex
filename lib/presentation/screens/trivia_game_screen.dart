@@ -1,8 +1,10 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/presentation/providers/game_state_provider.dart';
 import 'package:pokedex/presentation/providers/trivia_translations.dart';
 import 'package:pokedex/presentation/screens/trivia_results_screen.dart';
+import 'package:pokedex/presentation/widgets/error_view.dart';
 import 'package:pokedex/presentation/widgets/pokemon_silhouette_widget.dart';
 import 'package:pokedex/presentation/widgets/trivia_timer_widget.dart';
 
@@ -12,11 +14,67 @@ import 'package:pokedex/presentation/widgets/trivia_timer_widget.dart';
 /// - Maneja la selección de respuestas.
 /// - Muestra feedback visual (correcto/incorrecto).
 /// - Navega a la pantalla de resultados al finalizar.
-class TriviaGameScreen extends ConsumerWidget {
+class TriviaGameScreen extends ConsumerStatefulWidget {
   const TriviaGameScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TriviaGameScreen> createState() => _TriviaGameScreenState();
+}
+
+class _TriviaGameScreenState extends ConsumerState<TriviaGameScreen> {
+  bool _isOffline = false;
+  bool _isLoadingConnectivity = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkConnectivity();
+  }
+
+  Future<void> _checkConnectivity() async {
+    setState(() {
+      _isLoadingConnectivity = true;
+    });
+
+    try {
+      final result = await Connectivity().checkConnectivity();
+      setState(() {
+        _isOffline = result.contains(ConnectivityResult.none);
+        _isLoadingConnectivity = false;
+      });
+    } catch (e) {
+      // Fallback to assuming online or show error if check fails?
+      // Let's assume offline if check fails to be safe, or just show error.
+      setState(() {
+        _isOffline = true;
+        _isLoadingConnectivity = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    if (_isLoadingConnectivity) {
+      return Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_isOffline) {
+      return Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        body: ErrorView(
+          message:
+              'No internet connection.\nPlease check your settings and try again.',
+          onRetry: _checkConnectivity,
+        ),
+      );
+    }
+
     final gameState = ref.watch(gameStateProvider);
     final translations = ref.watch(triviaTranslationsProvider);
 
@@ -27,7 +85,9 @@ class TriviaGameScreen extends ConsumerWidget {
           if (context.mounted) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const TriviaResultsScreen()),
+              MaterialPageRoute(
+                builder: (context) => const TriviaResultsScreen(),
+              ),
             );
           }
         });
@@ -35,23 +95,24 @@ class TriviaGameScreen extends ConsumerWidget {
     });
 
     if (gameState.isLoading) {
-      return const Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(child: CircularProgressIndicator()),
+      return Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     if (gameState.currentGame == null) {
-      return const Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(child: Text('Error loading game')),
+      return Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        body: const Center(child: Text('Error loading game')),
       );
     }
 
-    final currentQuestion = gameState.currentGame!.questions[gameState.currentQuestionIndex];
+    final currentQuestion =
+        gameState.currentGame!.questions[gameState.currentQuestionIndex];
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
           // Fondo decorativo
@@ -61,7 +122,9 @@ class TriviaGameScreen extends ConsumerWidget {
             child: Icon(
               Icons.catching_pokemon,
               size: 300,
-              color: Colors.grey.withOpacity(0.05),
+              color: isDark
+                  ? Colors.white.withOpacity(0.05)
+                  : Colors.grey.withOpacity(0.05),
             ),
           ),
           SafeArea(
@@ -75,41 +138,56 @@ class TriviaGameScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
-                          color: Colors.grey[100],
+                          color: isDark ? Colors.grey[800] : Colors.grey[100],
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
                           '${translations.get('question_n')} ${gameState.currentQuestionIndex + 1}/10',
-                          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black54),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: theme.textTheme.bodyMedium?.color
+                                ?.withOpacity(0.7),
+                          ),
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFF8B7ED8).withOpacity(0.1),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
                           '${translations.get('score')}: ${gameState.currentGame!.totalScore}',
-                          style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF8B7ED8)),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF8B7ED8),
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Temporizador
                   TriviaTimerWidget(
-                    key: ValueKey(gameState.currentQuestionIndex), // Reinicia el widget en cada pregunta
+                    key: ValueKey(
+                      gameState.currentQuestionIndex,
+                    ), // Reinicia el widget en cada pregunta
                     timeLeft: gameState.timeLeft,
                     size: 60,
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Silueta
                   Expanded(
                     flex: 4,
@@ -122,20 +200,22 @@ class TriviaGameScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  
+
                   // Mensaje de feedback
                   SizedBox(
                     height: 60,
                     child: Center(
                       child: gameState.isAnswered
                           ? Text(
-                              currentQuestion.isCorrect 
-                                  ? translations.get('correct') 
+                              currentQuestion.isCorrect
+                                  ? translations.get('correct')
                                   : '${translations.get('incorrect')} ${translations.get('it_is')} ${currentQuestion.pokemonName}!',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: currentQuestion.isCorrect ? Colors.green : Colors.red,
+                                color: currentQuestion.isCorrect
+                                    ? Colors.green
+                                    : Colors.red,
                               ),
                               textAlign: TextAlign.center,
                             )
@@ -157,12 +237,21 @@ class TriviaGameScreen extends ConsumerWidget {
                       children: currentQuestion.options.map((option) {
                         return _OptionButton(
                           text: option,
-                          isSelected: gameState.isAnswered && currentQuestion.userAnswer == option,
-                          isCorrect: gameState.isAnswered && option == currentQuestion.pokemonName,
-                          isWrong: gameState.isAnswered && option == currentQuestion.userAnswer && option != currentQuestion.pokemonName,
-                          onTap: gameState.isAnswered 
-                              ? null 
-                              : () => ref.read(gameStateProvider.notifier).submitAnswer(option),
+                          isSelected:
+                              gameState.isAnswered &&
+                              currentQuestion.userAnswer == option,
+                          isCorrect:
+                              gameState.isAnswered &&
+                              option == currentQuestion.pokemonName,
+                          isWrong:
+                              gameState.isAnswered &&
+                              option == currentQuestion.userAnswer &&
+                              option != currentQuestion.pokemonName,
+                          onTap: gameState.isAnswered
+                              ? null
+                              : () => ref
+                                    .read(gameStateProvider.notifier)
+                                    .submitAnswer(option),
                         );
                       }).toList(),
                     ),
@@ -195,15 +284,21 @@ class _OptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color backgroundColor = Colors.white;
-    Color textColor = Colors.black87;
-    BorderSide borderSide = BorderSide(color: Colors.grey.shade200, width: 2);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    Color backgroundColor = theme.cardColor;
+    Color textColor = theme.textTheme.bodyLarge?.color ?? Colors.black87;
+    BorderSide borderSide = BorderSide(
+      color: isDark ? Colors.grey[700]! : Colors.grey.shade200,
+      width: 2,
+    );
     List<BoxShadow> shadows = [
       BoxShadow(
-        color: Colors.grey.withOpacity(0.1),
+        color: Colors.black.withOpacity(0.05),
         blurRadius: 5,
         offset: const Offset(0, 4),
-      )
+      ),
     ];
 
     if (isCorrect) {
@@ -215,7 +310,7 @@ class _OptionButton extends StatelessWidget {
           color: const Color(0xFF4FC1A6).withOpacity(0.4),
           blurRadius: 8,
           offset: const Offset(0, 4),
-        )
+        ),
       ];
     } else if (isWrong) {
       backgroundColor = const Color(0xFFFA6555); // Reddish
@@ -226,7 +321,7 @@ class _OptionButton extends StatelessWidget {
           color: const Color(0xFFFA6555).withOpacity(0.4),
           blurRadius: 8,
           offset: const Offset(0, 4),
-        )
+        ),
       ];
     }
 

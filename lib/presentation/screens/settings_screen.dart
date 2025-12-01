@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/presentation/providers/language_provider.dart';
+import 'package:pokedex/presentation/providers/theme_provider.dart';
 
 /// Pantalla de configuración de la aplicación.
 /// Permite al usuario:
@@ -14,9 +15,11 @@ class SettingsScreen extends ConsumerWidget {
     final currentLocale = ref.watch(languageProvider);
     // Helper simple para traducir dentro del build
     String tr(String key) => S(currentLocale).get(key);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
           // Fondo decorativo
@@ -26,7 +29,9 @@ class SettingsScreen extends ConsumerWidget {
             child: Icon(
               Icons.settings,
               size: 300,
-              color: Colors.grey.withOpacity(0.05),
+              color: isDark
+                  ? Colors.white.withOpacity(0.05)
+                  : Colors.grey.withOpacity(0.05),
             ),
           ),
           SafeArea(
@@ -40,23 +45,26 @@ class SettingsScreen extends ConsumerWidget {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.black87),
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: theme.textTheme.bodyLarge?.color,
+                        ),
                         onPressed: () => Navigator.pop(context),
                       ),
                       const SizedBox(width: 8),
                       Text(
                         tr('settings'),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: theme.textTheme.bodyLarge?.color,
                         ),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 32),
-                
+
                 // Contenido
                 Expanded(
                   child: ListView(
@@ -68,14 +76,65 @@ class SettingsScreen extends ConsumerWidget {
                         currentLocale: currentLocale,
                         onChanged: (val) {
                           if (val != null) {
-                            ref.read(languageProvider.notifier).changeLanguage(Locale(val));
+                            ref
+                                .read(languageProvider.notifier)
+                                .changeLanguage(Locale(val));
                           }
                         },
                       ),
-                      
+
                       const SizedBox(height: 32),
-                      
-                      const _SectionHeader(title: 'App Info'), // Podría necesitar traducción
+
+                      _SectionHeader(title: 'Appearance'),
+                      const SizedBox(height: 16),
+                      Consumer(
+                        builder: (context, ref, child) {
+                          final themeMode = ref.watch(themeProvider);
+                          final isDarkModeEnabled = themeMode == ThemeMode.dark;
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: theme.cardColor,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 15,
+                                  offset: const Offset(0, 5),
+                                ),
+                              ],
+                            ),
+                            child: SwitchListTile(
+                              title: Text(
+                                'Dark Mode',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: theme.textTheme.bodyLarge?.color,
+                                ),
+                              ),
+                              secondary: Icon(
+                                isDarkModeEnabled
+                                    ? Icons.dark_mode
+                                    : Icons.light_mode,
+                                color: const Color(0xFF8B7ED8),
+                              ),
+                              value: isDarkModeEnabled,
+                              onChanged: (val) {
+                                ref
+                                    .read(themeProvider.notifier)
+                                    .toggleTheme(val);
+                              },
+                              activeColor: const Color(0xFF8B7ED8),
+                            ),
+                          );
+                        },
+                      ),
+
+                      const SizedBox(height: 32),
+
+                      const _SectionHeader(
+                        title: 'App Info',
+                      ), // Podría necesitar traducción
                       const SizedBox(height: 16),
                       _InfoCard(
                         icon: Icons.info_outline,
@@ -102,10 +161,10 @@ class _SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,
-        color: Colors.black54,
+        color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6),
       ),
     );
   }
@@ -125,13 +184,14 @@ class _LanguageSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -146,7 +206,7 @@ class _LanguageSelector extends StatelessWidget {
             isSelected: currentLocale.languageCode == 'en',
             onTap: () => onChanged('en'),
           ),
-          Divider(height: 1, color: Colors.grey.withOpacity(0.1)),
+          Divider(height: 1, color: theme.dividerColor.withOpacity(0.1)),
           _LanguageOption(
             label: 'Español',
             flag: '🇪🇸',
@@ -177,6 +237,7 @@ class _LanguageOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
@@ -191,12 +252,18 @@ class _LanguageOption extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: isSelected ? const Color(0xFF8B7ED8) : Colors.black87,
+                color: isSelected
+                    ? const Color(0xFF8B7ED8)
+                    : theme.textTheme.bodyLarge?.color,
               ),
             ),
             const Spacer(),
             if (isSelected)
-              const Icon(Icons.check_circle, color: Color(0xFF4FC1A6), size: 24),
+              const Icon(
+                Icons.check_circle,
+                color: Color(0xFF4FC1A6),
+                size: 24,
+              ),
           ],
         ),
       ),
@@ -220,14 +287,15 @@ class _InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -238,7 +306,8 @@ class _InfoCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.grey[100],
+              color: theme
+                  .scaffoldBackgroundColor, // Use scaffold background for contrast
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: Colors.grey[600]),
@@ -249,18 +318,15 @@ class _InfoCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: theme.textTheme.bodyLarge?.color,
                 ),
               ),
               Text(
                 subtitle,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[500],
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey[500]),
               ),
             ],
           ),
