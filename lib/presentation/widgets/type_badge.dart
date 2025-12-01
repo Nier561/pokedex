@@ -28,7 +28,11 @@ class TypeBadge extends StatelessWidget {
           color: color,
           shape: BoxShape.circle,
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.2), offset: const Offset(0, 1), blurRadius: 2)
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.2),
+              offset: const Offset(0, 1),
+              blurRadius: 2,
+            ),
           ],
           border: Border.all(color: Colors.white, width: 1),
         ),
@@ -37,18 +41,27 @@ class TypeBadge extends StatelessWidget {
 
     // Comportamiento normal (Badge con texto)
     return Container(
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(16)),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(16),
+      ),
       padding: small
           ? const EdgeInsets.symmetric(horizontal: 6, vertical: 2)
           : const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       child: Text(
         type.isNotEmpty ? type[0].toUpperCase() + type.substring(1) : '',
         style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: small ? 10 : 12,
-            height: 1.3,
-            color: Colors.white,
-            shadows: [Shadow(color: Colors.black.withOpacity(0.2), offset: const Offset(0, 1), blurRadius: 2)]
+          fontWeight: FontWeight.bold,
+          fontSize: small ? 10 : 12,
+          height: 1.3,
+          color: Colors.white,
+          shadows: [
+            Shadow(
+              color: Colors.black.withValues(alpha: 0.2),
+              offset: const Offset(0, 1),
+              blurRadius: 2,
+            ),
+          ],
         ),
       ),
     );

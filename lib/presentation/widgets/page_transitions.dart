@@ -10,27 +10,27 @@ class SlideRightPageRoute<T> extends PageRouteBuilder<T> {
   SlideRightPageRoute({
     required this.child,
     this.duration = const Duration(milliseconds: 400),
-    RouteSettings? settings,
+    super.settings,
   }) : super(
-          pageBuilder: (context, animation, secondaryAnimation) => child,
-          settings: settings,
-          transitionDuration: duration,
-          reverseTransitionDuration: duration,
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(1.0, 0.0);
-            const end = Offset.zero;
-            const curve = Curves.easeInOut;
+         pageBuilder: (context, animation, secondaryAnimation) => child,
+         transitionDuration: duration,
+         reverseTransitionDuration: duration,
+         transitionsBuilder: (context, animation, secondaryAnimation, child) {
+           const begin = Offset(1.0, 0.0);
+           const end = Offset.zero;
+           const curve = Curves.easeInOut;
 
-            var tween = Tween(begin: begin, end: end).chain(
-              CurveTween(curve: curve),
-            );
+           var tween = Tween(
+             begin: begin,
+             end: end,
+           ).chain(CurveTween(curve: curve));
 
-            return SlideTransition(
-              position: animation.drive(tween),
-              child: child,
-            );
-          },
-        );
+           return SlideTransition(
+             position: animation.drive(tween),
+             child: child,
+           );
+         },
+       );
 }
 
 /// Transición de página con efecto de fundido
@@ -41,23 +41,23 @@ class FadePageRoute<T> extends PageRouteBuilder<T> {
   FadePageRoute({
     required this.child,
     this.duration = const Duration(milliseconds: 300),
-    RouteSettings? settings,
+    super.settings,
   }) : super(
-          pageBuilder: (context, animation, secondaryAnimation) => child,
-          settings: settings,
-          transitionDuration: duration,
-          reverseTransitionDuration: duration,
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(
-              opacity: animation.drive(
-                Tween(begin: 0.0, end: 1.0).chain(
-                  CurveTween(curve: Curves.easeInOut),
-                ),
-              ),
-              child: child,
-            );
-          },
-        );
+         pageBuilder: (context, animation, secondaryAnimation) => child,
+         transitionDuration: duration,
+         reverseTransitionDuration: duration,
+         transitionsBuilder: (context, animation, secondaryAnimation, child) {
+           return FadeTransition(
+             opacity: animation.drive(
+               Tween(
+                 begin: 0.0,
+                 end: 1.0,
+               ).chain(CurveTween(curve: Curves.easeInOut)),
+             ),
+             child: child,
+           );
+         },
+       );
 }
 
 /// Transición de página con efecto de escala y fundido para detalles
@@ -68,32 +68,30 @@ class ScaleFadePageRoute<T> extends PageRouteBuilder<T> {
   ScaleFadePageRoute({
     required this.child,
     this.duration = const Duration(milliseconds: 500),
-    RouteSettings? settings,
+    super.settings,
   }) : super(
-          pageBuilder: (context, animation, secondaryAnimation) => child,
-          settings: settings,
-          transitionDuration: duration,
-          reverseTransitionDuration: duration,
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const curve = Curves.easeInOut;
-            
-            var scaleAnimation = Tween(begin: 0.8, end: 1.0).animate(
-              CurvedAnimation(parent: animation, curve: curve),
-            );
-            
-            var fadeAnimation = Tween(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(parent: animation, curve: curve),
-            );
+         pageBuilder: (context, animation, secondaryAnimation) => child,
+         transitionDuration: duration,
+         reverseTransitionDuration: duration,
+         transitionsBuilder: (context, animation, secondaryAnimation, child) {
+           const curve = Curves.easeInOut;
 
-            return FadeTransition(
-              opacity: fadeAnimation,
-              child: ScaleTransition(
-                scale: scaleAnimation,
-                child: child,
-              ),
-            );
-          },
-        );
+           var scaleAnimation = Tween(
+             begin: 0.8,
+             end: 1.0,
+           ).animate(CurvedAnimation(parent: animation, curve: curve));
+
+           var fadeAnimation = Tween(
+             begin: 0.0,
+             end: 1.0,
+           ).animate(CurvedAnimation(parent: animation, curve: curve));
+
+           return FadeTransition(
+             opacity: fadeAnimation,
+             child: ScaleTransition(scale: scaleAnimation, child: child),
+           );
+         },
+       );
 }
 
 /// Transición de página con efecto de deslizamiento desde abajo
@@ -104,27 +102,27 @@ class SlideUpPageRoute<T> extends PageRouteBuilder<T> {
   SlideUpPageRoute({
     required this.child,
     this.duration = const Duration(milliseconds: 400),
-    RouteSettings? settings,
+    super.settings,
   }) : super(
-          pageBuilder: (context, animation, secondaryAnimation) => child,
-          settings: settings,
-          transitionDuration: duration,
-          reverseTransitionDuration: duration,
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(0.0, 1.0);
-            const end = Offset.zero;
-            const curve = Curves.easeInOut;
+         pageBuilder: (context, animation, secondaryAnimation) => child,
+         transitionDuration: duration,
+         reverseTransitionDuration: duration,
+         transitionsBuilder: (context, animation, secondaryAnimation, child) {
+           const begin = Offset(0.0, 1.0);
+           const end = Offset.zero;
+           const curve = Curves.easeInOut;
 
-            var tween = Tween(begin: begin, end: end).chain(
-              CurveTween(curve: curve),
-            );
+           var tween = Tween(
+             begin: begin,
+             end: end,
+           ).chain(CurveTween(curve: curve));
 
-            return SlideTransition(
-              position: animation.drive(tween),
-              child: child,
-            );
-          },
-        );
+           return SlideTransition(
+             position: animation.drive(tween),
+             child: child,
+           );
+         },
+       );
 }
 
 /// Extensión para facilitar la navegación con las transiciones personalizadas

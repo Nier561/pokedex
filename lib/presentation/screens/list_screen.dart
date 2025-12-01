@@ -156,7 +156,6 @@ class _PokemonListScreenState extends ConsumerState<PokemonListScreen> {
           cmp = a.baseStatTotal.compareTo(b.baseStatTotal);
           break;
         case SortMode.id:
-        default:
           cmp = a.id.compareTo(b.id);
           break;
       }

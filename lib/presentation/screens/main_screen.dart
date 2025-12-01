@@ -98,8 +98,8 @@ class _MainScreenState extends ConsumerState<MainScreen>
               Icons.catching_pokemon,
               size: 300,
               color: isDark
-                  ? Colors.white.withOpacity(0.05)
-                  : Colors.grey.withOpacity(0.05),
+                  ? Colors.white.withValues(alpha: 0.05)
+                  : Colors.grey.withValues(alpha: 0.05),
             ),
           ),
           SafeArea(
@@ -157,7 +157,7 @@ class _MainScreenState extends ConsumerState<MainScreen>
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                               color: theme.textTheme.bodyMedium?.color
-                                  ?.withOpacity(0.6),
+                                  ?.withValues(alpha: 0.6),
                             ),
                           ),
                         ],
@@ -315,7 +315,7 @@ class _MenuCardState extends State<_MenuCard> {
           // Sombra suave con color del degradado
           boxShadow: [
             BoxShadow(
-              color: widget.colorStart.withOpacity(0.4),
+              color: widget.colorStart.withValues(alpha: 0.4),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),
@@ -349,8 +349,8 @@ class _MenuCardState extends State<_MenuCard> {
                   child: Icon(
                     widget.icon,
                     size: 100,
-                    color: Colors.white.withOpacity(
-                      0.25,
+                    color: Colors.white.withValues(
+                      alpha: 0.25,
                     ), // Opacidad baja para efecto watermark
                   ),
                 ),
@@ -363,7 +363,7 @@ class _MenuCardState extends State<_MenuCard> {
                     height: 60,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0.1),
+                      color: Colors.white.withValues(alpha: 0.1),
                     ),
                   ),
                 ),

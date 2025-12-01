@@ -19,15 +19,9 @@ import 'package:pokedex/data/datasources/preferences_local_data_source.dart';
 // Presentation
 import 'package:pokedex/presentation/screens/main_screen.dart';
 import 'package:pokedex/presentation/screens/onboarding_screen.dart';
-import 'package:pokedex/presentation/screens/onboarding_screen.dart';
 import 'package:pokedex/presentation/providers/trivia_provider.dart';
 import 'package:pokedex/presentation/providers/theme_provider.dart';
-import 'package:pokedex/data/datasources/preferences_local_data_source.dart';
 
-/// INYECCIÓN DE DEPENDENCIAS CON RIVERPOD
-/// Estos providers crean las instancias de los repositorios que usaremos en la app.
-
-// Provider para el repositorio de Pokémon
 final pokemonRepositoryProvider = Provider<IPokemonRepository>((ref) {
   throw UnimplementedError('Provider must be overridden');
 });

@@ -14,7 +14,6 @@ class FavoritesStore extends ChangeNotifier {
   }
 
   final Set<int> _favoriteIds = {};
-  bool _isLoaded = false;
 
   Set<int> get favorites => _favoriteIds;
 
@@ -25,7 +24,7 @@ class FavoritesStore extends ChangeNotifier {
     if (stored != null) {
       _favoriteIds.addAll(stored.map((e) => int.parse(e)));
     }
-    _isLoaded = true;
+
     notifyListeners();
   }
 

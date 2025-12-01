@@ -244,7 +244,7 @@ class PokemonDetailDto {
         if (score > bestScore) {
           bestScore = score;
           best = item;
-          best!['normalized_method'] = methodMap;
+          best['normalized_method'] = methodMap;
         }
       }
       if (best != null) {

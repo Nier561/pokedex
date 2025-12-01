@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokedex/domain/entities/trivia_game.dart';
 import 'package:pokedex/domain/entities/trivia_question.dart';
-import 'package:pokedex/domain/repositories/i_pokemon_repository.dart';
 import 'package:pokedex/domain/repositories/i_trivia_repository.dart';
 import 'package:pokedex/main.dart'; // Para pokemonRepositoryProvider
 import 'package:pokedex/presentation/providers/trivia_provider.dart';

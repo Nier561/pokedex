@@ -99,7 +99,9 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
   }
 
   Future<void> _previewCard(PokemonDetail p, Function(String) tr) async {
-    if (_isGeneratingCard) return;
+    if (_isGeneratingCard) {
+      return;
+    }
     setState(() => _isGeneratingCard = true);
 
     try {
@@ -116,7 +118,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
       }
 
       final cardWidget = _buildCardForCapture(p, moves, hp, tr);
-      final Uint8List? image = await _screenshotController.captureFromWidget(
+      final Uint8List image = await _screenshotController.captureFromWidget(
         cardWidget,
         delay: const Duration(
           milliseconds: 500,
@@ -124,7 +126,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
         pixelRatio: 3.0,
       );
 
-      if (image != null && mounted) {
+      if (mounted) {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -162,7 +164,9 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
     if (typeMoves.length < 2) {
       typeMoves = allMoves.where((m) => m.power != null).toList();
     }
-    if (typeMoves.isEmpty) typeMoves = allMoves;
+    if (typeMoves.isEmpty) {
+      typeMoves = allMoves;
+    }
 
     typeMoves.shuffle();
     return typeMoves.take(2).toList();
@@ -177,7 +181,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
     final type = p.types.isNotEmpty ? p.types.first : 'normal';
     final gradient = typeGradients[type] ?? typeGradients['normal']!;
     final borderColor = (typeGradients[type]?.colors.first ?? Colors.grey)
-        .withOpacity(0.5);
+        .withValues(alpha: 0.5);
 
     return MediaQuery(
       data: const MediaQueryData(),
@@ -189,7 +193,10 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
           borderRadius: BorderRadius.circular(16),
           gradient: gradient,
           boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 10)],
-          border: Border.all(color: Colors.white.withOpacity(0.9), width: 8),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.9),
+            width: 8,
+          ),
         ),
         child: Column(
           children: [
@@ -241,7 +248,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
               height: 200,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.95),
+                color: Colors.white.withValues(alpha: 0.95),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: borderColor, width: 4),
                 boxShadow: const [
@@ -273,10 +280,10 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
                 width: double.infinity,
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.95),
+                  color: Colors.white.withValues(alpha: 0.95),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                     width: 1,
                   ),
                 ),
@@ -348,7 +355,9 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
   }
 
   String _displayName(String name) {
-    if (name.startsWith('zygarde-') && name.contains('-50')) return 'Zygarde';
+    if (name.startsWith('zygarde-') && name.contains('-50')) {
+      return 'Zygarde';
+    }
     return _pretty(name);
   }
 
@@ -466,7 +475,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
                           child: Icon(
                             Icons.catching_pokemon,
                             size: 280,
-                            color: Colors.white.withOpacity(0.15),
+                            color: Colors.white.withValues(alpha: 0.15),
                           ),
                         ),
                       ],
@@ -581,7 +590,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
                                               (t) => TypeBadge(
                                                 type: t,
                                                 backgroundColor: Colors.white
-                                                    .withOpacity(0.25),
+                                                    .withValues(alpha: 0.25),
                                               ),
                                             )
                                             .toList(),
@@ -607,7 +616,9 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
                                     if (detail != null)
                                       Container(
                                         decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.2),
+                                          color: Colors.white.withValues(
+                                            alpha: 0.2,
+                                          ),
                                           borderRadius: BorderRadius.circular(
                                             20,
                                           ),
@@ -661,10 +672,11 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
                                                   }
                                                 });
                                               },
-                                              activeColor: Colors.yellowAccent,
+                                              activeThumbColor:
+                                                  Colors.yellowAccent,
                                               activeTrackColor: Colors
                                                   .yellowAccent
-                                                  .withOpacity(0.5),
+                                                  .withValues(alpha: 0.5),
                                               inactiveThumbColor: Colors.white,
                                               inactiveTrackColor:
                                                   Colors.white24,
@@ -714,7 +726,9 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
                                         'assets/images/pokedex icono 2.webp',
                                         height: 100,
                                         width: 100,
-                                        color: Colors.white.withOpacity(0.5),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.5,
+                                        ),
                                         colorBlendMode: BlendMode.modulate,
                                       ),
                                   fadeInDuration: const Duration(
@@ -839,7 +853,9 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
 
   void _onSwipe(DragEndDetails d) {
     final v = d.primaryVelocity ?? 0;
-    if (v == 0) return;
+    if (v == 0) {
+      return;
+    }
     int? nextId;
     int? nextIdx;
     if (_ids.isNotEmpty && _idx >= 0) {
@@ -852,7 +868,9 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
       }
     } else {
       nextId = v < 0 ? widget.id + 1 : widget.id - 1;
-      if (nextId < 1) nextId = null;
+      if (nextId < 1) {
+        nextId = null;
+      }
     }
     if (nextId != null) {
       Pokemon? nextCached;
@@ -891,7 +909,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.05),
+              color: color.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Text(
@@ -1020,7 +1038,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -1232,27 +1250,43 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
   List<Widget> _buildDetailedConditions(Map<String, dynamic> m) {
     final chips = <Widget>[];
     if (m['min_level'] != null) chips.add(_condChip('Lvl ${m['min_level']}'));
-    if ((m['item'] as String).isNotEmpty)
+    if ((m['item'] as String).isNotEmpty) {
       chips.add(_condChip('Use ${_pretty(m['item'])}'));
+    }
     if ((m['trigger'] as String) == 'trade') {
       String text = 'Trade';
-      if ((m['held_item'] as String).isNotEmpty)
+      if ((m['held_item'] as String).isNotEmpty) {
         text += ' w/ ${_pretty(m['held_item'])}';
+      }
       chips.add(_condChip(text));
     }
-    if (m['min_happiness'] != null) chips.add(_condChip('Happiness'));
-    if (m['min_beauty'] != null) chips.add(_condChip('Beauty'));
-    if (m['min_affection'] != null) chips.add(_condChip('Affection'));
-    if ((m['time_of_day'] as String).isNotEmpty)
+    if (m['min_happiness'] != null) {
+      chips.add(_condChip('Happiness'));
+    }
+    if (m['min_beauty'] != null) {
+      chips.add(_condChip('Beauty'));
+    }
+    if (m['min_affection'] != null) {
+      chips.add(_condChip('Affection'));
+    }
+    if ((m['time_of_day'] as String).isNotEmpty) {
       chips.add(_condChip(m['time_of_day'] == 'night' ? 'Night ☾' : 'Day ☀'));
-    if ((m['move'] as String).isNotEmpty)
+    }
+    if ((m['move'] as String).isNotEmpty) {
       chips.add(_condChip('Knows ${_pretty(m['move'])}'));
-    if ((m['location'] as String).isNotEmpty)
+    }
+    if ((m['location'] as String).isNotEmpty) {
       chips.add(_condChip('At ${_pretty(m['location'])}'));
-    if (m['needs_rain'] == true) chips.add(_condChip('Rain'));
-    if (m['gender_id'] != null)
+    }
+    if (m['needs_rain'] == true) {
+      chips.add(_condChip('Rain'));
+    }
+    if (m['gender_id'] != null) {
       chips.add(_condChip(m['gender_id'] == 1 ? 'Female ♀' : 'Male ♂'));
-    if (m['upside_down'] == true) chips.add(_condChip('Upside Down'));
+    }
+    if (m['upside_down'] == true) {
+      chips.add(_condChip('Upside Down'));
+    }
     return chips;
   }
 
@@ -1289,7 +1323,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
             'assets/images/pokedex icono 2.webp',
             width: 60,
             height: 60,
-            color: Colors.grey.withOpacity(0.5),
+            color: Colors.grey.withValues(alpha: 0.5),
             colorBlendMode: BlendMode.modulate,
           ),
         ),
@@ -1393,23 +1427,24 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
   Widget _moveTile(MoveDto m, Function(String) tr, {bool showLvl = false}) {
     final typeColor = typeGradients[m.type]?.colors.first ?? Colors.grey;
     String assetPath = 'assets/images/Status.png';
-    if (m.damageClass.toLowerCase() == 'physical')
+    if (m.damageClass.toLowerCase() == 'physical') {
       assetPath = 'assets/images/Physical.png';
-    else if (m.damageClass.toLowerCase() == 'special')
+    } else if (m.damageClass.toLowerCase() == 'special') {
       assetPath = 'assets/images/Special.png';
-    else if (m.damageClass.toLowerCase() == 'status')
+    } else if (m.damageClass.toLowerCase() == 'status') {
       assetPath = 'assets/images/Status.png';
+    }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        border: Border.all(color: typeColor.withOpacity(0.3)),
+        border: Border.all(color: typeColor.withValues(alpha: 0.3)),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
-          collapsedBackgroundColor: typeColor.withOpacity(0.05),
+          collapsedBackgroundColor: typeColor.withValues(alpha: 0.05),
           backgroundColor: Theme.of(context).cardColor,
           childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           title: Row(
@@ -1482,7 +1517,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
               style: TextStyle(
                 color: Theme.of(
                   context,
-                ).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                ).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                 fontStyle: FontStyle.italic,
               ),
             ),
@@ -1566,7 +1601,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(16),
                   ),
@@ -1686,7 +1721,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
           borderRadius: BorderRadius.circular(12),
           child: Container(
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -1702,7 +1737,7 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
                     errorWidget: (context, url, error) => Image.asset(
                       'assets/images/pokedex icono 2.webp',
                       fit: BoxFit.contain,
-                      color: Colors.grey.withOpacity(0.5),
+                      color: Colors.grey.withValues(alpha: 0.5),
                       colorBlendMode: BlendMode.modulate,
                     ),
                   ),

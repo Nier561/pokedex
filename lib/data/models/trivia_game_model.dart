@@ -1,6 +1,5 @@
 import 'package:hive/hive.dart';
 import 'package:pokedex/domain/entities/trivia_game.dart';
-import 'package:pokedex/domain/entities/trivia_question.dart';
 
 part 'trivia_game_model.g.dart';
 

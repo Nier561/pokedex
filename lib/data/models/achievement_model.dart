@@ -1,5 +1,4 @@
 import 'package:hive/hive.dart';
-import 'package:pokedex/domain/entities/achievement.dart';
 
 part 'achievement_model.g.dart';
 
@@ -26,6 +25,6 @@ class AchievementModel extends HiveObject {
     this.unlockedAt,
   });
 
-  // Nota: Solo persistimos el estado (id, unlocked, date). 
+  // Nota: Solo persistimos el estado (id, unlocked, date).
   // La metadata estática (nombre, icono, etc.) viene del dominio/configuración.
 }

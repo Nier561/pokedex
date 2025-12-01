@@ -16,32 +16,88 @@ class StatBar extends StatelessWidget {
 
   String _normalizeLabel(String l) {
     switch (l.toLowerCase()) {
-      case 'hp': return 'HP';
-      case 'attack': return 'Atk';
-      case 'defense': return 'Def';
-      case 'special-attack': return 'SpA';
-      case 'special-defense': return 'SpD';
-      case 'speed': return 'Spe';
-      default: return l;
+      case 'hp':
+        return 'HP';
+      case 'attack':
+        return 'Atk';
+      case 'defense':
+        return 'Def';
+      case 'special-attack':
+        return 'SpA';
+      case 'special-defense':
+        return 'SpD';
+      case 'speed':
+        return 'Spe';
+      default:
+        return l;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final color = _getStatColor(value);
-    return Row(children: [
-      SizedBox(width: 40, child: Text(_normalizeLabel(label), style: TextStyle(fontWeight: FontWeight.bold, color: color, fontSize: 12))),
-      SizedBox(width: 35, child: Text('$value', textAlign: TextAlign.right, style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.black87, fontSize: 12))),
-      const SizedBox(width: 12),
-      Expanded(child: TweenAnimationBuilder<double>(
-        tween: Tween<double>(begin: 0, end: value / _maxStat),
-        duration: const Duration(milliseconds: 800),
-        curve: Curves.easeOutCubic,
-        builder: (context, percentage, _) => Stack(children: [
-          Container(height: 6, decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(3))),
-          FractionallySizedBox(widthFactor: percentage.clamp(0.0, 1.0), child: Container(height: 6, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(3), boxShadow: [BoxShadow(color: color.withOpacity(0.4), blurRadius: 4, offset: const Offset(0, 1))]))),
-        ]),
-      )),
-    ]);
+    return Row(
+      children: [
+        SizedBox(
+          width: 40,
+          child: Text(
+            _normalizeLabel(label),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: color,
+              fontSize: 12,
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 35,
+          child: Text(
+            '$value',
+            textAlign: TextAlign.right,
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
+              fontSize: 12,
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: TweenAnimationBuilder<double>(
+            tween: Tween<double>(begin: 0, end: value / _maxStat),
+            duration: const Duration(milliseconds: 800),
+            curve: Curves.easeOutCubic,
+            builder: (context, percentage, _) => Stack(
+              children: [
+                Container(
+                  height: 6,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
+                FractionallySizedBox(
+                  widthFactor: percentage.clamp(0.0, 1.0),
+                  child: Container(
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: BorderRadius.circular(3),
+                      boxShadow: [
+                        BoxShadow(
+                          color: color.withValues(alpha: 0.4),
+                          blurRadius: 4,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

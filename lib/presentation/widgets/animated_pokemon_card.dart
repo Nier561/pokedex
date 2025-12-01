@@ -89,6 +89,7 @@ class _AnimatedPokemonCardState extends State<AnimatedPokemonCard>
   @override
   Widget build(BuildContext context) {
     return Stack(
+      fit: StackFit.expand,
       children: [
         // Borde de marcador de posición (Placeholder)
         Container(
