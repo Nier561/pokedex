@@ -21,6 +21,8 @@ import 'package:pokedex/presentation/widgets/matchup_grid.dart';
 import 'package:pokedex/presentation/widgets/animated_detail_screen.dart';
 import 'package:pokedex/presentation/widgets/error_view.dart';
 import 'package:pokedex/presentation/widgets/stat_bar.dart';
+import 'package:pokedex/presentation/widgets/animated_like_button.dart';
+import 'package:pokedex/presentation/widgets/floating_hearts_overlay.dart';
 
 class PokemonDetailScreen extends ConsumerStatefulWidget {
   final int id;
@@ -55,7 +57,9 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
   bool _isShiny = false;
   bool _isGeneratingCard = false;
   bool _showShinyEffect = false;
+
   final _sfxPlayer = AudioPlayer();
+  final GlobalKey<FloatingHeartsOverlayState> _heartsOverlayKey = GlobalKey();
 
   static const int _initialVisibleMoves = 5;
   static const int _movesPageSize = 20;
@@ -442,365 +446,373 @@ class _PokemonDetailScreenState extends ConsumerState<PokemonDetailScreen>
     return AnimatedDetailScreen(
       child: GestureDetector(
         onHorizontalDragEnd: _onSwipe,
-        child: Scaffold(
-          backgroundColor: color,
-          body: Stack(
-            children: [
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(gradient: gradient),
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        top: -20,
-                        right: -60,
-                        child: Icon(
-                          Icons.catching_pokemon,
-                          size: 280,
-                          color: Colors.white.withOpacity(0.15),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Column(
-                children: [
-                  SafeArea(
-                    bottom: false,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.arrow_back,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () => Navigator.pop(context),
-                              ),
-                              Row(
-                                children: [
-                                  if (detail != null)
-                                    IconButton(
-                                      icon: _isGeneratingCard
-                                          ? const SizedBox(
-                                              width: 20,
-                                              height: 20,
-                                              child: CircularProgressIndicator(
-                                                color: Colors.white,
-                                                strokeWidth: 2,
-                                              ),
-                                            )
-                                          : const Icon(
-                                              Icons.style,
-                                              color: Colors.white,
-                                            ),
-                                      tooltip: 'Create Card',
-                                      onPressed: () => _previewCard(detail, tr),
-                                    ),
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.volume_up,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: _playCry,
-                                  ),
-                                  IconButton(
-                                    icon: Icon(
-                                      isFav
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: () => ref
-                                        .read(favoritesProvider.notifier)
-                                        .toggle(id),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _displayName(name),
-                                      style: const TextStyle(
-                                        fontSize: 36,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                        height: 1.2,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Wrap(
-                                      spacing: 8,
-                                      children: types
-                                          .map(
-                                            (t) => TypeBadge(
-                                              type: t,
-                                              backgroundColor: Colors.white
-                                                  .withOpacity(0.25),
-                                            ),
-                                          )
-                                          .toList(),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: Text(
-                                      '#${id.toString().padLeft(3, '0')}',
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white70,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  if (detail != null)
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.2),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 2,
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            Icons.auto_awesome,
-                                            color: _isShiny
-                                                ? Colors.yellowAccent
-                                                : Colors.white70,
-                                            size: 16,
-                                          ),
-                                          const SizedBox(width: 4),
-                                          Switch(
-                                            value: _isShiny,
-                                            onChanged: (val) {
-                                              setState(() {
-                                                _isShiny = val;
-                                                // Si se activa el modo shiny, reproducir sonido y mostrar animación
-                                                if (_isShiny) {
-                                                  // Reproduce el sonido de shiny
-                                                  _sfxPlayer.play(
-                                                    AssetSource(
-                                                      'sounds/shiny.mp3',
-                                                    ),
-                                                  );
-
-                                                  // Muestra el GIF de shiny
-                                                  _showShinyEffect = true;
-
-                                                  // Oculta el GIF después de 1.5 segundos (duración estimada de la animación)
-                                                  Future.delayed(
-                                                    const Duration(
-                                                      milliseconds: 1500,
-                                                    ),
-                                                    () {
-                                                      if (mounted) {
-                                                        setState(() {
-                                                          _showShinyEffect =
-                                                              false;
-                                                        });
-                                                      }
-                                                    },
-                                                  );
-                                                }
-                                              });
-                                            },
-                                            activeColor: Colors.yellowAccent,
-                                            activeTrackColor: Colors
-                                                .yellowAccent
-                                                .withOpacity(0.5),
-                                            inactiveThumbColor: Colors.white,
-                                            inactiveTrackColor: Colors.white24,
-                                            materialTapTargetSize:
-                                                MaterialTapTargetSize
-                                                    .shrinkWrap,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 220,
+        child: FloatingHeartsOverlay(
+          key: _heartsOverlayKey,
+          child: Scaffold(
+            backgroundColor: color,
+            body: Stack(
+              children: [
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(gradient: gradient),
                     child: Stack(
-                      alignment: Alignment.bottomCenter,
                       children: [
                         Positioned(
-                          bottom: 0,
-                          child: Hero(
-                            tag: 'pokemon-img-${_displayName(name)}',
-                            child: AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 500),
-                              child: CachedNetworkImage(
-                                key: ValueKey(_isShiny),
-                                imageUrl: _img(id),
-                                height: 200,
-                                fit: BoxFit.contain,
-                                placeholder: (context, url) => const SizedBox(
-                                  height: 200,
-                                  width: 200,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                    ),
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    Image.asset(
-                                      'assets/images/pokedex icono 2.webp',
-                                      height: 100,
-                                      width: 100,
-                                      color: Colors.white.withOpacity(0.5),
-                                      colorBlendMode: BlendMode.modulate,
-                                    ),
-                                fadeInDuration: const Duration(
-                                  milliseconds: 300,
-                                ),
-                              ),
-                            ),
+                          top: -20,
+                          right: -60,
+                          child: Icon(
+                            Icons.catching_pokemon,
+                            size: 280,
+                            color: Colors.white.withOpacity(0.15),
                           ),
                         ),
-                        // Animación de Shiny (Sparkles) superpuesta
-                        if (_showShinyEffect)
-                          Positioned(
-                            top: 0,
-                            right: 0,
-                            left: 0,
-                            bottom: 0,
-                            child: Image.asset(
-                              'assets/gif/shiny.gif',
-                              fit: BoxFit.contain,
-                            ),
-                          ),
                       ],
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(30),
-                        ),
-                      ),
-                      child: detail == null
-                          ? const Center(child: CircularProgressIndicator())
-                          : Column(
+                ),
+                Column(
+                  children: [
+                    SafeArea(
+                      bottom: false,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const SizedBox(height: 16),
-                                TabBar(
-                                  controller: _tabController,
-                                  labelColor: Theme.of(
-                                    context,
-                                  ).textTheme.bodyLarge?.color,
-                                  unselectedLabelColor: Colors.grey,
-                                  indicatorColor: color,
-                                  indicatorSize: TabBarIndicatorSize.label,
-                                  indicatorWeight: 3,
-                                  labelStyle: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.white,
                                   ),
-                                  isScrollable: true,
-                                  tabs: [
-                                    Tab(text: tr('about')),
-                                    Tab(text: tr('stats')),
-                                    Tab(text: tr('evolutions')),
-                                    Tab(text: tr('moves')),
-                                    Tab(text: tr('locations')),
-                                    Tab(text: tr('megas')),
-                                    Tab(text: tr('forms')),
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                                Row(
+                                  children: [
+                                    if (detail != null)
+                                      IconButton(
+                                        icon: _isGeneratingCard
+                                            ? const SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                      color: Colors.white,
+                                                      strokeWidth: 2,
+                                                    ),
+                                              )
+                                            : const Icon(
+                                                Icons.style,
+                                                color: Colors.white,
+                                              ),
+                                        tooltip: 'Create Card',
+                                        onPressed: () =>
+                                            _previewCard(detail, tr),
+                                      ),
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.volume_up,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: _playCry,
+                                    ),
+                                    AnimatedLikeButton(
+                                      isLiked: isFav,
+                                      onPressed: () {
+                                        ref
+                                            .read(favoritesProvider.notifier)
+                                            .toggle(id);
+                                        _heartsOverlayKey.currentState
+                                            ?.showHearts(isBroken: isFav);
+                                      },
+                                    ),
                                   ],
                                 ),
-                                const Divider(height: 1),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
                                 Expanded(
-                                  child: TabBarView(
-                                    controller: _tabController,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      _buildAbout(detail, tr, color),
-                                      _buildStats(
-                                        detail.stats,
-                                        detail.types,
-                                        tr,
-                                        color,
+                                      Text(
+                                        _displayName(name),
+                                        style: const TextStyle(
+                                          fontSize: 36,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          height: 1.2,
+                                        ),
                                       ),
-                                      _buildEvolutionTab(
-                                        detail.evolutionChain,
-                                        context,
-                                      ),
-                                      _buildMovesTab(
-                                        movesLvl,
-                                        movesTm,
-                                        movesTutor,
-                                        movesEgg,
-                                        tr,
-                                      ),
-                                      _buildLocationsTab(
-                                        detail.locations,
-                                        color,
-                                        context,
-                                        tr,
-                                      ),
-                                      _buildForms(
-                                        formsMega,
-                                        color,
-                                        context,
-                                        emptyLabel: tr('no_megas'),
-                                        emptyIcon: Icons.auto_awesome,
-                                      ),
-                                      _buildForms(
-                                        formsAlt,
-                                        color,
-                                        context,
-                                        emptyLabel: tr('no_forms'),
-                                        emptyIcon: Icons.extension,
+                                      const SizedBox(height: 8),
+                                      Wrap(
+                                        spacing: 8,
+                                        children: types
+                                            .map(
+                                              (t) => TypeBadge(
+                                                type: t,
+                                                backgroundColor: Colors.white
+                                                    .withOpacity(0.25),
+                                              ),
+                                            )
+                                            .toList(),
                                       ),
                                     ],
                                   ),
                                 ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Text(
+                                        '#${id.toString().padLeft(3, '0')}',
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white70,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    if (detail != null)
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withOpacity(0.2),
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 2,
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              Icons.auto_awesome,
+                                              color: _isShiny
+                                                  ? Colors.yellowAccent
+                                                  : Colors.white70,
+                                              size: 16,
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Switch(
+                                              value: _isShiny,
+                                              onChanged: (val) {
+                                                setState(() {
+                                                  _isShiny = val;
+                                                  // Si se activa el modo shiny, reproducir sonido y mostrar animación
+                                                  if (_isShiny) {
+                                                    // Reproduce el sonido de shiny
+                                                    _sfxPlayer.play(
+                                                      AssetSource(
+                                                        'sounds/shiny.mp3',
+                                                      ),
+                                                    );
+
+                                                    // Muestra el GIF de shiny
+                                                    _showShinyEffect = true;
+
+                                                    // Oculta el GIF después de 1.5 segundos (duración estimada de la animación)
+                                                    Future.delayed(
+                                                      const Duration(
+                                                        milliseconds: 1500,
+                                                      ),
+                                                      () {
+                                                        if (mounted) {
+                                                          setState(() {
+                                                            _showShinyEffect =
+                                                                false;
+                                                          });
+                                                        }
+                                                      },
+                                                    );
+                                                  }
+                                                });
+                                              },
+                                              activeColor: Colors.yellowAccent,
+                                              activeTrackColor: Colors
+                                                  .yellowAccent
+                                                  .withOpacity(0.5),
+                                              inactiveThumbColor: Colors.white,
+                                              inactiveTrackColor:
+                                                  Colors.white24,
+                                              materialTapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                  ],
+                                ),
                               ],
                             ),
+                          ),
+                          const SizedBox(height: 15),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    SizedBox(
+                      height: 220,
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          Positioned(
+                            bottom: 0,
+                            child: Hero(
+                              tag: 'pokemon-img-${_displayName(name)}',
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 500),
+                                child: CachedNetworkImage(
+                                  key: ValueKey(_isShiny),
+                                  imageUrl: _img(id),
+                                  height: 200,
+                                  fit: BoxFit.contain,
+                                  placeholder: (context, url) => const SizedBox(
+                                    height: 200,
+                                    width: 200,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Image.asset(
+                                        'assets/images/pokedex icono 2.webp',
+                                        height: 100,
+                                        width: 100,
+                                        color: Colors.white.withOpacity(0.5),
+                                        colorBlendMode: BlendMode.modulate,
+                                      ),
+                                  fadeInDuration: const Duration(
+                                    milliseconds: 300,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          // Animación de Shiny (Sparkles) superpuesta
+                          if (_showShinyEffect)
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              left: 0,
+                              bottom: 0,
+                              child: Image.asset(
+                                'assets/gif/shiny.gif',
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(30),
+                          ),
+                        ),
+                        child: detail == null
+                            ? const Center(child: CircularProgressIndicator())
+                            : Column(
+                                children: [
+                                  const SizedBox(height: 16),
+                                  TabBar(
+                                    controller: _tabController,
+                                    labelColor: Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge?.color,
+                                    unselectedLabelColor: Colors.grey,
+                                    indicatorColor: color,
+                                    indicatorSize: TabBarIndicatorSize.label,
+                                    indicatorWeight: 3,
+                                    labelStyle: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                    isScrollable: true,
+                                    tabs: [
+                                      Tab(text: tr('about')),
+                                      Tab(text: tr('stats')),
+                                      Tab(text: tr('evolutions')),
+                                      Tab(text: tr('moves')),
+                                      Tab(text: tr('locations')),
+                                      Tab(text: tr('megas')),
+                                      Tab(text: tr('forms')),
+                                    ],
+                                  ),
+                                  const Divider(height: 1),
+                                  Expanded(
+                                    child: TabBarView(
+                                      controller: _tabController,
+                                      children: [
+                                        _buildAbout(detail, tr, color),
+                                        _buildStats(
+                                          detail.stats,
+                                          detail.types,
+                                          tr,
+                                          color,
+                                        ),
+                                        _buildEvolutionTab(
+                                          detail.evolutionChain,
+                                          context,
+                                        ),
+                                        _buildMovesTab(
+                                          movesLvl,
+                                          movesTm,
+                                          movesTutor,
+                                          movesEgg,
+                                          tr,
+                                        ),
+                                        _buildLocationsTab(
+                                          detail.locations,
+                                          color,
+                                          context,
+                                          tr,
+                                        ),
+                                        _buildForms(
+                                          formsMega,
+                                          color,
+                                          context,
+                                          emptyLabel: tr('no_megas'),
+                                          emptyIcon: Icons.auto_awesome,
+                                        ),
+                                        _buildForms(
+                                          formsAlt,
+                                          color,
+                                          context,
+                                          emptyLabel: tr('no_forms'),
+                                          emptyIcon: Icons.extension,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
